@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -20,10 +21,12 @@ public class Grid {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		System.out.println("Done");
 	}
 
 	private void load(String path) throws IOException{
-		Scanner scanner = new Scanner(path);
+		File file = new File(path);
+		Scanner scanner = new Scanner(file);
 		for(int y=0; y<height && scanner.hasNextLine(); y++) {
 			String line = scanner.nextLine();
 			for(int x=0; x<width && x<line.length(); x++) {
@@ -57,5 +60,7 @@ public class Grid {
 	public int getHeight() {
 		return height;
 	}
-	
+	/*public static void main(String[] args) {
+		new Grid(5,5,"maps/testmap1.txt");
+	}*/
 }
