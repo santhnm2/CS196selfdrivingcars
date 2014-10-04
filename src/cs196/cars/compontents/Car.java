@@ -7,9 +7,11 @@ package cs196.cars.compontents;
 
 public class Car extends Entity {
     private int dir, speed;
+    private int x, y;
 
     public Car(int x, int y) {
-        throw new RuntimeException();
+        this.x = x;
+        this.y = y;
     }
 
     public Tile getNextTile() {

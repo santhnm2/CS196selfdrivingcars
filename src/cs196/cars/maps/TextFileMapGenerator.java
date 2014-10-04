@@ -1,5 +1,6 @@
 package cs196.cars.maps;
 
+import cs196.cars.compontents.Car;
 import cs196.cars.compontents.Directions;
 import cs196.cars.compontents.Tile;
 import cs196.cars.compontents.nonroads.NonRoad;
@@ -75,6 +76,6 @@ public class TextFileMapGenerator implements MapGenerator {
 
     @Override
     public Map generateMap() {
-        return new Map(this.grid);
+        return new Map(this.grid, new Car[0]);
     }
 }

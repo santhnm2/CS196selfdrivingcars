@@ -1,5 +1,6 @@
 package cs196.cars.compontents.roads;
 
+import cs196.cars.compontents.Directions;
 import cs196.cars.compontents.roads.Road;
 
 /**
@@ -8,6 +9,10 @@ import cs196.cars.compontents.roads.Road;
  */
 
 public class TrafficLight extends Road {
+
+    public TrafficLight() {
+        super(Directions.UP);
+    }
 
     public boolean canMoveLeft() {
         throw new RuntimeException();

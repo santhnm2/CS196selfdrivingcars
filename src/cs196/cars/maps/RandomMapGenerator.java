@@ -1,5 +1,6 @@
 package cs196.cars.maps;
 
+import cs196.cars.compontents.Car;
 import cs196.cars.compontents.Directions;
 import cs196.cars.compontents.Tile;
 import cs196.cars.compontents.nonroads.NonRoad;
@@ -29,6 +30,8 @@ public class RandomMapGenerator implements MapGenerator {
     public Map generateMap() {
         Tile[][] tiles = new Tile[length][length];
 
+        Car[] cars = new Car[this.cars];
+
         Random r = new Random();
         Set<Coord> lightPos = new HashSet<>();
         for (int i = 0; i < lights; i++) {
@@ -47,6 +50,7 @@ public class RandomMapGenerator implements MapGenerator {
             }
         }
 
+        int pos = 0;
         for (Coord c : lightPos) {
             int actualX = c.x * 2;
             int actualY = c.y * 2;
@@ -69,13 +73,24 @@ public class RandomMapGenerator implements MapGenerator {
                 }
             }
 
-            tiles[actualX][actualY] = new TrafficLight();
-            tiles[actualX + 1][actualY] = new TrafficLight();
-            tiles[actualX][actualY + 1] = new TrafficLight();
-            tiles[actualX + 1][actualY + 1] = new TrafficLight();
+            int[] dx = { 0, 0, 1, 1};
+            int[] dy = { 0, 1, 0, 1};
+
+            for (int i = 0; i < 4; i++) {
+                int altX = actualX + dx[i];
+                int altY = actualY + dy[i];
+
+                tiles[altX][altY] = new TrafficLight();
+
+                if (pos < this.cars) {
+                    cars[pos++] = new Car(altX, altY);
+                }
+            }
+
+
         }
 
-        return new Map(tiles);
+        return new Map(tiles, cars);
     }
 
 
