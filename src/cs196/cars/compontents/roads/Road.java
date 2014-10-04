@@ -14,9 +14,9 @@ public class Road extends Tile {
     private final Car[] occupancy;
 
 
-    public Road() {
-        speedLimit = 0;
-        dir = Directions.UP;
-        occupancy = new Car[4];
+    public Road(int dir) {
+        this.speedLimit = 0;
+        this.dir = dir;
+        this.occupancy = new Car[4];
     }
 }
