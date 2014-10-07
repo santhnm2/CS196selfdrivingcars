@@ -9,5 +9,8 @@ import cs196.cars.compontents.Tile;
  */
 
 public abstract class NonRoad extends Tile {
-
+    @Override
+    public String toString() {
+        return "@@";
+    }
 }

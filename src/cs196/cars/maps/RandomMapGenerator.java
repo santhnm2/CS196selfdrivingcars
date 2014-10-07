@@ -8,6 +8,7 @@ import cs196.cars.compontents.nonroads.Office;
 import cs196.cars.compontents.roads.Road;
 import cs196.cars.compontents.roads.TrafficLight;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -18,6 +19,8 @@ import java.util.Set;
  */
 
 public class RandomMapGenerator implements MapGenerator {
+    private static final double DENSITY = 0.75;
+
     private final int length, cars, lights;
 
     public RandomMapGenerator(int length, int cars, int lights) {
@@ -28,69 +31,28 @@ public class RandomMapGenerator implements MapGenerator {
 
     @Override
     public Map generateMap() {
-        Tile[][] tiles = new Tile[length][length];
+        Tile[][] grid = new Tile[length][length];
 
-        Car[] cars = new Car[this.cars];
-
-        Random r = new Random();
-        Set<Coord> lightPos = new HashSet<>();
-        for (int i = 0; i < lights; i++) {
-            Coord c;
-
-            do {
-                c = new Coord(r.nextInt((length - 1) / 2), r.nextInt((length - 1) / 2));
-            } while(lightPos.contains(c));
-
-            lightPos.add(c);
-        }
-
-        for (int i = 0; i < length; i++) {
-            for (int j = 0; j < length; j++) {
-                tiles[i][j] = new Office();
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+                grid[i][j] = new Office();
             }
         }
 
-        int pos = 0;
-        for (Coord c : lightPos) {
-            int actualX = c.x * 2;
-            int actualY = c.y * 2;
+        Map m = new Map(grid, new Car[0]);
 
-            for (int i = 0; i < length; i++) {
-                if (tiles[actualX][i] instanceof NonRoad) {
-                    tiles[actualX][i] = new Road(Directions.DOWN);
-                }
-
-                if (tiles[actualX + 1][i] instanceof NonRoad) {
-                    tiles[actualX + 1][i] = new Road(Directions.UP);
-                }
-
-                if (tiles[i][actualY] instanceof NonRoad) {
-                    tiles[i][actualY] = new Road(Directions.RIGHT);
-                }
-
-                if (tiles[i][actualY + 1] instanceof NonRoad) {
-                    tiles[i][actualY + 1] = new Road(Directions.LEFT);
-                }
+        for(int i = 0; i < length; i += 4){
+            if(Math.random() < DENSITY){
+                m.createHorizontalRoad(i, 2, (int) (Math.random() * length) / 2 * 2, length - 1);
             }
-
-            int[] dx = { 0, 0, 1, 1};
-            int[] dy = { 0, 1, 0, 1};
-
-            for (int i = 0; i < 4; i++) {
-                int altX = actualX + dx[i];
-                int altY = actualY + dy[i];
-
-                tiles[altX][altY] = new TrafficLight();
-
-                if (pos < this.cars) {
-                    cars[pos++] = new Car(altX, altY);
-                }
-            }
-
-
         }
 
-        return new Map(tiles, cars);
+        for(int j = 0; j < length; j += 4){
+            if(Math.random() < DENSITY)
+                m.createVerticalRoad(j, 2, (int) (Math.random() * length) / 2 * 2, length - 1);
+        }
+
+        return m;
     }
 
 

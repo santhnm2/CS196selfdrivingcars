@@ -29,4 +29,9 @@ public class TrafficLight extends Road {
     public boolean canMoveDown() {
         throw new RuntimeException();
     }
+
+    @Override
+    public String toString() {
+        return "TL";
+    }
 }
