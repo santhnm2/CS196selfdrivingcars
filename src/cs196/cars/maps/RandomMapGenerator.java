@@ -1,17 +1,8 @@
 package cs196.cars.maps;
 
-import cs196.cars.compontents.Car;
-import cs196.cars.compontents.Directions;
-import cs196.cars.compontents.Tile;
-import cs196.cars.compontents.nonroads.NonRoad;
-import cs196.cars.compontents.nonroads.Office;
-import cs196.cars.compontents.roads.Road;
-import cs196.cars.compontents.roads.TrafficLight;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
+import cs196.cars.components.Car;
+import cs196.cars.components.Tile;
+import cs196.cars.components.nonroads.Office;
 
 /**
  * @author arshsab

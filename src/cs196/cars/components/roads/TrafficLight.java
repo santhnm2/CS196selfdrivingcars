@@ -1,7 +1,6 @@
-package cs196.cars.compontents.roads;
+package cs196.cars.components.roads;
 
-import cs196.cars.compontents.Directions;
-import cs196.cars.compontents.roads.Road;
+import cs196.cars.components.Directions;
 
 /**
  * @author arshsab

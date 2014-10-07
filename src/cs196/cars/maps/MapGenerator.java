@@ -6,5 +6,11 @@ package cs196.cars.maps;
  */
 
 public interface MapGenerator {
+
+    /**
+     *
+     *
+     * @return
+     */
     public Map generateMap();
 }

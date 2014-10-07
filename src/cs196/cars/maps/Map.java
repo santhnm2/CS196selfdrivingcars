@@ -1,14 +1,17 @@
 package cs196.cars.maps;
 
-import cs196.cars.compontents.Car;
-import cs196.cars.compontents.Directions;
-import cs196.cars.compontents.Tile;
-import cs196.cars.compontents.roads.Road;
-import cs196.cars.compontents.roads.TrafficLight;
+import cs196.cars.components.Car;
+import cs196.cars.components.Directions;
+import cs196.cars.components.Tile;
+import cs196.cars.components.roads.Road;
+import cs196.cars.components.roads.TrafficLight;
 
 import java.util.Arrays;
 
 /**
+ *
+ *
+ *
  * @author arshsab
  * @since 10 2014
  */

@@ -1,12 +1,11 @@
 package cs196.cars.maps;
 
-import cs196.cars.compontents.Car;
-import cs196.cars.compontents.Directions;
-import cs196.cars.compontents.Tile;
-import cs196.cars.compontents.nonroads.NonRoad;
-import cs196.cars.compontents.nonroads.Office;
-import cs196.cars.compontents.roads.Road;
-import cs196.cars.compontents.roads.TrafficLight;
+import cs196.cars.components.Car;
+import cs196.cars.components.Directions;
+import cs196.cars.components.Tile;
+import cs196.cars.components.nonroads.Office;
+import cs196.cars.components.roads.Road;
+import cs196.cars.components.roads.TrafficLight;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;

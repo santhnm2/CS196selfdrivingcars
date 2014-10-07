@@ -1,4 +1,4 @@
-package cs196.cars.compontents;
+package cs196.cars.components;
 
 /**
  * @author arshsab

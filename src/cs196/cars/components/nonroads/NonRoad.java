@@ -1,7 +1,6 @@
-package cs196.cars.compontents.nonroads;
+package cs196.cars.components.nonroads;
 
-import cs196.cars.compontents.Entity;
-import cs196.cars.compontents.Tile;
+import cs196.cars.components.Tile;
 
 /**
  * @author arshsab

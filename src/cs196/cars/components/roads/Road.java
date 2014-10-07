@@ -1,8 +1,8 @@
-package cs196.cars.compontents.roads;
+package cs196.cars.components.roads;
 
-import cs196.cars.compontents.Car;
-import cs196.cars.compontents.Directions;
-import cs196.cars.compontents.Tile;
+import cs196.cars.components.Car;
+import cs196.cars.components.Directions;
+import cs196.cars.components.Tile;
 
 /**
  * @author arshsab

@@ -1,4 +1,4 @@
-package cs196.cars.compontents.nonroads;
+package cs196.cars.components.nonroads;
 
 /**
  * @author arshsab

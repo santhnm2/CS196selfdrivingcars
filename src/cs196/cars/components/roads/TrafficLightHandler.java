@@ -1,4 +1,4 @@
-package cs196.cars.compontents.roads;
+package cs196.cars.components.roads;
 
 /**
  * @author arshsab

@@ -1,10 +1,9 @@
 package cs196.cars.components.maps;
 
-import cs196.cars.compontents.Tile;
-import cs196.cars.compontents.roads.TrafficLight;
+import cs196.cars.components.Tile;
+import cs196.cars.components.roads.TrafficLight;
 import cs196.cars.maps.Map;
 import cs196.cars.maps.RandomMapGenerator;
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
