@@ -1,71 +1,68 @@
 package com.Cars;
 
+import java.util.Arrays;
+
+
 public class Grid {
-	int[][] map;
-	final int NON_ROAD = 0;
-	final int ROAD = 1;
-	final int TRAFFIC_LIGHT = 2;
-	
-	public Grid(int sizeX, int sizeY){
-		map = new int[sizeX][sizeY];
-	}
-	public int[][] getMap(){
-		return map;
-	}
-	public int getLength(){
-		return map.length;
-	}
-	public int getHeight(){
-		return map[1].length;
-	}
-	//for now, will have integer array to represent road/non-road/etc.
-	//0 = non-road. Anything else = some kind of road, traffic light, etc.
-	public void print(){
-		for(int i = 0; i < map.length; i++){
-			for(int j = 0; j < map[i].length; j++){
-				System.out.print(map[i][j]);
-			}
-			System.out.println();
-		}
-	}
-	public void createHorizontalRoad(int row,int width, int start, int end){
-		for(int i = 0; i < width; i++){
-			for(int j = start; j <= end; j++){
-				if(j > 0 && j < map[1].length - 1){
-					
-					if(map[row+i][j] == ROAD || map[row+i][j] == TRAFFIC_LIGHT){
-						if(map[row + i][j + 1] == ROAD)//look ahead to the right first, then check behind.
-							map[row+i][j + 1] = TRAFFIC_LIGHT;
-						else if(map[row+i][j - 1] == ROAD)//if ahead is not a road, check behind to make sure you haven't started on a road
-							map[row+i][j - 1] = TRAFFIC_LIGHT;
-				//should turn above block of if/else into a method. Fosho. Seriously this code is a pain.
-						map[row+i][j] = TRAFFIC_LIGHT;
-					} else
-						map[row + i][j] = ROAD;
-				}
-			}
-		}
-	}
-	
-	public void createVerticalRoad(int column, int width, int start, int end){
-		for(int i = 0; i < width; i++){
-			for(int j = start; j <= end; j++){
-				if(j > 0 && j < map.length - 1){
-					
-					if(map[j][column + i] == ROAD || map[j][column+i] == TRAFFIC_LIGHT){	
-						if(map[j+1][column+i] == ROAD)
-							map[j+1][column+i] = TRAFFIC_LIGHT;
-						else if(map[j-1][column+i] == ROAD)
-							map[j-1][column+i] = TRAFFIC_LIGHT;
-				//same as above; should turn above block into method.
-						map[j][column + i] = TRAFFIC_LIGHT;
-					} else
-						map[j][column + i] = ROAD;
-				}
-			}
-		}
-	}
-	
-	
-	
+    private final Tile[][] grid;
+    private final Car[] cars;
+
+    public Grid(Tile[][] grid, Car[] cars) {
+        this.grid = grid;
+        this.cars = cars;
+    }
+
+    public Tile get(int x, int y) {
+        return this.grid[x][y];
+    }
+
+    public Tile[][] getTiles() {
+        return this.grid;
+    }
+
+    public Car[] getCars() {
+        return this.cars;
+    }
+
+    @Override
+    public String toString() {
+        return Arrays.deepToString(grid).replaceAll("], ", "]\n");
+    }
+
+    public void createHorizontalRoad(int row, int width, int start, int end){
+        for(int i = 0; i < width; i++){
+            for(int j = start; j <= end; j++){
+                if(j > 0 && j < grid[1].length - 1){
+                    if(grid[row + i][j] instanceof Road || grid[row + i][j] instanceof TrafficLight){
+                        if(grid[row + i][j + 1] instanceof Road) // look ahead to the right first, then check behind.
+                            grid[row + i][j + 1] = new TrafficLight();
+                        else if(grid[row + i][j - 1] instanceof Road) // if ahead is not a road, check behind to make sure you haven't started on a road
+                            grid[row + i][j - 1] = new TrafficLight();
+                        // should turn above block of if/else into a method. Fosho. Seriously this code is a pain.
+                        grid[row + i][j] = new TrafficLight();
+                    } else
+                        grid[row + i][j] = new Road((i == 0 ? Directions.LEFT : Directions.RIGHT));
+                }
+            }
+        }
+    }
+
+    public void createVerticalRoad(int column, int width, int start, int end){
+        for(int i = 0; i < width; i++){
+            for(int j = start; j <= end; j++){
+                if(j > 0 && j < grid.length - 1){
+
+                    if(grid[j][column + i] instanceof Road || grid[j][column + i] instanceof TrafficLight){
+                        if(grid[j + 1][column + i] instanceof Road)
+                            grid[j + 1][column + i] = new TrafficLight();
+                        else if(grid[j - 1][column + i] instanceof Road)
+                            grid[j - 1][column + i] = new TrafficLight();
+                        //same as above; should turn above block into method.
+                        grid[j][column + i] = new TrafficLight();
+                    } else
+                        grid[j][column + i] = new Road((i == 1 ? Directions.UP : Directions.DOWN));
+                }
+            }
+        }
+    }
 }
