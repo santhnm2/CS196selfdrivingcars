@@ -1,3 +1,5 @@
+import java.util.Map;
+import java.util.ArrayList;
 
 class Car {
 	private int speed=0;
@@ -6,10 +8,10 @@ class Car {
 	private int yPos=0;
 //	final private Tile destination=new Tile();   waiting to be implemented
 	
-	Grid grid; //Grid that the car is in
+	Map map; //Grid that the car is in
 	
-	public Car(Grid grid) {
-		this.grid = grid;
+	public Car(Map map) {
+		this.map = map;
 	}
 	
 	public boolean move()
@@ -49,8 +51,8 @@ class Car {
 			x--;
 			break;
 		}
-		if(x>=0 && x<grid.tiles.length && y>=0 && y<grid.tiles[0].length) //Ensure tile is in grid
-			return grid.tiles[x][y];
+		if(x>=0 && x<map.getTiles().length && y>=0 && y<map.getTiles()[0].length) //Ensure tile is in grid
+			return map.get(x,y);
 		else
 			return null; //If not in grid, return null
 	}
@@ -71,5 +73,38 @@ class Car {
 		dir=this.dir;
 	}
 	
+	public ArrayList<Integer> genPath(Tile dest) {
+		int destX = dest.getX();
+		int destY = dest.getY();
+		int curX = xPos;
+		int curY = yPos;
+		ArrayList<Integer> path = new ArrayList<Integer>();
+		while(curX!=destX && curY!=destY) {
+			if(curX<destX && map.get(curX+1,curY) instanceof Road && (Road)map.get(curX+1,curY).getDirection()==Directions.RIGHT) {
+				curX++;
+				path.add(Directions.RIGHT);
+			}
+			else if(curX>destX && map.get(curX-1,curY) instanceof Road && (Road)map.get(curX-1,curY).getDirection()==Directions.LEFT) {
+				curX--;
+				path.add(Directions.LEFT);
+			}
+			else if(curY<destY && map.get(curX,curY+1) instanceof Road && (Road)map.get(curX,curY+1).getDirection()==Directions.DOWN) {
+				curY++;
+				path.add(Directions.DOWN);
+			}
+			else if(curY>destY && map.get(curX,curY-1) instanceof Road && (Road)map.get(curX,curY-1).getDirection()==Directions.UP) {
+				curY--;
+				path.add(Directions.UP);
+			}
+			else {
+				//May throw an error in certain start conditions
+				int nextDir = map.get(curX,curY).getDirection();
+				path.add(nextDir);
+				curX = getNextTile(nextDir).getX();
+				curY = getNextTile(nextDir).getY();
+			}
+		}
+		return path;
+	}
 	
 }
