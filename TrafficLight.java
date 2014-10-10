@@ -1,19 +1,21 @@
 
 public class TrafficLight extends Tile {
 	private int dir;
-	private boolean canMoveLeft, canMoveRight, canMoveUp, canMoveDown;
 	
-	public TrafficLight(int x, int y, int direction)
+	private boolean isRed;
+	public TrafficLight(int x, int y, int direction, boolean isRed)
 	{
 		posX = x;
 		posY = y;
 		dir = direction;
-		canMoveLeft = true;
+		this.isRed = isRed;
 	}
 	
 	public boolean getStatus()
 	{
-		return canMoveLeft;
+		return isRed;
 	}
-	
+	public void toggle() {
+		isRed = !isRed;
+	}
 }
