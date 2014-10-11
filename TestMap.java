@@ -1,20 +1,20 @@
 package com.Cars;
 
-public class Map {
+public class TestMap {
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Tile[][] map = new Tile[100][100];
-		for(int i = 0; i < map.length; i++){
-			for(int j = 0; j < map[0].length; j++){
-				map[i][j] = new House();
+		Tile[][] testMap = new Tile[100][100];
+		for(int i = 0; i < testMap.length; i++){
+			for(int j = 0; j < testMap[0].length; j++){
+				testMap[i][j] = new House();
 			}
 		}
 		
 		Car[] y = new Car[20];
-		Grid x = new Grid(map, y);
+		Map x = new Map(testMap, y);
 		//hardcoded threeway intersection
 		System.out.println("Road initialized");
 		
