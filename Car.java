@@ -72,7 +72,7 @@ class Car {
 	{
 		dir=this.dir;
 	}
-	
+	// unsafe, do not use.
 	public ArrayList<Integer> genPath(Tile dest) {
 		int destX = dest.getX();
 		int destY = dest.getY();
