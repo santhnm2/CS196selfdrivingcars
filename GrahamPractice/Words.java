@@ -10,18 +10,17 @@ public class Words {
 // stores all of the characters into consecutive nodes.
       for(int i = 0; i<word.length();i++)
          list.add(word.charAt(i));
-//prints forwards
-      for ( CharNode runner = list.head; runner != null; runner = runner.next)
-      {
-         System.out.print(runner.item);
-      }
-      System.out.println();
-//prints backwards      
-      for ( CharNode runner = list.tail; runner != null; runner = runner.previous)
-      {
-         System.out.print(runner.item);
-      }
+      
+      MyList.Print(list, true);//forward
+      MyList.Print(list, false);//backwards
+      
+      System.out.print("first index: ");
+      int first = sc.nextInt();
+      
+      System.out.print("second index: ");
+      int second = sc.nextInt();
+      
+      MyList.InternalReversal(list, first, second);
    }
    
-
 }
