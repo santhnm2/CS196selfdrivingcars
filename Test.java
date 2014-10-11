@@ -1,4 +1,3 @@
-package cs196.cars.maps;
 
 /**
  * @author arshsab
@@ -7,7 +6,7 @@ package cs196.cars.maps;
 
 public class Test {
     public static void main(String[] args) {
-        RandomMapGenerator mapGen = new RandomMapGenerator(100, 0, 10);
+        RandomMapGenerator mapGen = new RandomMapGenerator(100);
 
         Map m = mapGen.generateMap();
 

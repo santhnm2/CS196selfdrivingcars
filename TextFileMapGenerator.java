@@ -1,4 +1,3 @@
-package cs196.cars.maps;
 
 import cs196.cars.components.Car;
 import cs196.cars.components.Directions;

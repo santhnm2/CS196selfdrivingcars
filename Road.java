@@ -3,7 +3,7 @@ public class Road extends Tile
 {
 	private int speedLimit;
 	private int dir;
-	private Car[] occupancy;
+	private Cars[] occupancy;
 	
 	public Road(int x, int y, int speed, int direction)
 	{

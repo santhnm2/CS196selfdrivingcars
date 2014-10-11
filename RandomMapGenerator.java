@@ -1,4 +1,3 @@
-package cs196.cars.maps;
 
 import cs196.cars.components.Car;
 import cs196.cars.components.Tile;
@@ -12,12 +11,10 @@ import cs196.cars.components.nonroads.Office;
 public class RandomMapGenerator implements MapGenerator {
     private static final double DENSITY = 0.75;
 
-    private final int length, cars, lights;
+    private final int length;
 
-    public RandomMapGenerator(int length, int cars, int lights) {
+    public RandomMapGenerator(int length) {
         this.length = length;
-        this.cars = cars;
-        this.lights = lights;
     }
 
     @Override

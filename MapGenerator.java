@@ -1,4 +1,3 @@
-package cs196.cars.maps;
 
 /**
  * @author arshsab
