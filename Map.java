@@ -3,11 +3,11 @@ package com.Cars;
 import java.util.Arrays;
 
 
-public class Grid {
+public class Map {
     private final Tile[][] grid;
     private final Car[] cars;
 
-    public Grid(Tile[][] grid, Car[] cars) {
+    public Map(Tile[][] grid, Car[] cars) {
         this.grid = grid;
         this.cars = cars;
     }
