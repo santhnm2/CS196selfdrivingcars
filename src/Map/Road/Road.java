@@ -1,3 +1,7 @@
+package src.Map.Road;
+
+import src.Map.*;
+import src.Car.*;
 
 public class Road extends Tile
 {
@@ -21,5 +25,14 @@ public class Road extends Tile
 	public int getDirection()
 	{
 		return dir;
+	}
+	public String toString(){
+		switch(dir){
+		case 0: return "UR";
+		case 1: return "RR";
+		case 2: return "DR";
+		case 3: return "LR";
+		}
+		return null;
 	}
 }

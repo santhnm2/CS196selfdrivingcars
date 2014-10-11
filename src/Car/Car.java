@@ -1,7 +1,13 @@
-import java.util.Map;
-import java.util.ArrayList;
+package src.Car;
 
-class Car {
+
+import java.util.ArrayList;
+import src.Constants.*;
+import src.Map.*;
+import src.Map.Road.*;
+import src.Map.NonRoad.*;
+
+public class Car {
 	private int speed=0;
 	private int dir=0; 
 	private int xPos=0;
@@ -80,25 +86,25 @@ class Car {
 		int curY = yPos;
 		ArrayList<Integer> path = new ArrayList<Integer>();
 		while(curX!=destX && curY!=destY) {
-			if(curX<destX && map.get(curX+1,curY) instanceof Road && (Road)map.get(curX+1,curY).getDirection()==Directions.RIGHT) {
+			if(curX<destX && map.get(curX+1,curY) instanceof Road && ((Road)map.get(curX+1,curY)).getDirection()==Directions.RIGHT) {
 				curX++;
 				path.add(Directions.RIGHT);
 			}
-			else if(curX>destX && map.get(curX-1,curY) instanceof Road && (Road)map.get(curX-1,curY).getDirection()==Directions.LEFT) {
+			else if(curX>destX && map.get(curX-1,curY) instanceof Road && ((Road)map.get(curX-1,curY)).getDirection()==Directions.LEFT) {
 				curX--;
 				path.add(Directions.LEFT);
 			}
-			else if(curY<destY && map.get(curX,curY+1) instanceof Road && (Road)map.get(curX,curY+1).getDirection()==Directions.DOWN) {
+			else if(curY<destY && map.get(curX,curY+1) instanceof Road && ((Road)map.get(curX,curY+1)).getDirection()==Directions.DOWN) {
 				curY++;
 				path.add(Directions.DOWN);
 			}
-			else if(curY>destY && map.get(curX,curY-1) instanceof Road && (Road)map.get(curX,curY-1).getDirection()==Directions.UP) {
+			else if(curY>destY && map.get(curX,curY-1) instanceof Road && ((Road)map.get(curX,curY-1)).getDirection()==Directions.UP) {
 				curY--;
 				path.add(Directions.UP);
 			}
 			else {
 				//May throw an error in certain start conditions
-				int nextDir = map.get(curX,curY).getDirection();
+				int nextDir = ((Road)map.get(curX,curY)).getDirection();
 				path.add(nextDir);
 				curX = getNextTile(nextDir).getX();
 				curY = getNextTile(nextDir).getY();

@@ -1,3 +1,7 @@
+package src.Map.Road;
+
+import src.Car.*;
+import src.Map.*;
 
 public class TrafficLight extends Tile {
 	private int dir;
@@ -17,5 +21,8 @@ public class TrafficLight extends Tile {
 	}
 	public void toggle() {
 		isRed = !isRed;
+	}
+	public String toString(){
+		return "TL";
 	}
 }
