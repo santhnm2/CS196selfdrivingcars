@@ -1,3 +1,4 @@
+package src.Map;
 
 public class Tile {
 	
