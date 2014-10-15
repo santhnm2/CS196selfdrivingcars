@@ -1,26 +1,20 @@
-package src.Map;
+package Map;
 
 public class Tile {
-	
-	public int posX = 0, posY = 0;
-	
-	public void setposY(int y)
-	{
-		posY = y;
-	}
-	
-	public void setposX(int x)
-	{
-		posX = x;
-	}
+    private final int x, y;
+
+    public Tile(int x, int y) {
+         this.x = x;
+         this.y = y;
+    }
 	
 	public int getX()
 	{
-		return posX;
+		return x;
 	}
 	
 	public int getY()
 	{
-		return posY;
+		return y;
 	}
 }

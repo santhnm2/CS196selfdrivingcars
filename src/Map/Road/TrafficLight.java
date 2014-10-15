@@ -1,28 +1,32 @@
-package src.Map.Road;
+package Map.Road;
 
-import src.Car.*;
-import src.Map.*;
+import Map.*;
 
-public class TrafficLight extends Tile {
+public class TrafficLight extends Road {
 	private int dir;
-	
 	private boolean isRed;
-	public TrafficLight(int x, int y, int direction, boolean isRed)
-	{
-		posX = x;
-		posY = y;
-		dir = direction;
+
+	public TrafficLight(int x, int y, int dir, boolean isRed) {
+        super(x, y, 0, 0); //Temporary Speed and Direction are 0 and 0
+		this.dir = dir;
 		this.isRed = isRed;
 	}
 	
-	public boolean getStatus()
-	{
+	public boolean getStatus() {
 		return isRed;
 	}
+
 	public void toggle() {
 		isRed = !isRed;
 	}
-	public String toString(){
-		return "TL";
+
+    public String toString() {
+		if(hasCar) return "::";
+		else if(isRed) return "RL";
+		else return "GL";
 	}
+
+    public boolean isRed() {
+        return isRed;
+    }
 }

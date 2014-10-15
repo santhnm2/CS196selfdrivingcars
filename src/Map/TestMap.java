@@ -1,6 +1,6 @@
-package src.Map;
-import src.Car.*;
-import src.Map.NonRoad.*;
+package Map;
+import Car.*;
+import Map.NonRoad.*;
 
 
 public class TestMap {
