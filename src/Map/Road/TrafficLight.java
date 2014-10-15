@@ -1,6 +1,5 @@
 package Map.Road;
 
-import Car.*;
 import Map.*;
 
 public class TrafficLight extends Tile {
@@ -24,4 +23,8 @@ public class TrafficLight extends Tile {
     public String toString() {
 		return "TL";
 	}
+
+    public boolean isRed() {
+        return isRed;
+    }
 }
