@@ -2,12 +2,12 @@ package Map.Road;
 
 import Map.*;
 
-public class TrafficLight extends Tile {
+public class TrafficLight extends Road {
 	private int dir;
 	private boolean isRed;
 
 	public TrafficLight(int x, int y, int dir, boolean isRed) {
-        super(x, y);
+        super(x, y, 0, 0); //Temporary Speed and Direction are 0 and 0
 		this.dir = dir;
 		this.isRed = isRed;
 	}
@@ -21,7 +21,9 @@ public class TrafficLight extends Tile {
 	}
 
     public String toString() {
-		return "TL";
+		if(hasCar) return "::";
+		else if(isRed) return "RR";
+		else return "GG";
 	}
 
     public boolean isRed() {

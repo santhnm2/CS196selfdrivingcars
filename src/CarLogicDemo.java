@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Scanner;
 
 import Car.Car;
@@ -16,12 +17,13 @@ public class CarLogicDemo {
         long curTime = System.currentTimeMillis();
         Scanner kboard = new Scanner(System.in);
         init();
-        while(!kboard.nextLine().equals("end")) {
+        boolean running=true;
+        while(!kboard.nextLine().equals("end") && running) {
             step();
         }
     }
     public static void init() {
-        Tile[][] testMap = new Tile[120][120];
+        Tile[][] testMap = new Tile[20][20];
         for(int i = 0; i < testMap.length; i++){
             for(int j = 0; j < testMap[0].length; j++){
                 testMap[i][j] = new House(i,j);
@@ -33,7 +35,11 @@ public class CarLogicDemo {
         map.createVerticalRoad(4, 2, 3, 99, 5);
         map.createHorizontalRoad(7, 2, 5, 99, 5);
         map.createVerticalRoad(16, 2, 4, 99, 5);
-        y[0] = new Car(5, 14, 9, 4, map);
+        
+        //Write different versions of y[0] here as test cases
+        y[0] = new Car(5, 14, 9, 3, map);
+        
+        
         System.out.println(map);
     }
     public static void step() {
@@ -53,7 +59,7 @@ public class CarLogicDemo {
         }
 
         for(Car c:map.getCars()) {
-            c.move();
+            if(c!=null && c.getPath().size()>0) c.move();
         }
 
         System.out.println(map);
