@@ -1,11 +1,11 @@
-package src.Map;
+package Map;
 
 import java.util.Arrays;
-import src.Car.*;
-import src.Map.*;
-import src.Map.NonRoad.*;
-import src.Map.Road.*;
-import src.Constants.*;
+import Car.*;
+import Map.*;
+import Map.NonRoad.*;
+import Map.Road.*;
+import Constants.*;
 
 
 public class Map {

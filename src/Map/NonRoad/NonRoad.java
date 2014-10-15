@@ -1,12 +1,10 @@
-package src.Map.NonRoad;
+package Map.NonRoad;
 
-import src.Map.*;
+import Map.*;
 
-public class NonRoad extends Tile
-{
-	public NonRoad(int x, int y)
-	{
-		posX = x;
-		posY = y;
-	}
+public class NonRoad extends Tile {
+
+    public NonRoad(int x, int y) {
+        super(x, y);
+    }
 }
