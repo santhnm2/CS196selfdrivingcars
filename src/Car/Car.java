@@ -39,7 +39,6 @@ public class Car {
             if(l.isRed() && !(map.get(xPos,yPos) instanceof TrafficLight))
                 return false;
         }
-        System.out.println(nextTile);
         if(nextTile.getX()>=0 && nextTile.getY()>=0)
         {
             Road road = (Road)map.get(xPos, yPos);
@@ -165,7 +164,6 @@ public class Car {
             //Check to see if found destination
             if(Math.abs(destY-curY)<=1 && Math.abs(destX-curX)<=1) finding = false;
         }
-        System.out.println("Final Pos:"+curX+","+curY);
         System.out.println(path);
         return path;
 		/*while(curX!=destX && curY!=destY) {
