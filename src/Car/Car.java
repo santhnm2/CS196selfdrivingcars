@@ -26,24 +26,28 @@ public class Car {
         this.destX = destX;
         this.destY = destY;
         Road road = (Road)map.get(xPos, yPos);
+        road.setCar(true);
         this.map = map;
         path = genPath();
     }
 
     public boolean move() // plug off the first item of the arraylist and execute that
     {
-        Tile nextTile=getNextTile(path.get(0));
+        Tile nextTile=getNextTile(xPos, yPos, path.get(0));
         if(nextTile instanceof TrafficLight) {
             TrafficLight l = (TrafficLight)nextTile;
             if(l.isRed() && !(map.get(xPos,yPos) instanceof TrafficLight))
                 return false;
         }
+        System.out.println(nextTile);
         if(nextTile.getX()>=0 && nextTile.getY()>=0)
         {
             Road road = (Road)map.get(xPos, yPos);
+            road.setCar(false);
             xPos=nextTile.getX();
             yPos=nextTile.getY();
             road = (Road) map.get(xPos, yPos);
+            road.setCar(true);
             path.remove(0);
             return true;
         }
@@ -66,10 +70,8 @@ public class Car {
      * @param Direction to check in
      * @return Tile in the given direction, or null if it doesn't exist.
      */
-    public Tile getNextTile(int dir)
+    public Tile getNextTile(int x, int y, int dir)
     {
-        int x = xPos;
-        int y = yPos;
         switch(dir) {
             case Directions.UP:
                 y--;
@@ -115,51 +117,56 @@ public class Car {
             Road curRoad = (Road)map.get(curX, curY);
             int dir = curRoad.getDirection();
             //Hit a Traffic Light
-            if(getNextTile(dir) instanceof TrafficLight) {
-                //Left Turn
+            if(getNextTile(curX, curY, dir) instanceof TrafficLight) {
+            	//Left Turn
                 if(curX>destX && dir == Directions.UP) {
-                    leftTurn(dir);
+                    path.addAll(leftTurn(dir));
+                    curX-=2; curY-=2;
                 }
                 else if(curX<destX && dir == Directions.DOWN) {
-                    leftTurn(dir);
+                	path.addAll(leftTurn(dir));
+                    curX+=2; curY+=2;
                 }
-                else if(curY>destY && dir == Directions.LEFT) {
-                    leftTurn(dir);
+                else if(curY<destY && dir == Directions.LEFT) {
+                	path.addAll(leftTurn(dir));
+                    curX-=2; curY+=2;
                 }
-                else if(curY<destY && dir == Directions.RIGHT) {
-                    leftTurn(dir);
+                else if(curY>destY && dir == Directions.RIGHT) {
+                	path.addAll(leftTurn(dir));
+                    curX+=2; curY-=2;
                 }
                 //Right Turn
                 else if(curX<destX && dir == Directions.UP) {
-                    rightTurn(dir);
+                    path.addAll(rightTurn(dir));
+                    curX++; curY--;
                 }
                 else if(curX>destX && dir == Directions.DOWN) {
-                    rightTurn(dir);
+                	path.addAll(rightTurn(dir));
+                    curX--; curY++;
                 }
-                else if(curY<destY && dir == Directions.LEFT) {
-                    rightTurn(dir);
+                else if(curY>destY && dir == Directions.LEFT) {
+                	path.addAll(rightTurn(dir));
+                    curX--; curY--;
                 }
-                else if(curY>destY && dir == Directions.RIGHT) {
-                    rightTurn(dir);
+                else if(curY<destY && dir == Directions.RIGHT) {
+                	path.addAll(rightTurn(dir));
+                    curX++; curY++;
                 }
             }
             //Continue on road
-            else if(getNextTile(dir) instanceof Road) {
-                Road roadInDir = (Road)getNextTile(dir);
+            else if(getNextTile(curX, curY, dir) instanceof Road) {
+                Road roadInDir = (Road)getNextTile(curX, curY, dir);
                 if(roadInDir.getDirection()==dir) {
                     path.add(dir);
-                    curX = getNextTile(dir).getX();
-                    curY = getNextTile(dir).getY();
+                    curX = getNextTile(curX, curY, dir).getX();
+                    curY = getNextTile(curX, curY, dir).getY();
                 }
             }
             //Check to see if found destination
-            if(dir == Directions.LEFT || dir == Directions.RIGHT) {
-                if(Math.abs(destY-curY)<=1) finding = false;
-            }
-            else if (dir == Directions.UP || dir == Directions.DOWN){
-                if(Math.abs(destX-curX)<=1) finding = false;
-            }
+            if(Math.abs(destY-curY)<=1 && Math.abs(destX-curX)<=1) finding = false;
         }
+        System.out.println("Final Pos:"+curX+","+curY);
+        System.out.println(path);
         return path;
 		/*while(curX!=destX && curY!=destY) {
 			if(curX<destX && map.get(curX+1,curY) instanceof Road && ((Road)map.get(curX+1,curY)).getDirection()==Directions.RIGHT) {
@@ -205,5 +212,10 @@ public class Car {
         dirs.add(dir);
         dirs.add(rightDir);
         return dirs;
+    }
+    public ArrayList<Integer> getPath(){ return path; }
+    
+    public String toString() {
+    	return (xPos+","+yPos);
     }
 }

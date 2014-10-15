@@ -8,6 +8,7 @@ public class Road extends Tile
 	private final int speedLimit;
 	private final int dir;
 	private Car[] occupancy;
+	protected boolean hasCar=false;
 	
 	public Road(int x, int y, int speed, int direction) {
 		super(x, y);
@@ -22,8 +23,12 @@ public class Road extends Tile
 	public int getDirection() {
 		return dir;
 	}
+	public void setCar(boolean b) {
+		hasCar = b;
+	}
 
 	public String toString() {
+		if(hasCar) return "::";
 		switch(dir){
             case 0: return "UR";
             case 1: return "RR";
