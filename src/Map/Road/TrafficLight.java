@@ -22,8 +22,8 @@ public class TrafficLight extends Road {
 
     public String toString() {
 		if(hasCar) return "::";
-		else if(isRed) return "RR";
-		else return "GG";
+		else if(isRed) return "RL";
+		else return "GL";
 	}
 
     public boolean isRed() {
