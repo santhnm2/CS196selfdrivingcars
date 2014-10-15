@@ -1,38 +1,36 @@
-package src.Map.Road;
+package Map.Road;
 
-import src.Map.*;
-import src.Car.*;
+import Map.*;
+import Car.*;
 
 public class Road extends Tile
 {
-	private int speedLimit;
-	private int dir;
+	private final int speedLimit;
+	private final int dir;
 	private Car[] occupancy;
 	
-	public Road(int x, int y, int speed, int direction)
-	{
-		posX = x;
-		posY = y;
+	public Road(int x, int y, int speed, int direction) {
+		super(x, y);
 		speedLimit = speed;
 		dir = direction;
 	}
 	
-	public int getSpeed()
-	{
+	public int getSpeed() {
 		return speedLimit;
 	}
 	
-	public int getDirection()
-	{
+	public int getDirection() {
 		return dir;
 	}
-	public String toString(){
+
+	public String toString() {
 		switch(dir){
-		case 0: return "UR";
-		case 1: return "RR";
-		case 2: return "DR";
-		case 3: return "LR";
+            case 0: return "UR";
+            case 1: return "RR";
+            case 2: return "DR";
+            case 3: return "LR";
 		}
-		return null;
+
+		throw new RuntimeException("Invalid direction; cannot string-ify");
 	}
 }

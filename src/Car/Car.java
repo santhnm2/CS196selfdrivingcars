@@ -1,11 +1,11 @@
-package src.Car;
+package Car;
 
 
 import java.util.ArrayList;
-import src.Constants.*;
-import src.Map.*;
-import src.Map.Road.*;
-import src.Map.NonRoad.*;
+import Constants.*;
+import Map.*;
+import Map.Road.*;
+import Map.NonRoad.*;
 
 public class Car {
 	private int speed=0;
