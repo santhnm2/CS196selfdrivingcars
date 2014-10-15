@@ -3,6 +3,8 @@ package Car;
 
 import java.util.ArrayList;
 
+import com.sun.javafx.scene.traversal.Direction;
+
 import Constants.Directions;
 import Map.Map;
 import Map.Tile;
@@ -162,7 +164,8 @@ public class Car {
                 }
             }
             //Check to see if found destination
-            if(Math.abs(destY-curY)<=1 && Math.abs(destX-curX)<=1) finding = false;
+            if((dir==Directions.UP||dir==Directions.DOWN)&&Math.abs(destX-curX)<=1&&destY==curY) finding = false;
+            else if((dir==Directions.RIGHT||dir==Directions.LEFT)&&Math.abs(destY-curY)<=1&&destX==curX) finding = false;
         }
         System.out.println(path);
         return path;
