@@ -1,3 +1,6 @@
+package src.Map.NonRoad;
+
+import src.Map.*;
 
 public class NonRoad extends Tile
 {
