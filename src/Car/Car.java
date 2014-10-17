@@ -3,8 +3,6 @@ package Car;
 
 import java.util.ArrayList;
 
-import com.sun.javafx.scene.traversal.Direction;
-
 import Constants.Directions;
 import Map.Map;
 import Map.Tile;
@@ -21,7 +19,7 @@ public class Car {
     Map map; //Grid that the car is in
     private int destX;
     private int destY;
-
+    
     public Car(int x, int y, int destX, int destY, Map map) {
         xPos = x;
         yPos = y;
@@ -32,7 +30,7 @@ public class Car {
         this.map = map;
         path = genPath();
     }
-
+    
     public boolean move() // plug off the first item of the arraylist and execute that
     {
         Tile nextTile=getNextTile(xPos, yPos, path.get(0));
@@ -119,21 +117,21 @@ public class Car {
             int dir = curRoad.getDirection();
             //Hit a Traffic Light
             if(getNextTile(curX, curY, dir) instanceof TrafficLight) {
-            	//Left Turn
+                //Left Turn
                 if(curX>destX && dir == Directions.UP) {
                     path.addAll(leftTurn(dir));
                     curX-=2; curY-=2;
                 }
                 else if(curX<destX && dir == Directions.DOWN) {
-                	path.addAll(leftTurn(dir));
+                    path.addAll(leftTurn(dir));
                     curX+=2; curY+=2;
                 }
                 else if(curY<destY && dir == Directions.LEFT) {
-                	path.addAll(leftTurn(dir));
+                    path.addAll(leftTurn(dir));
                     curX-=2; curY+=2;
                 }
                 else if(curY>destY && dir == Directions.RIGHT) {
-                	path.addAll(leftTurn(dir));
+                    path.addAll(leftTurn(dir));
                     curX+=2; curY-=2;
                 }
                 //Right Turn
@@ -142,15 +140,15 @@ public class Car {
                     curX++; curY--;
                 }
                 else if(curX>destX && dir == Directions.DOWN) {
-                	path.addAll(rightTurn(dir));
+                    path.addAll(rightTurn(dir));
                     curX--; curY++;
                 }
                 else if(curY>destY && dir == Directions.LEFT) {
-                	path.addAll(rightTurn(dir));
+                    path.addAll(rightTurn(dir));
                     curX--; curY--;
                 }
                 else if(curY<destY && dir == Directions.RIGHT) {
-                	path.addAll(rightTurn(dir));
+                    path.addAll(rightTurn(dir));
                     curX++; curY++;
                 }
             }
@@ -169,32 +167,32 @@ public class Car {
         }
         System.out.println(path);
         return path;
-		/*while(curX!=destX && curY!=destY) {
-			if(curX<destX && map.get(curX+1,curY) instanceof Road && ((Road)map.get(curX+1,curY)).getDirection()==Directions.RIGHT) {
-				curX++;
-				path.add(Directions.RIGHT);
-			}
-			else if(curX>destX && map.get(curX-1,curY) instanceof Road && ((Road)map.get(curX-1,curY)).getDirection()==Directions.LEFT) {
-				curX--;
-				path.add(Directions.LEFT);
-			}
-			else if(curY<destY && map.get(curX,curY+1) instanceof Road && ((Road)map.get(curX,curY+1)).getDirection()==Directions.DOWN) {
-				curY++;
-				path.add(Directions.DOWN);
-			}
-			else if(curY>destY && map.get(curX,curY-1) instanceof Road && ((Road)map.get(curX,curY-1)).getDirection()==Directions.UP) {
-				curY--;
-				path.add(Directions.UP);
-			}
-			else {
-				//May throw an error in certain start conditions
-				int nextDir = ((Road)map.get(curX,curY)).getDirection();
-				path.add(nextDir);
-				curX = getNextTile(nextDir).getX();
-				curY = getNextTile(nextDir).getY();
-			}
-		}
-		return path;*/
+        /*while(curX!=destX && curY!=destY) {
+         if(curX<destX && map.get(curX+1,curY) instanceof Road && ((Road)map.get(curX+1,curY)).getDirection()==Directions.RIGHT) {
+         curX++;
+         path.add(Directions.RIGHT);
+         }
+         else if(curX>destX && map.get(curX-1,curY) instanceof Road && ((Road)map.get(curX-1,curY)).getDirection()==Directions.LEFT) {
+         curX--;
+         path.add(Directions.LEFT);
+         }
+         else if(curY<destY && map.get(curX,curY+1) instanceof Road && ((Road)map.get(curX,curY+1)).getDirection()==Directions.DOWN) {
+         curY++;
+         path.add(Directions.DOWN);
+         }
+         else if(curY>destY && map.get(curX,curY-1) instanceof Road && ((Road)map.get(curX,curY-1)).getDirection()==Directions.UP) {
+         curY--;
+         path.add(Directions.UP);
+         }
+         else {
+         //May throw an error in certain start conditions
+         int nextDir = ((Road)map.get(curX,curY)).getDirection();
+         path.add(nextDir);
+         curX = getNextTile(nextDir).getX();
+         curY = getNextTile(nextDir).getY();
+         }
+         }
+         return path;*/
     }
     private ArrayList<Integer> leftTurn(int dir) {
         ArrayList<Integer> dirs = new ArrayList<Integer>();
@@ -217,6 +215,6 @@ public class Car {
     public ArrayList<Integer> getPath(){ return path; }
     
     public String toString() {
-    	return (xPos+","+yPos);
+        return (xPos+","+yPos);
     }
 }
