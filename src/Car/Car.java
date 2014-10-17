@@ -14,6 +14,7 @@ public class Car {
     private int dir=0;
     private int xPos=0;
     private int yPos=0;
+    private int previousDir=0;
     //	final private Tile destination=new Tile();   waiting to be implemented
     ArrayList<Integer> path=new ArrayList<Integer>();
     Map map; //Grid that the car is in
@@ -114,9 +115,21 @@ public class Car {
         boolean finding = true;
         while(finding) {
             Road curRoad = (Road)map.get(curX, curY);
+            
             int dir = curRoad.getDirection();
+            if(curRoad instanceof TrafficLight)
+                dir=previousDir; // giving traffic light a temp direction.
+            
             //Hit a Traffic Light
-            if(getNextTile(curX, curY, dir) instanceof TrafficLight) {
+            if(getNextTile(curX, curY, dir) instanceof Road &&!(getNextTile(curX, curY, dir) instanceof TrafficLight)) {
+                Road roadInDir = (Road)getNextTile(curX, curY, dir);
+                if(roadInDir.getDirection()==dir) {
+                    path.add(dir);
+                    curX = getNextTile(curX, curY, dir).getX();
+                    curY = getNextTile(curX, curY, dir).getY();
+                }
+            }
+            else if(getNextTile(curX, curY, dir) instanceof TrafficLight &&(curX!=destX && curY!=destY) ) {
                 //Left Turn
                 if(curX>destX && dir == Directions.UP) {
                     path.addAll(leftTurn(dir));
@@ -152,21 +165,26 @@ public class Car {
                     curX++; curY++;
                 }
             }
-            //Continue on road
-            else if(getNextTile(curX, curY, dir) instanceof Road) {
-                Road roadInDir = (Road)getNextTile(curX, curY, dir);
-                if(roadInDir.getDirection()==dir) {
-                    path.add(dir);
-                    curX = getNextTile(curX, curY, dir).getX();
-                    curY = getNextTile(curX, curY, dir).getY();
-                }
+            else if(getNextTile(curX, curY, dir) instanceof TrafficLight && (curX==destX || curY==destY))
+            {
+                
+                path.add(dir);
+                curX = getNextTile(curX, curY, dir).getX();
+                curY = getNextTile(curX, curY, dir).getY();
+                
             }
+            
+            //Continue on road
+            
+            previousDir=dir;
             //Check to see if found destination
             if((dir==Directions.UP||dir==Directions.DOWN)&&Math.abs(destX-curX)<=1&&destY==curY) finding = false;
             else if((dir==Directions.RIGHT||dir==Directions.LEFT)&&Math.abs(destY-curY)<=1&&destX==curX) finding = false;
         }
+        
         System.out.println(path);
         return path;
+        
         /*while(curX!=destX && curY!=destY) {
          if(curX<destX && map.get(curX+1,curY) instanceof Road && ((Road)map.get(curX+1,curY)).getDirection()==Directions.RIGHT) {
          curX++;
