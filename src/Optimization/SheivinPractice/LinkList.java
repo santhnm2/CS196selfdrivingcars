@@ -23,6 +23,14 @@ public class LinkList {
 		first = link;
 	}
 	
+	//Calls method insert to insert all different digits of num into the list
+	public void insertNumber(int num) {
+		while(num != 0) {
+			insert(num % 10);
+			num /= 10;
+		}
+	}
+	
 	//Prints list data
 	public void printList() {
 		Link currentLink = first;
@@ -34,10 +42,22 @@ public class LinkList {
 		System.out.println();
 	}
 	
+	//Method to implement the rolling sum feature
+	public void rollingSum() {
+		Link currentLink = first;
+		String number = "";
+		while(currentLink != null) {
+			number = "" + currentLink.digit + number;
+			currentLink = currentLink.nextLink;
+		}
+		System.out.println("Number: " + number);
+	}
+	
+	//Method to print the complete number
 	public void print() {
 		Link currentLink = first;
 		String forward = "";
-		String reverse="";
+		String reverse = "";
 		while(currentLink != null) {
 			reverse = reverse + "" + currentLink.digit;
 			forward = "" + currentLink.digit + forward;
