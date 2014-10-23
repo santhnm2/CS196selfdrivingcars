@@ -81,15 +81,10 @@ public class Driving extends JPanel implements Runnable, ActionListener
 
       }
        
-      //g.dispose();  
-      //g.drawImage(buffImg, 250, 250, null);
-
+      
 
 
    }
 
-   public void actionPerformed(ActionEvent e)
-   {
-
-   }
+   
 }
