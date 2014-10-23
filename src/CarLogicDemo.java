@@ -7,7 +7,6 @@ import Map.Tile;
 import Map.NonRoad.House;
 import Map.Road.TrafficLight;
 
-
 public class CarLogicDemo {
     
     static Map map;
@@ -17,9 +16,10 @@ public class CarLogicDemo {
         long curTime = System.currentTimeMillis();
         Scanner kboard = new Scanner(System.in);
         init();
+        
         boolean running=true;
         while(!kboard.nextLine().equals("end") && running) {
-            step();
+            step();	
         }
     }
     public static void init() {
@@ -36,7 +36,9 @@ public class CarLogicDemo {
         map.createHorizontalRoad(7, 2, 5, 99, 5);
         map.createVerticalRoad(16, 2, 4, 99, 5);
         System.out.println(map);
+        JPanelRunner a=new JPanelRunner();
         Scanner scan=new Scanner(System.in);
+        
         System.out.println("Please set your statring point in the format x,y");
         String start=scan.nextLine();
         int startx= Integer.parseInt(start.substring(0,start.indexOf(",")));
@@ -47,8 +49,6 @@ public class CarLogicDemo {
         int desty= Integer.parseInt(dest.substring(dest.indexOf(",")+1));
         //Write different versions of y[0] here as test cases
         y[0] = new Car(startx,starty , destx, desty, map);
-        
-        
         System.out.println(map);
     }
     public static void step() {
