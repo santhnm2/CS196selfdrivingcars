@@ -1,19 +1,17 @@
 package Map.Road;
 
-import Map.*;
+import Constants.Directions;
 
 public class TrafficLight extends Road {
-	private int dir;
 	private boolean isRed;
 
-	public TrafficLight(int x, int y, int dir, boolean isRed) {
-        super(x, y, 0, 0); //Temporary Speed and Direction are 0 and 0
-		this.dir = dir;
+	public TrafficLight(int x, int y, boolean isRed) {
+        super(x, y, 0, Directions.NO_DIR, 0); //Temporary Speed and Direction are 0 and 0
 		this.isRed = isRed;
 	}
 	
-	public boolean getStatus() {
-		return isRed;
+	public void setRed(boolean b){
+		isRed = b;
 	}
 
 	public void toggle() {

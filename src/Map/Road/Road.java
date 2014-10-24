@@ -6,14 +6,17 @@ import Car.*;
 public class Road extends Tile
 {
 	private final int speedLimit;
-	private final int dir;
-	private Car[] occupancy;
+	protected final int dir;
+	private final int MAX;
+	private Car[] occupants;
 	protected boolean hasCar=false;
 	
-	public Road(int x, int y, int speed, int direction) {
+	public Road(int x, int y, int speed, int direction, int lanes) {
 		super(x, y);
 		speedLimit = speed;
 		dir = direction;
+		MAX = lanes;
+		occupants = new Car[MAX];
 	}
 	
 	public int getSpeed() {
@@ -25,6 +28,22 @@ public class Road extends Tile
 	}
 	public void setCar(boolean b) {
 		hasCar = b;
+	}
+	
+	public void carIncrement(Car c){
+		for(int i = 0; i<occupants.length; i++)
+		{
+			if(occupants[i] == null)
+				occupants[i] = c;
+		}
+	}
+	
+	public void carDecrement(Car c){
+		for(int i = 0; i<occupants.length; i++)
+		{
+			if(occupants[i].equals(c))
+				occupants[i] = null;
+		}
 	}
 
 	public String toString() {
