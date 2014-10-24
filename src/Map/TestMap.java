@@ -21,10 +21,10 @@ public class TestMap {
 		//hardcoded threeway intersection
 		System.out.println("Road initialized");
 		
-		x.createHorizontalRoad(3, 2, 0, 99, 5);
-		x.createVerticalRoad(4, 2, 3, 99, 5);
-		x.createHorizontalRoad(7, 2, 5, 99, 5);
-		x.createVerticalRoad(16, 2, 4, 99, 5);
+		x.createHorizontalRoad(3, 2, 0, 99, 5, 2);
+		x.createVerticalRoad(4, 2, 3, 99, 5, 2);
+		x.createHorizontalRoad(7, 2, 5, 99, 5, 2);
+		x.createVerticalRoad(16, 2, 4, 99, 5, 2);
 		System.out.print(x.toString());
 		System.out.println("Road with roads created");
 		
