@@ -46,38 +46,38 @@ public class Map {
         return total.toString();
     }
 
-    public void createVerticalRoad(int row, int width, int start, int end, int speed){
+    public void createVerticalRoad(int row, int width, int start, int end, int speed, int lanes){
         for(int i = 0; i < width; i++){
             for(int j = start; j <= end; j++){
                 if(j > 0 && j < grid[1].length - 1){
                     if(grid[row + i][j] instanceof Road || grid[row + i][j] instanceof TrafficLight){
                         if(grid[row + i][j + 1] instanceof Road) // look ahead to the right first, then check behind.
-                            grid[row + i][j + 1] = new TrafficLight(row + i, j + 1, (i == 0 ? Directions.DOWN : Directions.UP), false);
+                            grid[row + i][j + 1] = new TrafficLight(row + i, j + 1, false);
                         else if(grid[row + i][j - 1] instanceof Road) // if ahead is not a road, check behind to make sure you haven't started on a road
-                            grid[row + i][j - 1] = new TrafficLight(row+i, j-1, (i==0 ? Directions.DOWN : Directions.UP), false);
+                            grid[row + i][j - 1] = new TrafficLight(row+i, j-1,false);
                         // should turn above block of if/else into a method. Fosho. Seriously this code is a pain.
-                        grid[row + i][j] = new TrafficLight(row+i, j, (i==0 ? Directions.DOWN : Directions.UP), false);
+                        grid[row + i][j] = new TrafficLight(row+i, j, false);
                     } else
-                        grid[row + i][j] = new Road(row+i, j, speed, (i == 0 ? Directions.DOWN : Directions.UP));
+                        grid[row + i][j] = new Road(row+i, j, speed, (i == 0 ? Directions.DOWN : Directions.UP), lanes);
                 }
             }
         }
     }
 
-    public void createHorizontalRoad(int row, int width, int start, int end, int speed){
+    public void createHorizontalRoad(int row, int width, int start, int end, int speed, int lanes){
         for(int i = 0; i < width; i++){
             for(int j = start; j <= end; j++){
                 if(j > 0 && j < grid.length - 1){
 
                     if(grid[j][row + i] instanceof Road || grid[j][row + i] instanceof TrafficLight){
                         if(grid[j + 1][row + i] instanceof Road)
-                            grid[j + 1][row + i] = new TrafficLight(j+1, row+i, (i==1 ? Directions.RIGHT : Directions.LEFT), false);
+                            grid[j + 1][row + i] = new TrafficLight(j+1, row+i, false);
                         else if(grid[j - 1][row + i] instanceof Road)
-                            grid[j - 1][row + i] = new TrafficLight(j-1, row+i, (i==1 ? Directions.RIGHT : Directions.LEFT), false);
+                            grid[j - 1][row + i] = new TrafficLight(j-1, row+i, false);
                         //same as above; should turn above block into method.
-                        grid[j][row + i] = new TrafficLight(j, row+i, (i==1 ? Directions.RIGHT : Directions.LEFT), false);
+                        grid[j][row + i] = new TrafficLight(j, row+i, false);
                     } else
-                        grid[j][row + i] = new Road(j, row + i, speed, (i == 1 ? Directions.RIGHT : Directions.LEFT));
+                        grid[j][row + i] = new Road(j, row + i, speed, (i == 1 ? Directions.RIGHT : Directions.LEFT), lanes);
                 }
             }
         }
