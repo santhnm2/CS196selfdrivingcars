@@ -1,11 +1,9 @@
 package Map;
 
-import java.util.Arrays;
-import Car.*;
-import Map.*;
-import Map.NonRoad.*;
-import Map.Road.*;
-import Constants.*;
+import Car.Car;
+import Constants.Directions;
+import Map.Road.Road;
+import Map.Road.TrafficLight;
 
 
 public class Map {
