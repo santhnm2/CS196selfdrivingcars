@@ -19,14 +19,18 @@ public class PathGenerator {
       position[1] = car.getYPos();
       int distX =  car.getDestX() - position[0];
       int distY =  car.getDestY() - position[1];
-      boolean cont = true;
       int dir = car.getDir();
+      //checks if car is moving horizontally or vertically to start
+      //then moves the car on that axis towards the destination
       if (dir == Directions.LEFT || dir == Directions.RIGHT)
       {
+    	 
          PathGenerator.travelHorizontally(path, car, position);
          dir = path.get(path.size()-1);
+         //check if finished
          if (finalXDest(position[0], car.getDestX()) && finalYDest(position[1], car.getDestY()))
             return path;
+         //determine if the destination is to the left or right and turns that way
          if ((distY>0 && dir == Directions.LEFT) || (distY < 0 && dir == Directions.RIGHT))
              turnLeft(path, position);
          else if ((distY>0 && dir == Directions.LEFT) || (distY < 0 && dir == Directions.RIGHT))
@@ -50,24 +54,32 @@ public class PathGenerator {
       
       PathGenerator.travelVertically(path, car, position);
          return path;
+         
+      //horiz, vertical, horiz or vertical, horiz, vertical is the maximum number of moves needed
    }
    
    public static void travelHorizontally(ArrayList<Integer> path, Car car, int[] position)
    {
       int dir = path.get(path.size()-1);
       int distX =  car.getDestX() - position[0];
+      //used to differentiate between moving in negative X or positive X direction
       short inverter = -1;
       if (dir == Directions.RIGHT)
          inverter = 1;
       boolean cont = true;
-      for (int i = 0; i < distX;i++)
+      //moves the car horizontally until the last turn before destination X value
+      for (int i = 0; cont;i++)
       {
+    	 //checks whether a light is the last one before destination X
          if (car.getNextTile(position[0], position[1], dir) instanceof TrafficLight)
          {
             cont = false;
             for (int j = 0; i+j> Math.abs(distX) && !cont ; j++)
             {
-               if ((car.getNextTile(position[0]+inverter*j, position[1], dir) instanceof TrafficLight) || (finalXDest(position[0] + inverter*j, car.getDestX()) && finalYDest(position[1], car.getDestY())))
+               //checks each square after the turn to see if it's the destination or
+               //a turn preceding the destination
+               if ((car.getNextTile(position[0]+inverter*j, position[1], dir) instanceof TrafficLight) ||
+                     (finalXDest(position[0] + inverter*j, car.getDestX()) && finalYDest(position[1], car.getDestY())))
                   cont = true;
             }
          }
@@ -80,6 +92,7 @@ public class PathGenerator {
       
    }
  
+   //same idea as the horizontal class just modifying the y direction
    public static void travelVertically(ArrayList<Integer> path, Car car, int[] position)
    {
       int dir = path.get(path.size()-1);
@@ -88,7 +101,7 @@ public class PathGenerator {
       if (dir == Directions.UP)
          inverter = 1;
       boolean cont = true;
-      for (int i = 0; i < distY;i++)
+      for (int i = 0; cont;i++)
       {
          if (car.getNextTile(position[0], position[1], dir) instanceof TrafficLight)
          {
@@ -107,12 +120,14 @@ public class PathGenerator {
       }
       
    }
+   //checks if the current x is the destination or is on the other side of the street (or on the side of the road...)
    public static Boolean finalXDest(int xPos, int destX)
    {
       if (xPos == destX || xPos + 1 == destX || xPos - 1 == destX)
          return true;
       return false;
    }
+   //checks if the current y is the destination or is on the other side of the street (or on the side of the road...)
    public static Boolean finalYDest(int yPos, int destY)
    {
       if (yPos == destY || yPos + 1 == destY || yPos - 1 == destY)
