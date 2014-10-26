@@ -7,7 +7,7 @@ public class Road extends Tile
 {
 	private final int speedLimit;
 	protected final int dir;
-	private final int MAX;
+	private int max;
 	private Car[] occupants;
 	protected boolean hasCar=false;
 	
@@ -15,8 +15,8 @@ public class Road extends Tile
 		super(x, y);
 		speedLimit = speed;
 		dir = direction;
-		MAX = lanes;
-		occupants = new Car[MAX];
+		max = lanes;
+		occupants = new Car[max];
 	}
 	
 	public int getSpeed() {
@@ -60,6 +60,16 @@ public class Road extends Tile
 			}
 		}
 		return false;
+	}
+	
+	public int getRemaining(){
+		int empty = 0;
+		for(int i = 0; i<occupants.length; i++)
+		{
+			if(occupants[i] == null)
+				empty++;
+		}
+		return empty;
 	}
 
 	public String toString() {
