@@ -30,20 +30,36 @@ public class Road extends Tile
 		hasCar = b;
 	}
 	
-	public void carIncrement(Car c){
+	public boolean carIncrement(Car c){
 		for(int i = 0; i<occupants.length; i++)
 		{
-			if(occupants[i] == null)
+			if(occupants[i] == null) {
 				occupants[i] = c;
+				hasCar = true;
+				return true;
+			}
 		}
+		return false;
 	}
 	
-	public void carDecrement(Car c){
+	public boolean carDecrement(Car c){
 		for(int i = 0; i<occupants.length; i++)
 		{
-			if(occupants[i].equals(c))
+			if(occupants[i].equals(c)) {
 				occupants[i] = null;
+				for(Car car:occupants) {
+					if(!car.equals(null)) {
+						hasCar = true;
+						break;
+					}
+					else  {
+						hasCar = false;
+					}
+				}
+				return true;
+			}
 		}
+		return false;
 	}
 
 	public String toString() {
