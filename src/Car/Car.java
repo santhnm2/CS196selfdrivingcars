@@ -28,6 +28,7 @@ public class Car {
         this.destY = destY;
         Road road = (Road)map.get(xPos, yPos);
         road.setCar(true);
+        this.dir = road.getDirection();
         this.map = map;
         path = genPath();
     }
