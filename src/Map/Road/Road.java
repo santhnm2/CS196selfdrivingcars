@@ -7,7 +7,7 @@ public class Road extends Tile
 {
 	private final int speedLimit;
 	protected final int dir;
-	private final int MAX;
+	private int max;
 	private Car[] occupants;
 	protected boolean hasCar=false;
 	
@@ -15,8 +15,8 @@ public class Road extends Tile
 		super(x, y);
 		speedLimit = speed;
 		dir = direction;
-		MAX = lanes;
-		occupants = new Car[MAX];
+		max = lanes;
+		occupants = new Car[max];
 	}
 	
 	public int getSpeed() {
@@ -30,20 +30,46 @@ public class Road extends Tile
 		hasCar = b;
 	}
 	
-	public void carIncrement(Car c){
+	public boolean carIncrement(Car c){
+		for(int i = 0; i<occupants.length; i++)
+		{
+			if(occupants[i] == null) {
+				occupants[i] = c;
+				hasCar = true;
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean carDecrement(Car c){
+		for(int i = 0; i<occupants.length; i++)
+		{
+			if(occupants[i].equals(c)) {
+				occupants[i] = null;
+				for(Car car:occupants) {
+					if(!car.equals(null)) {
+						hasCar = true;
+						break;
+					}
+					else  {
+						hasCar = false;
+					}
+				}
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public int getRemaining(){
+		int empty = 0;
 		for(int i = 0; i<occupants.length; i++)
 		{
 			if(occupants[i] == null)
-				occupants[i] = c;
+				empty++;
 		}
-	}
-	
-	public void carDecrement(Car c){
-		for(int i = 0; i<occupants.length; i++)
-		{
-			if(occupants[i].equals(c))
-				occupants[i] = null;
-		}
+		return empty;
 	}
 
 	public String toString() {

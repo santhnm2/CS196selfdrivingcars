@@ -9,15 +9,38 @@ import Car.Car;
  */
 
 public class RandomMapGenerator implements MapGenerator {
-    private final Tile[][] grid;
+    private static final double DENSITY = 0.75;
 
-    public RandomMapGenerator(Tile[][] grid) {
-        this.grid = grid;
+    private final int length;
+
+    public RandomMapGenerator(int length) {
+        this.length = length;
     }
 
     @Override
     public Map generateMap() {
-        throw new RuntimeException("Todo.");
+        Tile[][] grid = new Tile[length][length];
+
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+                grid[i][j] = new House(i, j);
+            }
+        }
+
+        Map m = new Map(grid, new Car[0]);
+
+        for(int i = 0; i < length; i += 4){
+            if(Math.random() < DENSITY){
+                m.createHorizontalRoad(i, 2, (int) (Math.random() * length) / 2 * 2, length - 1, 5, 2);
+            }
+        }
+
+        for(int j = 0; j < length; j += 4){
+            if(Math.random() < DENSITY)
+                m.createVerticalRoad(j, 2, (int) (Math.random() * length) / 2 * 2, length - 1, 5, 2);
+        }
+
+        return m;
     }
 
 
@@ -47,6 +70,8 @@ public class RandomMapGenerator implements MapGenerator {
     }
 
     public static void main(String[] args) {
-        // todo
+        MapGenerator mapGen = new RandomMapGenerator(30);
+
+        System.out.println(mapGen.generateMap());
     }
 }
