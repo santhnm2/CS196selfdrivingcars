@@ -71,7 +71,9 @@ public class Road extends Tile
 		}
 		return empty;
 	}
-
+	public int getNumOccupants() {
+		return occupants.length;
+	}
 	public String toString() {
 		if(hasCar) return "::";
 		switch(dir){
