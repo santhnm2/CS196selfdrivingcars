@@ -28,8 +28,25 @@ public class Car {
         this.destY = destY;
         Road road = (Road)map.get(xPos, yPos);
         road.setCar(true);
+        this.dir = road.getDirection();
         this.map = map;
         path = genPath();
+    }
+    public int getXPos()
+    {
+       return xPos;
+    }
+    public int getYPos()
+    {
+       return yPos;
+    }
+    public int getDestX()
+    {
+       return destX;
+    }
+    public int getDestY()
+    {
+       return destY;
     }
     
     public boolean move() // plug off the first item of the arraylist and execute that

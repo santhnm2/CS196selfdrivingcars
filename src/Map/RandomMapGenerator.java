@@ -31,13 +31,13 @@ public class RandomMapGenerator implements MapGenerator {
 
         for(int i = 0; i < length; i += 4){
             if(Math.random() < DENSITY){
-                m.createHorizontalRoad(i, 2, (int) (Math.random() * length) / 2 * 2, length - 1, 5);
+                m.createHorizontalRoad(i, 2, (int) (Math.random() * length) / 2 * 2, length - 1, 5, 2);
             }
         }
 
         for(int j = 0; j < length; j += 4){
             if(Math.random() < DENSITY)
-                m.createVerticalRoad(j, 2, (int) (Math.random() * length) / 2 * 2, length - 1, 5);
+                m.createVerticalRoad(j, 2, (int) (Math.random() * length) / 2 * 2, length - 1, 5, 2);
         }
 
         return m;
