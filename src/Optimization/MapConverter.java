@@ -19,7 +19,7 @@ public class MapConverter {
       for(int i = 0; i < graph.length; i++) {
     	  temp[i] = graph[i];
       }
-      temp[graph.length] = new graphNode(x, y);
+      temp[graph.length] = new graphNode(x, y,graph.length);
       // search up until you get to a node and then set this node's up and that node's
       // down.
       for(int i = y; i >= 0; i--) {
