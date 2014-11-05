@@ -54,14 +54,14 @@ public class PriorityQueue {
 	      }
 	   }
 	      //method stops when item is on the end of the list or finds its spot.
-	      public void add(int value, int index, int parent) {
+	      public void add(int weight, int index, int parent_index) {
 	   
 	   //adds a number to correct place in list.
 	      length++;
 	      resize();
-	      heap[length][0] = value;
-	      heap[length][1] = index;
-	      heap[length][2] = parent;
+	      heap[length][0] = weight;			//heap[i][0] stores the weight of the edge in the graph
+	      heap[length][1] = index;			//heap[i][1] stores the index of the node in the heap
+	      heap[length][2] = parent_index;	//heap[i][2] stores the index of the node's parent in the heap
 	      int runner = length;
 	      
 	      while (heap[runner][0] < heap[parent(runner)][0]) {
