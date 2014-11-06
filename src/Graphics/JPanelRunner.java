@@ -1,10 +1,17 @@
 package Graphics;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import Map.*;
 import Map.NonRoad.House;
+import Map.NonRoad.NonRoad;
+import Map.Road.Road;
 import Map.Road.TrafficLight;
 
 import java.util.Arrays;
@@ -12,10 +19,11 @@ import java.util.Scanner;
 
 import Car.Car;
 
-public class JPanelRunner {
+public class JPanelRunner extends JFrame {
 	static Map map;
     static int iterations = 0;
     private static Tile[][] testMap = new Tile[20][20];    
+    static JPanel gui = new JPanel(new BorderLayout());
     public static void main(String[] args) {
         Runnable r = new Runnable() {
 
@@ -23,7 +31,7 @@ public class JPanelRunner {
             public void run() {
                 
             	// the GUI as seen by the user (without frame)
-                JPanel gui = new JPanel(new BorderLayout());
+
                 gui.setBorder(new EmptyBorder(2, 3, 2, 3));
                 gui.setBackground(Color.WHITE.darker().darker());
                 init();
@@ -36,6 +44,13 @@ public class JPanelRunner {
                 //for (int ii=0; ii<w*h; ii++) {
                 	String test=a.next();
                 	Color c=null;
+                	BufferedImage img;
+                	try {                
+                    	img = ImageIO.read(new File("C:\\Users\\Shim\\workspace\\CS196SelfDrivingCars\\src\\Graphics\\car.png"));
+                     } catch (IOException ex) {
+                          // handle exception...
+                     }
+/*
                 	if(test.equals(".."))
                 		 c= Color.WHITE ;
                 	if(test.equals("GL"))
@@ -48,7 +63,8 @@ public class JPanelRunner {
                		 c= Color.BLACK ;
                 	if(test.equals("::"))
                		 c= Color.PINK ;
-                    gui.add(new JLabel(new ColorIcon(c, 16)));
+  */				paint(map);
+//                	gui.add(new JLabel(new ColorIcon(c, 16)));
                 }
 
                 JFrame f = new JFrame("Demo");
@@ -70,6 +86,23 @@ public class JPanelRunner {
         // Swing GUIs should be created and updated on the EDT
         // http://docs.oracle.com/javase/tutorial/uiswing/concurrency/initial.html
         SwingUtilities.invokeLater(r);
+    }
+    public static void paint(Map map){
+    	   for (int i = 0; i < map.getLengthX(); i++) {
+               for (int j = 0; j < map.getLengthY(); j++) {
+               Color c=null;
+            	if(map.get(i, j) instanceof NonRoad)
+            		 c= Color.WHITE ;
+            	if(map.get(i, j) instanceof TrafficLight)
+           		 c= Color.GREEN ;
+            	if(map.get(i, j) instanceof Road)
+           		 c= Color.BLACK ;
+   /*         	if(map.get(i, j) instanceof Car)
+           		 c= Color.PINK ;
+                */gui.add(new JLabel(new ColorIcon(c, 16)));
+                System.out.println(i+" "+j);
+               }
+            }
     }
     public static void step() {
         //Print out state
