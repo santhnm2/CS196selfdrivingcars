@@ -26,6 +26,18 @@ public class PriorityQueue {
 	   public int getRight(int index) {
 	      return (2 * index) + 1;
 	   }
+	   public boolean foundItem(int index, int weight, int parentIndex){
+	      for (int i = 0; i < length; i++)
+	         if (heap[i][1] == index){
+	            if (heap[i][0] <= weight){
+	               heap[i][0] = weight;
+	               heap[i][2] = parentIndex;
+	            }
+	            return true;
+	         }
+	      
+	      return false;
+	   }
 
 	   public void swap(int index1, int index2) {
 	      int[] temp = new int[3];
@@ -54,19 +66,20 @@ public class PriorityQueue {
 	      }
 	   }
 	      //method stops when item is on the end of the list or finds its spot.
-	      public void add(int weight, int index, int parent_index) {
-	   
-	   //adds a number to correct place in list.
-	      length++;
-	      resize();
-	      heap[length][0] = weight;			//heap[i][0] stores the weight of the edge in the graph
-	      heap[length][1] = index;			//heap[i][1] stores the index of the node in the heap
-	      heap[length][2] = parent_index;	//heap[i][2] stores the index of the node's parent in the heap
-	      int runner = length;
+	      public void add(int weight, int index, int parentIndex) {
+	         //adds a number to correct place in list.
+	         if (foundItem(index, weight, parentIndex))
+	            return;
+	         length++;
+	         resize();
+	         heap[length][0] = weight;			//heap[i][0] stores the weight of the edge in the graph
+	         heap[length][1] = index;			//heap[i][1] stores the index of the node in the heap
+	         heap[length][2] = parentIndex;	//heap[i][2] stores the index of the node's parent in the heap
+	         int runner = length;
 	      
-	      while (heap[runner][0] < heap[parent(runner)][0]) {
-	         swap(runner, parent(runner));
-	         runner = parent(runner);
+	         while (heap[runner][0] < heap[parent(runner)][0]) {
+	            swap(runner, parent(runner));
+	            runner = parent(runner);
 	      }
 	   }
 	   //checks every piece of array and places it in the correct place.
