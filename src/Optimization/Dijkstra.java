@@ -2,6 +2,7 @@ package Optimization;
 
 import Car.Car;
 import Map.Map;
+import Constants.Directions;
 import java.util.ArrayList;
 public class Dijkstra {
    //take in a converted map, take in the coordinates of a starting point and a destination, and add those two nodes to the converted map.
@@ -68,6 +69,34 @@ public class Dijkstra {
       if (start == end || start + 1 == end || start - 1 == end)
          return true;
       return false;
+   }
+   
+   //function to add one direction to the list at a time
+   public static void moveInDirection(graphNode a, graphNode b, ArrayList<Integer> path) {
+	   if(a.getX() == b.getX()) {
+		   if(a.getY() > b.getY()) {
+			   for(int i = 0; i < a.getY() - b.getY(); i++){
+				   path.add(Directions.UP);
+			   }
+		   }
+		   else {
+			   for(int i = 0; i < b.getY() - a.getY(); i++) {
+				   path.add(Directions.DOWN);
+			   }
+		   }
+	   }
+	   else {
+		   if(a.getX() > b.getX()) {
+			   for(int i = 0; i < a.getX() - b.getX(); i++) {
+				   path.add(Directions.LEFT);
+			   }
+		   }
+		   else {
+			   for(int i = 0; i < b.getX() - a.getX(); i++) {
+				   path.add(Directions.RIGHT);
+			   }
+		   }
+	   }
    }
 
 }
