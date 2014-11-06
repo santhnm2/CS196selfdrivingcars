@@ -1,6 +1,7 @@
 package Optimization;
 
 import Car.Car;
+import Constants.Directions;
 import Map.Map;
 import java.util.ArrayList;
 public class Dijkstra {
@@ -21,6 +22,29 @@ public class Dijkstra {
 		
 		return path;
 		
+	}
+	
+	public void relax(int[] current, graphNode[] graph, PriorityQueue pq) {
+		int pos = current[1];
+		int weight = current[0];
+		
+		//Adding all the new weights for all four directions to the priority queue
+		if(graph[pos].getUp() != null) {
+			weight += graph[pos].getY() - graph[pos].getUp().getY();
+			pq.add(weight, graph[pos].getUp().getIndex(), pos);
+		}
+		if(graph[pos].getRight() != null) {
+			weight += graph[pos].getRight().getX() - graph[pos].getX();
+			pq.add(weight, graph[pos].getRight().getIndex(), pos);
+		}
+		if(graph[pos].getDown() != null) {
+			weight += graph[pos].getDown().getY() - graph[pos].getY();
+			pq.add(weight, graph[pos].getDown().getIndex(), pos);
+		}
+		if(graph[pos].getLeft() != null) {
+			weight += graph[pos].getX() - graph[pos].getLeft().getX();
+			pq.add(weight, graph[pos].getLeft().getIndex(), pos);
+		}
 	}
 	
 }
