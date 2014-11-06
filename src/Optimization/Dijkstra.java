@@ -28,11 +28,21 @@ public class Dijkstra {
       }     
       
       //repeat until you pop the destination
-      
+      toArrayList(path, completed, completed[0].length, graph);
       return path;
-      
    }
 
+   public static void toArrayList(ArrayList<Integer> path, int[][] arr, int index, graphNode[] graph){
+      //converts an array of connected items to an an ArrayList.      
+      if (arr[1][index] != -1)
+         toArrayList(path, arr, arr[1][index], graph);
+      else
+         return;
+     moveInDirection(graph[arr[1][index]], graph[arr[0][index]], path);
+     
+         
+      }
+   
 	public static void relax(int[] current, graphNode[] graph, PriorityQueue pq) {
 		int pos = current[1];
 		int weight = current[0];
