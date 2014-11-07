@@ -2,9 +2,14 @@ package Optimization;
 
 import Map.*;
 import Map.Road.*;
-
+import Map.NonRoad.*;
+/*PROBLEMS:
+*currently the MapConverter stores each intersection as four nodes. It would be better if it was one node.
+*destination is stored as a node on only one side of the road. the other side isn't recognized as the destination.
+*
+*/
 public class MapConverter {
-   // converts a given map to a graph w/ vertexes at traffic lights.
+   // converts a given map to a graph w/ vertices at traffic lights.
    public static graphNode[] toGraph(Map map) {
       graphNode[] graph = new graphNode[0];
       for (int x = 0; x < map.getLengthX(); x++)
@@ -26,6 +31,9 @@ public class MapConverter {
     	  if(nodeIndex(graph, x, i) != -1) {
     		  temp[graph.length].setUp(temp[nodeIndex(graph, x, i)]);
     		  temp[nodeIndex(graph, x, i)].setDown(temp[graph.length]);
+           //forces the for loop to end because there is a break in the road.
+           if (map.get(x, i) instanceof NonRoad)
+              i = 0;
     	  }
       }
       // search left until you get to a node and then set this node's left and that
@@ -34,24 +42,31 @@ public class MapConverter {
     	  if(nodeIndex(graph, i, y) != -1) {
     		  temp[graph.length].setLeft(temp[nodeIndex(graph, i, y)]);
     		  temp[nodeIndex(graph, i, y)].setRight(temp[graph.length]);
+           //forces the for loop to end because there is a break in the road.
+           if (map.get(i, x) instanceof NonRoad)
+              i = 0;
     	  }
       }
       // search down until you get to a node and then set this node's down and that
-      // node's up. This is done because it will help when we add the source and the
-      // destination as nodes.
+      // node's up. This is done only when we add a source or a destination.
       for(int i = y; i < map.getLengthY(); i++) {
     	  if(nodeIndex(graph, x, i) != -1) {
     		  temp[graph.length].setDown(temp[nodeIndex(graph, x, i)]);
     		  temp[nodeIndex(graph, x, i)].setUp(temp[graph.length]);
+           //forces the for loop to end because there is a break in the road.
+           if (map.get(x, i) instanceof NonRoad)
+              i = map.getLengthY();
     	  }
       }
       // search right until you get to a node and then set this node's right and that
-      // node's left. This is done because it will help when we add the source and the
-      // destination as nodes.
+      // node's left.  This is done only when we add a source or a destination.
       for(int i = x; i < map.getLengthX(); i++) {
     	  if(nodeIndex(graph, i, y) != -1) {
     		  temp[graph.length].setRight(temp[nodeIndex(graph, i, y)]);
     		  temp[nodeIndex(graph, i, y)].setLeft(temp[graph.length]);
+    		//forces the for loop to end because there is a break in the road.
+           if (map.get(i, y) instanceof NonRoad)
+              i = map.getLengthX();
     	  }
       }
    }
