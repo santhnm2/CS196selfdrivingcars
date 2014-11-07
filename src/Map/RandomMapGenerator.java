@@ -29,7 +29,7 @@ public class RandomMapGenerator implements MapGenerator {
 
         Map m = new Map(grid, new Car[0]);
 
-        for (int t = 0; t < 3; t++) {g
+        for (int t = 0; t < 3; t++) {
             for (int i = 0; i < length; i += 4){
                 if(Math.random() < .85){
                     int start = (int) (Math.random() * length / 2) * 2;
