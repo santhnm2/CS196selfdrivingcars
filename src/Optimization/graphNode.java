@@ -7,8 +7,9 @@ public class graphNode {
    private graphNode down;
    private int x;
    private int y;
+   private int index;
 
-   public graphNode(int x, int y) {
+   public graphNode(int x, int y, int index) {
       this.x = x;
       this.y = y;
    }
@@ -20,6 +21,9 @@ public class graphNode {
    public int getY() {
       return this.y;
    }
+   public int getIndex() {
+	      return this.index;
+	   }
 
    public void setLeft(graphNode graph) {
       this.left = graph;
