@@ -8,6 +8,7 @@ import Map.Map;
 import Map.Tile;
 import Map.Road.Road;
 import Map.Road.TrafficLight;
+import Optimization.PathGenerator;
 
 public class Car {
     private int speed=0;
@@ -27,7 +28,7 @@ public class Car {
         this.destX = destX;
         this.destY = destY;
         Road road = (Road)map.get(xPos, yPos);
-        road.setCar(true);
+        road.carIncrement(this);
         this.dir = road.getDirection();
         this.map = map;
         path = genPath();
@@ -52,26 +53,25 @@ public class Car {
     public boolean move() // plug off the first item of the arraylist and execute that
     {
         Tile nextTile=getNextTile(xPos, yPos, path.get(0));
-        if(nextTile instanceof TrafficLight) {
+        if(nextTile instanceof TrafficLight) { //No red traffic lights
             TrafficLight l = (TrafficLight)nextTile;
-            if(l.isRed() && !(map.get(xPos,yPos) instanceof TrafficLight))
+            if(l.isRed() && !(map.get(xPos,yPos) instanceof TrafficLight)) {
                 return false;
+            }
         }
-        if(nextTile.getX()>=0 && nextTile.getY()>=0)
-        {
-            Road road = (Road)map.get(xPos, yPos);
-            road.setCar(false);
-            xPos=nextTile.getX();
-            yPos=nextTile.getY();
-            road = (Road) map.get(xPos, yPos);
-            road.setCar(true);
-            path.remove(0);
-            return true;
+        if(nextTile.getX()>=0 && nextTile.getY()>=0 && nextTile.getX()<map.getLengthX() && nextTile.getY()<map.getLengthY()) {
+        	if(((Road)(map.get(nextTile.getX(), nextTile.getY()))).getRemaining()>0) {
+	            Road road = (Road)map.get(xPos, yPos);
+	            road.carDecrement(this);
+	            xPos=nextTile.getX();
+	            yPos=nextTile.getY();
+	            road = (Road) map.get(xPos, yPos);
+	            road.carIncrement(this);
+	            path.remove(0);
+	            return true;
+        	}
         }
-        else
-        {
-            return false;
-        }
+        return false;
     }
     public boolean turn()
     {

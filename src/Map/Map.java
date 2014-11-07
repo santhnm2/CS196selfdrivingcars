@@ -87,4 +87,31 @@ public class Map {
         return 0 <= y && y < grid.length &&
                0 <= x && x < grid[y].length;
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    //Written by Car Logic
+    public Tile getInDir(Tile t, int dir) {
+    	int x = t.getX(); int y = t.getY();
+    	switch(dir) {
+    	case 0:
+    		return get(x,y-1);
+    	case 1:
+    		return get(x+1,y);
+    	case 2:
+    		return get(x,y+1);
+    	case 3:
+    		return get(x-1,y);
+    	default:
+    		return t;
+    	}
+    }
 }

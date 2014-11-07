@@ -1,7 +1,7 @@
 package Map;
 
 public class Tile {
-    private final int x, y;
+    protected final int x, y;
 
     public Tile(int x, int y) {
          this.x = x;
