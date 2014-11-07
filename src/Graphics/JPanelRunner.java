@@ -20,17 +20,17 @@ import java.util.Scanner;
 import Car.Car;
 
 public class JPanelRunner extends JFrame {
-	static Map map;
+    static Map map;
     static int iterations = 0;
-    private static Tile[][] testMap = new Tile[20][20];    
+    private static Tile[][] testMap = new Tile[20][20];
     static JPanel gui = new JPanel(new BorderLayout());
     public static void main(String[] args) {
         Runnable r = new Runnable() {
 
             @Override
             public void run() {
-                
-            	// the GUI as seen by the user (without frame)
+
+                // the GUI as seen by the user (without frame)
 
                 gui.setBorder(new EmptyBorder(2, 3, 2, 3));
                 gui.setBackground(Color.WHITE.darker().darker());
@@ -38,18 +38,18 @@ public class JPanelRunner extends JFrame {
                 int w = map.getLengthX();
                 int h = map.getLengthY();
                 gui.setLayout(new GridLayout(h, w, 2, 2));
-                
+
                 Scanner a=new Scanner(map.toString());
                 while(a.hasNext()){
-                //for (int ii=0; ii<w*h; ii++) {
-                	String test=a.next();
-                	Color c=null;
-                	BufferedImage img;
-                	try {                
-                    	img = ImageIO.read(new File("C:\\Users\\Shim\\workspace\\CS196SelfDrivingCars\\src\\Graphics\\car.png"));
-                     } catch (IOException ex) {
-                          // handle exception...
-                     }
+                    //for (int ii=0; ii<w*h; ii++) {
+                    String test=a.next();
+                    Color c=null;
+                    BufferedImage img;
+                    try {
+                        img = ImageIO.read(new File("C:\\Users\\Shim\\workspace\\CS196SelfDrivingCars\\src\\Graphics\\car.png"));
+                    } catch (IOException ex) {
+                        // handle exception...
+                    }
 /*
                 	if(test.equals(".."))
                 		 c= Color.WHITE ;
@@ -63,7 +63,7 @@ public class JPanelRunner extends JFrame {
                		 c= Color.BLACK ;
                 	if(test.equals("::"))
                		 c= Color.PINK ;
-  */				paint(map);
+*/				paint(map);
 //                	gui.add(new JLabel(new ColorIcon(c, 16)));
                 }
 
@@ -88,21 +88,21 @@ public class JPanelRunner extends JFrame {
         SwingUtilities.invokeLater(r);
     }
     public static void paint(Map map){
-    	   for (int i = 0; i < map.getLengthX(); i++) {
-               for (int j = 0; j < map.getLengthY(); j++) {
-               Color c=null;
-            	if(map.get(i, j) instanceof NonRoad)
-            		 c= Color.WHITE ;
-            	if(map.get(i, j) instanceof TrafficLight)
-           		 c= Color.GREEN ;
-            	if(map.get(i, j) instanceof Road)
-           		 c= Color.BLACK ;
+        for (int i = 0; i < map.getLengthX(); i++) {
+            for (int j = 0; j < map.getLengthY(); j++) {
+                Color c=null;
+                if(map.get(i, j) instanceof NonRoad)
+                    c= Color.WHITE ;
+                if(map.get(i, j) instanceof TrafficLight)
+                    c= Color.GREEN ;
+                if(map.get(i, j) instanceof Road)
+                    c= Color.BLACK ;
    /*         	if(map.get(i, j) instanceof Car)
            		 c= Color.PINK ;
                 */gui.add(new JLabel(new ColorIcon(c, 16)));
                 System.out.println(i+" "+j);
-               }
             }
+        }
     }
     public static void step() {
         //Print out state
@@ -111,7 +111,7 @@ public class JPanelRunner extends JFrame {
             for(int i = 0; i < map.getLengthX(); i++) {
                 for (int j = 0; j < map.getLengthY(); j++) {
                     Tile t = map.get(i, j);
-                    
+
                     if(t instanceof TrafficLight) {
                         TrafficLight l  = (TrafficLight)t;
                         l.toggle();
@@ -119,11 +119,11 @@ public class JPanelRunner extends JFrame {
                 }
             }
         }
-        
+
         for(Car c:map.getCars()) {
             if(c!=null && c.getPath().size()>0) c.move();
         }
-        
+
         System.out.println(map);
     }
     public static void init() {
@@ -134,15 +134,12 @@ public class JPanelRunner extends JFrame {
             }
         }
         Car[] y = new Car[20];
-        map = new Map(testMap, y);
-        map.createHorizontalRoad(3, 2, 1, 99, 5, 2);
-        map.createVerticalRoad(4, 2, 3, 99, 5, 2);
-        map.createHorizontalRoad(7, 2, 5, 99, 5, 2);
-        map.createVerticalRoad(16, 2, 4, 99, 5, 2);
+        map = new RandomMapGenerator(30).generateMap();
+
         System.out.println(map);
         JPanelRunner a=new JPanelRunner();
         Scanner scan=new Scanner(System.in);
-        
+
         System.out.println("Please set your statring point in the format x,y");
         String start=scan.nextLine();
         int startx= Integer.parseInt(start.substring(0,start.indexOf(",")));
@@ -153,11 +150,11 @@ public class JPanelRunner extends JFrame {
         int desty= Integer.parseInt(dest.substring(dest.indexOf(",")+1));
         //Write different versions of y[0] here as test cases
         //y[0] = new Car(startx,starty , destx, desty, map);
-        
-        
-   //     System.out.println(map);
+
+
+        //     System.out.println(map);
     }
-    
+
 }
 
 class ColorIcon implements Icon {

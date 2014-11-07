@@ -30,10 +30,10 @@ public class CarLogicDemo {
         }
         Car[] y = new Car[20];
         map = new Map(testMap, y);
-        map.createHorizontalRoad(3, 2, 1, 99, 5, 2);
-        map.createVerticalRoad(4, 2, 3, 99, 5, 2);
-        map.createHorizontalRoad(7, 2, 5, 99, 5, 2);
-        map.createVerticalRoad(16, 2, 4, 99, 5, 2);
+//        map.createHorizontalRoad(3, 2, 1, 99, 5, 2);
+//        map.createVerticalRoad(4, 2, 3, 99, 5, 2);
+//        map.createHorizontalRoad(7, 2, 5, 99, 5, 2);
+//        map.createVerticalRoad(16, 2, 4, 99, 5, 2);
         System.out.println(map);
         //JPanelRunner a = new JPanelRunner();
         Scanner scan=new Scanner(System.in);
