@@ -17,9 +17,30 @@ public class MapConverter {
          for (int y = 0; y < map.getLengthY(); y++)
             if (map.get(x, y) instanceof TrafficLight){
                addNode(graph, x, y, map);
+               for(int i = 0; i <= 3; i++) {
+            	   if(((Road)map.get(x, y)).getDirection() == i) {
+            		   
+            	   }
+               }
+               if(((Road)map.get(x, y)).getDirection() == Directions.UP) {
+            	   graph[graph.length - 1].setHorizontal(Directions.LEFT);
+            	   addNode(graph, x - 1, y, map);
+               }
+               if(((Road)map.get(x, y)).getDirection() == Directions.RIGHT) {
+            	   graph[graph.length - 1].setVertical(Directions.UP);
+            	   addNode(graph, x, y - 1, map);
+               }
+               if(((Road)map.get(x, y)).getDirection() == Directions.DOWN) {
+            	   graph[graph.length - 1].setHorizontal(Directions.RIGHT);
+            	   addNode(graph, x + 1, y, map);
+               }
+               if(((Road)map.get(x, y)).getDirection() == Directions.LEFT) {
+            	   graph[graph.length - 1].setVertical(Directions.DOWN);
+            	   addNode(graph, x, y + 1, map);
+               }
                for (int i = -2; i <= 2; i++){
                   if (map.get(x+i, y) instanceof Road && !(map.get(x+i, y) instanceof TrafficLight) && graph[graph.length -1].getHorizontal() == Directions.NO_DIR)
-                     graph[graph.length-1].setHorizontal(((Road)map.get(x+1,y)).getDirection());
+                     graph[graph.length-1].setHorizontal(((Road)map.get(x+i,y)).getDirection());
                   if (map.get(x, y+i) instanceof Road && !(map.get(x, y+i) instanceof TrafficLight) && graph[graph.length -1].getHorizontal() == Directions.NO_DIR)
                      graph[graph.length-1].setVertical(((Road)map.get(x,y+i)).getDirection());
                }
