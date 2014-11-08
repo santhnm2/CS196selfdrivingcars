@@ -9,7 +9,7 @@ import Map.Tile;
 public class Intersection {
 	
 	private final ArrayList<TrafficLight> lights;
-	private ArrayList<Road> inputRoads = new ArrayList<>();
+	private ArrayList<Road> inputRoads = new ArrayList<Road>();
 	private Map map;
 	
 	private int timeSinceToggle; //To be implemented
