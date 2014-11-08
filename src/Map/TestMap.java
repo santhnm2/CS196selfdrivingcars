@@ -17,7 +17,7 @@ public class TestMap {
 		}
 		
 		Car[] y = new Car[20];
-		Map x = new RandomMapGenerator(30).generateMap();
+		Map x = new RandomMapGenerator(30, 1).generateMap();
 		//hardcoded threeway intersection
 		System.out.println("Road initialized");
 

@@ -107,6 +107,10 @@ public class Map {
         this.handler = new TrafficLightHandler(intersections);
     }
 
+    void placeCar(Car c) {
+        cars.add(c);
+    }
+
     void createHorizontalRoad(int startX, int startY, int width, int lanes, int speed){
         startX += startX % 2;
         startY += startY % 2;
@@ -138,31 +142,15 @@ public class Map {
                0 <= x && x < grid[y].length;
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     //Written by Car Logic
     public Tile getInDir(Tile t, int dir) {
-    	int x = t.getX(); int y = t.getY();
-    	switch(dir) {
-    	case 0:
-    		return get(x,y-1);
-    	case 1:
-    		return get(x+1,y);
-    	case 2:
-    		return get(x,y+1);
-    	case 3:
-    		return get(x-1,y);
-    	default:
-    		return t;
-    	}
+    	int x = t.getX();
+        int y = t.getY();
+
+        int[] dx = { 0, 1, 0, -1 };
+        int[] dy = { 1, 0, -1, 0 };
+
+    	return get(x + dx[dir], y + dy[dir]);
     }
 
     public TrafficLightHandler getHandler() {

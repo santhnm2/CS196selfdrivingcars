@@ -82,7 +82,7 @@ public class Road extends Tile
 		return occupants.length;
 	}
 	public String toString() {
-		if(hasCar) return getFilled()+""+getFilled();
+		if(hasCar) return getFilled() + "" + getFilled();
 		switch(dir){
             case 0: return "UR";
             case 1: return "RR";

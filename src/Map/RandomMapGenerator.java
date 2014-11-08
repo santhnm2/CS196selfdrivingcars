@@ -2,6 +2,8 @@ package Map;
 
 import Map.NonRoad.House;
 import Car.Car;
+import Map.Road.Road;
+import Map.Road.TrafficLight;
 
 import java.util.ArrayList;
 
@@ -14,9 +16,11 @@ public class RandomMapGenerator implements MapGenerator {
     private static final double DENSITY = 0.34;
 
     private final int length;
+    private final int cars;
 
-    public RandomMapGenerator(int length) {
+    public RandomMapGenerator(int length, int cars) {
         this.length = length;
+        this.cars = cars;
     }
 
     @Override
@@ -42,13 +46,34 @@ public class RandomMapGenerator implements MapGenerator {
             }
 
             for (int i = 0; i < length; i += 4){
-                if(Math.random() < .85) {
+                if (Math.random() < .85) {
                     int start = (int) (Math.random() * length / 2) * 2;
                     int width = (int) (Math.random() * (length - start - 6) / 2) * 2 + 6;
 
                     m.createVerticalRoad(i, start, width, 2, 4);
                 }
             }
+        }
+
+        ArrayList<Road> roads = new ArrayList<Road>();
+
+        for (Tile[] a : grid) {
+            for (Tile b : a) {
+                if (b instanceof Road && !(b instanceof TrafficLight)) {
+                    roads.add((Road) b);
+                }
+            }
+        }
+
+        for (int i = 0; i < cars; i++) {
+            Road start, end;
+
+            do {
+                start = roads.get((int) (roads.size() * Math.random()));
+                end   = roads.get((int) (roads.size() * Math.random()));
+            } while (start == end);
+
+            m.placeCar(new Car(start.x, start.y, end.x, end.y, m));
         }
 
         return m;
@@ -81,7 +106,7 @@ public class RandomMapGenerator implements MapGenerator {
     }
 
     public static void main(String[] args) {
-        MapGenerator mapGen = new RandomMapGenerator(30);
+        MapGenerator mapGen = new RandomMapGenerator(30, 1);
 
         System.out.println(mapGen.generateMap());
     }
