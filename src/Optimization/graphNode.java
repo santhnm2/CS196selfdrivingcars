@@ -5,6 +5,8 @@ public class graphNode {
    private graphNode right;
    private graphNode up;
    private graphNode down;
+   private int dirHorizontal;
+   private int dirVertical;
    private int x;
    private int y;
    private int index;
@@ -39,6 +41,22 @@ public class graphNode {
 
    public void setDown(graphNode graph) {
       this.down = graph;
+   }
+   
+   public void setHorizontal(int h) {
+	   this.dirHorizontal = h;
+   }
+   
+   public void setVertical(int v) {
+	   this.dirVertical = v;
+   }
+   
+   public int getHorizontal() {
+	   return this.dirHorizontal;
+   }
+   
+   public int getVertical() {
+	   return this.dirVertical;
    }
 
    public graphNode getLeft() {
