@@ -11,10 +11,10 @@ import java.util.ArrayList;
 
 public class Map {
     private final Tile[][] grid;
-    private final Car[] cars;
+    private final ArrayList<Car> cars;
     private TrafficLightHandler handler = new TrafficLightHandler(new ArrayList<Intersection>());
 
-    public Map(Tile[][] grid, Car[] cars) {
+    public Map(Tile[][] grid, ArrayList<Car> cars) {
         this.grid = grid;
         this.cars = cars;
     }
@@ -37,7 +37,7 @@ public class Map {
         return grid.length;
     }
 
-    public Car[] getCars() {
+    public ArrayList<Car> getCars() {
         return this.cars;
     }
 
