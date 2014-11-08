@@ -1,17 +1,25 @@
 package Optimization;
 
 public class PriorityQueue {
-	   private int[][] heap = new int[][]{{Integer.MIN_VALUE}};
+	   private int[][] heap = new int[1][3];
 	   private int length = 0;
 	   
 
 	   //resizes the array to be the same size as the number of elements
+	   public PriorityQueue()
+	   {
+	      heap[0][0] = Integer.MIN_VALUE;
+	      heap[0][1] = -1;
+	      heap[0][2] = -1;
+	   }
 	   public void resize() {
-	      int[][] temp = new int[length + 1][3];
-	      for (int i = 0; i < heap.length && i < length; i++)
+	      if (heap.length <=   length + 1){
+	      int[][] temp = new int[length*2][3];
+	      for (int i = 0; i < length; i++)
 	    	  for (int j = 0; j<3; j++)
 	    		  temp[i][j] = heap[i][j];
 	      heap = temp;
+	      }
 	    		  
 	   }
 	   //returns the index of the parent, left child and right child
