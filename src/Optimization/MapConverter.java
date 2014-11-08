@@ -1,5 +1,6 @@
 package Optimization;
 
+import Constants.Directions;
 import Map.*;
 import Map.Road.*;
 import Map.NonRoad.*;
@@ -14,11 +15,18 @@ public class MapConverter {
       graphNode[] graph = new graphNode[0];
       for (int x = 0; x < map.getLengthX(); x++)
          for (int y = 0; y < map.getLengthY(); y++)
-            if (map.get(x, y) instanceof TrafficLight)
+            if (map.get(x, y) instanceof TrafficLight){
                addNode(graph, x, y, map);
+               for (int i = -2; i <= 2; i++){
+                  if (map.get(x+i, y) instanceof Road && !(map.get(x+i, y) instanceof TrafficLight) && graph[graph.length -1].getHorizontal() == Directions.NO_DIR)
+                     graph[graph.length-1].setHorizontal(((Road)map.get(x+1,y)).getDirection());
+                  if (map.get(x, y+i) instanceof Road && !(map.get(x, y+i) instanceof TrafficLight) && graph[graph.length -1].getHorizontal() == Directions.NO_DIR)
+                     graph[graph.length-1].setVertical(((Road)map.get(x,y+i)).getDirection());
+               }
+            }
       return graph;
    }
-
+   
    public static void addNode(graphNode[] graph, int x, int y, Map map) {
       graphNode[] temp = new graphNode[graph.length + 1];
       for(int i = 0; i < graph.length; i++) {
