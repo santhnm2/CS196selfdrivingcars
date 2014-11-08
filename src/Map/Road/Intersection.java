@@ -9,7 +9,7 @@ import Map.Tile;
 public class Intersection {
 	
 	private final ArrayList<TrafficLight> lights;
-	private ArrayList<Road> inputRoads;
+	private ArrayList<Road> inputRoads = new ArrayList<>();
 	private Map map;
 	
 	private int timeSinceToggle; //To be implemented
@@ -24,7 +24,8 @@ public class Intersection {
         {
         	lights.get(3).setRed(false);
         }
-        findInputRoads();
+
+//        findInputRoads();
 	}
     public void toggle() {
 		for (TrafficLight light : lights) {
@@ -59,8 +60,8 @@ public class Intersection {
     		for(int dir:Directions.dirs) {
 	    		Tile check = map.getInDir(light, dir);
 	    		if(check instanceof Road && !(check instanceof TrafficLight)) {
-	    			if(map.getInDir(check, ((Road)check).getDirection()).equals(light)) {
-	    				inputRoads.add((Road)check);
+	    			if(map.getInDir(check, ((Road) check).getDirection()).equals(light)) {
+	    				inputRoads.add((Road) check);
 	    				light.setTraffic(traceBack((Road)check));
 	    			}
 	    		}

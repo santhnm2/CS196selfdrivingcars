@@ -2,13 +2,17 @@ package Map;
 
 import Car.Car;
 import Constants.Directions;
+import Map.Road.Intersection;
 import Map.Road.Road;
 import Map.Road.TrafficLight;
+
+import java.util.ArrayList;
 
 
 public class Map {
     private final Tile[][] grid;
     private final Car[] cars;
+    private TrafficLightHandler handler = new TrafficLightHandler(new ArrayList<>());
 
     public Map(Tile[][] grid, Car[] cars) {
         this.grid = grid;
@@ -16,7 +20,13 @@ public class Map {
     }
 
     public Tile get(int x, int y) {
-        return this.grid[x][y];
+        if (0 <= x && x < grid.length &&
+                0 <= y && y < grid[x].length) {
+
+            return this.grid[x][y];
+        }
+
+        return null;
     }
 
     public int getLengthX() {
@@ -46,7 +56,7 @@ public class Map {
         return total.toString();
     }
 
-    public void createVerticalRoad(int startX, int startY, int width, int lanes, int speed){
+    void createVerticalRoad(int startX, int startY, int width, int lanes, int speed){
         startX += startX % 2;
         startY += startY % 2;
         width  += width % 2;
@@ -68,9 +78,36 @@ public class Map {
                 grid[startX + 1][startY + i] = new Road(startX + 1, startY + i, speed, Directions.UP, lanes);
             }
         }
+
+        fixLights();
     }
 
-    public void createHorizontalRoad(int startX, int startY, int width, int lanes, int speed){
+    private void fixLights() {
+        ArrayList<Intersection> intersections = new ArrayList<>();
+
+        for (int i = 0; i < grid.length; i += 2) {
+            for (int j = 0; j < grid[i].length; j += 2) {
+                if (grid[i][j] instanceof TrafficLight) {
+                    int[] dx = { 0, 1, 1, 0 };
+                    int[] dy = { 0, 0, 1, 1 };
+
+
+                    ArrayList<TrafficLight> l = new ArrayList<>();
+
+
+                    for (int k = 0; k < 4; k++)
+                        l.add((TrafficLight) grid[i + dx[k]][j + dy[k]]);
+
+
+                    intersections.add(new Intersection(l, this));
+                }
+            }
+        }
+
+        this.handler = new TrafficLightHandler(intersections);
+    }
+
+    void createHorizontalRoad(int startX, int startY, int width, int lanes, int speed){
         startX += startX % 2;
         startY += startY % 2;
         width  += width % 2;
@@ -92,6 +129,8 @@ public class Map {
                 grid[startX + i][startY + 1] = new Road(startX + i, startY + 1, speed, Directions.RIGHT, lanes);
             }
         }
+
+        fixLights();
     }
 
     public boolean pointIsValid(int x, int y) {
@@ -124,5 +163,9 @@ public class Map {
     	default:
     		return t;
     	}
+    }
+
+    public TrafficLightHandler getHandler() {
+        return handler;
     }
 }
