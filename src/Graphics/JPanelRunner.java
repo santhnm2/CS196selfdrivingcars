@@ -21,6 +21,7 @@ import Car.Car;
 
 public class JPanelRunner extends JFrame {
 	static Map map;
+	static Color c;
     static int iterations = 0;
     private static Tile[][] testMap = new Tile[20][20];    
     static JPanel gui = new JPanel(new BorderLayout());
@@ -40,46 +41,23 @@ public class JPanelRunner extends JFrame {
                 gui.setLayout(new GridLayout(h, w, 2, 2));
                 
                 Scanner a=new Scanner(map.toString());
-                while(a.hasNext()){
-                //for (int ii=0; ii<w*h; ii++) {
+             //   while(a.hasNext()){
+                { //for (int ii=0; ii<w*h; ii++) {
                 	String test=a.next();
-                	Color c=null;
                 	BufferedImage img;
                 	try {                
                     	img = ImageIO.read(new File("C:\\Users\\Shim\\workspace\\CS196SelfDrivingCars\\src\\Graphics\\car.png"));
                      } catch (IOException ex) {
                           // handle exception...
                      }
-/*
-                	if(test.equals(".."))
-                		 c= Color.WHITE ;
-                	if(test.equals("GL"))
-               		 c= Color.GREEN ;
-                	if(test.equals("YL"))
-                  		 c= Color.YELLOW ;
-                	if(test.equals("RL"))
-                  		 c= Color.RED ;
-                	if(test.contains("R"))
-               		 c= Color.BLACK ;
-                	if(test.equals("::"))
-               		 c= Color.PINK ;
-  */				paint(map);
-//                	gui.add(new JLabel(new ColorIcon(c, 16)));
-                }
-
+                	
+                 }
+                color(map);
                 JFrame f = new JFrame("Demo");
                 f.add(gui);
-                // Ensures JVM closes after frame(s) closed and
-                // all non-daemon threads are finished
                 f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                // See http://stackoverflow.com/a/7143398/418556 for demo.
                 f.setLocationByPlatform(true);
-
-                // ensures the frame is the minimum size it needs to be
-                // in order display the components within it
                 f.pack();
-                // should be done last, to avoid flickering, moving,
-                // resizing artifacts.
                 f.setVisible(true);
             }
         };
@@ -87,23 +65,34 @@ public class JPanelRunner extends JFrame {
         // http://docs.oracle.com/javase/tutorial/uiswing/concurrency/initial.html
         SwingUtilities.invokeLater(r);
     }
-    public static void paint(Map map){
-    	   for (int i = 0; i < map.getLengthX(); i++) {
-               for (int j = 0; j < map.getLengthY(); j++) {
-               Color c=null;
-            	if(map.get(i, j) instanceof NonRoad)
-            		 c= Color.WHITE ;
-            	if(map.get(i, j) instanceof TrafficLight)
-           		 c= Color.GREEN ;
-            	if(map.get(i, j) instanceof Road)
-           		 c= Color.BLACK ;
-   /*         	if(map.get(i, j) instanceof Car)
-           		 c= Color.PINK ;
-                */gui.add(new JLabel(new ColorIcon(c, 16)));
-                System.out.println(i+" "+j);
-               }
-            }
+    public static  void color(Map map){
+      	c=null; 
+    	for (int i = 0; i < map.getLengthX(); i++) {
+             for (int j = 0; j < map.getLengthY(); j++) {
+            	 	if(map.get(j,i) instanceof TrafficLight) {
+            	 		TrafficLight light= (TrafficLight) map.get(j, i);
+            	 	
+            	 		if(light.getStatus())
+            	 			c= Color.RED ;
+            	 		else
+            	 			c= Color.GREEN ;
+                    	gui.add(new JLabel(new ColorIcon(c, 16)));
+            	 	}
+            	 	else if(map.get(j,i) instanceof NonRoad){
+            	 		c= Color.WHITE;
+                    	gui.add(new JLabel(new ColorIcon(c, 16)));
+            	 	}
+            	 	else if(map.get(j, i)instanceof Road ) {
+            	 		Road car=(Road) map.get(j, i);
+            	 		//check ocupancy, if something in draw a car instead
+            	 		c= Color.BLACK ;
+                    	gui.add(new JLabel(new ColorIcon(c, 16)));
+            	 	}
+            	 	}}
+
     }
+            
+    
     public static void step() {
         //Print out state
         iterations++;
