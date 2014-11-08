@@ -19,86 +19,86 @@ import Map.NonRoad.NonRoad;
 import Map.Road.Road;
 import Map.Road.TrafficLight;
 
-
 public class Runner extends JFrame {
-    static int iterations = 0;
-    static JPanel gui = new JPanel(new BorderLayout());
-    
-    public static void main(String[] args) {
+	static int iterations = 0;
+	static JPanel gui = new JPanel(new BorderLayout());
 
-                
-            	// the GUI as seen by the user (without frame)
+	public static void main(String[] args) {
 
-                gui.setBorder(new EmptyBorder(2, 3, 2, 3));
-                gui.setBackground(Color.WHITE.darker().darker());
-                RandomMapGenerator generator = new RandomMapGenerator(30);
-                
-                Map map = generator.generateMap();
-                System.out.println(map);
-                int w = map.getLengthX();
-                int h = map.getLengthY();
-                gui.setLayout(new GridLayout(h, w, 2, 2));
-                
-                color(gui, map);
-                JFrame f = new JFrame("Demo");
-                f.add(gui);
-                f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                f.setLocationByPlatform(true);
-                f.pack();
-                f.setVisible(true);
-            }
-    private static void color(JPanel gui, Map map){
-    	for (int i = 0; i < map.getLengthX(); i++) {
-             for (int j = 0; j < map.getLengthY(); j++) {
-            	 	if(map.get(j,i) instanceof TrafficLight) {
-            	 		TrafficLight light= (TrafficLight) map.get(j, i);
-            	 	
-            	 		if(light.isRed())
-            	 			gui.add(new JLabel(new ColorIcon(Color.RED, 16)));
-        	 			else
-        	 				gui.add(new JLabel(new ColorIcon(Color.GREEN, 16)));
-            	 	} else if (map.get(j,i) instanceof NonRoad){
-                    	gui.add(new JLabel(new ColorIcon(Color.WHITE, 16)));
-            	 	} else if(map.get(j, i)instanceof Road ) {
-            	 		Road car=(Road) map.get(j, i);
-            	 			if(car.getFilled() > 0)
-            	 				gui.add(new JLabel(new ColorIcon(Color.PINK, 16)));            	 				
-            	 			else 
-            	 				gui.add(new JLabel(new ColorIcon(Color.BLACK, 16)));            	 				            	 			
-            	 	}
-            	 	}}
+		// the GUI as seen by the user (without frame)
 
-   // 	step();
-    }
-    
-    static class ColorIcon implements Icon {
+		gui.setBorder(new EmptyBorder(2, 3, 2, 3));
+		gui.setBackground(Color.WHITE.darker().darker());
+		RandomMapGenerator generator = new RandomMapGenerator(30);
 
-        Color color;
-        int preferredSize = -1;
+		Map map = generator.generateMap();
+		System.out.println(map);
+		int w = map.getLengthX();
+		int h = map.getLengthY();
+		gui.setLayout(new GridLayout(h, w, 2, 2));
 
-        private ColorIcon() {
-        }
+		color(gui, map);
+		JFrame f = new JFrame("Demo");
+		f.add(gui);
+		f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		f.setLocationByPlatform(true);
+		f.pack();
+		f.setVisible(true);
+	}
 
-        public ColorIcon(Color color, int preferredSize) {
-            this.color = color;
-            this.preferredSize = preferredSize;
-        }
+	private static void color(JPanel gui, Map map) {
+		for (int i = 0; i < map.getLengthX(); i++) {
+			for (int j = 0; j < map.getLengthY(); j++) {
+				if (map.get(j, i) instanceof TrafficLight) {
+					TrafficLight light = (TrafficLight) map.get(j, i);
 
-        @Override
-        public void paintIcon(Component c, Graphics g, int x, int y) {
-            g.setColor(color);
-            g.fillRect(0, 0, preferredSize, preferredSize);
-        }
+					if (light.isRed())
+						gui.add(new JLabel(new ColorIcon(Color.RED, 16)));
+					else
+						gui.add(new JLabel(new ColorIcon(Color.GREEN, 16)));
+				} else if (map.get(j, i) instanceof NonRoad) {
+					gui.add(new JLabel(new ColorIcon(Color.WHITE, 16)));
+				} else if (map.get(j, i) instanceof Road) {
+					Road car = (Road) map.get(j, i);
+					if (car.getFilled() > 0)
+						gui.add(new JLabel(new ColorIcon(Color.PINK, 16)));
+					else
+						gui.add(new JLabel(new ColorIcon(Color.BLACK, 16)));
+				}
+			}
+		}
 
-        @Override
-        public int getIconWidth() {
-            return preferredSize;
-        }
+		// step();
+	}
 
-        @Override
-        public int getIconHeight() {
-            return preferredSize;
-        }
+	static class ColorIcon implements Icon {
 
-}
+		Color color;
+		int preferredSize = -1;
+
+		private ColorIcon() {
+		}
+
+		public ColorIcon(Color color, int preferredSize) {
+			this.color = color;
+			this.preferredSize = preferredSize;
+		}
+
+		@Override
+		public void paintIcon(Component c, Graphics g, int x, int y) {
+			g.setColor(color);
+			g.fillRect(0, 0, preferredSize, preferredSize);
+		}
+
+		@Override
+		public int getIconWidth() {
+			return preferredSize;
+		}
+
+		@Override
+		public int getIconHeight() {
+			return preferredSize;
+		}
+
+	}
 }
