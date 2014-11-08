@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import Car.Car;
@@ -29,7 +30,7 @@ public class CarLogicDemo {
             }
         }
         Car[] y = new Car[20];
-        map = new Map(testMap, y);
+        map = new Map(testMap, new ArrayList<Car>());
 //        map.createHorizontalRoad(3, 2, 1, 99, 5, 2);
 //        map.createVerticalRoad(4, 2, 3, 99, 5, 2);
 //        map.createHorizontalRoad(7, 2, 5, 99, 5, 2);

@@ -3,6 +3,8 @@ package Map;
 import Map.NonRoad.House;
 import Car.Car;
 
+import java.util.ArrayList;
+
 /**
  * @author arshsab
  * @since 10 2014
@@ -27,7 +29,7 @@ public class RandomMapGenerator implements MapGenerator {
             }
         }
 
-        Map m = new Map(grid, new Car[0]);
+        Map m = new Map(grid, new ArrayList<Car>());
 
         for (int t = 0; t < 3; t++) {
             for (int i = 0; i < length; i += 4){
