@@ -72,8 +72,8 @@ public class Road extends Tile
 	}
 	public int getFilled() {
 		int filled = 0;
-		for(int i = 0; i<occupants.length; i++) {
-			if(occupants[i]!=null)
+		for(int i = 0; i < occupants.length; i++) {
+			if(occupants[i] != null)
 				filled++;
 		}
 		return filled;
