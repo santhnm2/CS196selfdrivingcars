@@ -1,12 +1,13 @@
 package Optimization;
+import Constants.Directions;
 
 public class graphNode {
    private graphNode left;
    private graphNode right;
    private graphNode up;
    private graphNode down;
-   private int dirHorizontal;
-   private int dirVertical;
+   private int dirHorizontal = Directions.NO_DIR;
+   private int dirVertical = Directions.NO_DIR;
    private int x;
    private int y;
    private int index;
