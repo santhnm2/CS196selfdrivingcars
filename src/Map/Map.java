@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class Map {
     private final Tile[][] grid;
     private final Car[] cars;
-    private TrafficLightHandler handler = new TrafficLightHandler(new ArrayList<>());
+    private TrafficLightHandler handler = new TrafficLightHandler(new ArrayList<Intersection>());
 
     public Map(Tile[][] grid, Car[] cars) {
         this.grid = grid;
@@ -83,7 +83,7 @@ public class Map {
     }
 
     private void fixLights() {
-        ArrayList<Intersection> intersections = new ArrayList<>();
+        ArrayList<Intersection> intersections = new ArrayList<Intersection>();
 
         for (int i = 0; i < grid.length; i += 2) {
             for (int j = 0; j < grid[i].length; j += 2) {
@@ -92,7 +92,7 @@ public class Map {
                     int[] dy = { 0, 0, 1, 1 };
 
 
-                    ArrayList<TrafficLight> l = new ArrayList<>();
+                    ArrayList<TrafficLight> l = new ArrayList<TrafficLight>();
 
 
                     for (int k = 0; k < 4; k++)
