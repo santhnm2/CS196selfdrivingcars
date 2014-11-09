@@ -56,7 +56,7 @@ public class Map {
         return total.toString();
     }
 
-    void createVerticalRoad(int startX, int startY, int width, int lanes, int speed){
+    public void createVerticalRoad(int startX, int startY, int width, int lanes, int speed){
         startX += startX % 2;
         startY += startY % 2;
         width  += width % 2;
@@ -107,7 +107,7 @@ public class Map {
         this.handler = new TrafficLightHandler(intersections);
     }
 
-    void createHorizontalRoad(int startX, int startY, int width, int lanes, int speed){
+    public void createHorizontalRoad(int startX, int startY, int width, int lanes, int speed){
         startX += startX % 2;
         startY += startY % 2;
         width  += width % 2;
