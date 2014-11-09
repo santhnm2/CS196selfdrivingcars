@@ -5,25 +5,26 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.GridLayout;
-import java.util.ArrayList;
 
 import javax.swing.Icon;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import Car.Car;
 import Map.Map;
 import Map.RandomMapGenerator;
 import Map.Tile;
 import Map.NonRoad.NonRoad;
 import Map.Road.Road;
 import Map.Road.TrafficLight;
-import Car.Car;
 
 public class Runner extends JFrame {
 	static int iterations = 0;
 	static JPanel gui = new JPanel(new BorderLayout());
+	static JLabel [][] labels;
 
 	public static void main(String[] args) throws InterruptedException {
 
@@ -38,7 +39,13 @@ public class Runner extends JFrame {
 		int w = map.getLengthX();
 		int h = map.getLengthY();
 		gui.setLayout(new GridLayout(h, w, 2, 2));
-
+		labels = new JLabel[w][h];
+		for (int i = 0; i < w; i++) 
+			for (int j = 0; j < h; j++)
+			{
+				labels[i][j] = new JLabel();
+				gui.add(labels[i][j]);
+			}
 		color(gui, map);
 
 		JFrame f = new JFrame("Demo");
@@ -48,13 +55,15 @@ public class Runner extends JFrame {
 		f.pack();
 		f.setVisible(true);
 
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 20; i++) {
+			gui.removeAll();
 			step(map);
 			color(gui, map);
-			gui.repaint();
-
-			Thread.sleep(2000);
-		}
+			f.pack();
+			gui.updateUI();
+			//gui.revalidate();
+			Thread.sleep(500);
+			}
 	}
 
 	private static void color(JPanel gui, Map map) {
@@ -63,25 +72,49 @@ public class Runner extends JFrame {
 				if (map.get(j, i) instanceof TrafficLight) {
 					TrafficLight light = (TrafficLight) map.get(j, i);
 
-					if (light.isRed())
-						gui.add(new JLabel(new ColorIcon(Color.RED, 16)));
+					if (light.isRed()) {
+						//labels[i][j] = new JLabel(new ColorIcon(Color.RED, 16));
+						JLabel myLabel = new JLabel(new ColorIcon(Color.RED, 16));
+						gui.add(myLabel);
+						myLabel.setLocation(i, j);
+
+					}
 					else
-						gui.add(new JLabel(new ColorIcon(Color.GREEN, 16)));
+					{
+						//labels[i][j] = new JLabel(new ColorIcon(Color.RED, 16));
+						JLabel myLabel = new JLabel(new ColorIcon(Color.GREEN, 16));
+						gui.add(myLabel);
+						myLabel.setLocation(i, j);
+					}
 				} else if (map.get(j, i) instanceof NonRoad) {
-					gui.add(new JLabel(new ColorIcon(Color.WHITE, 16)));
+					//labels[i][j] = new JLabel(new ColorIcon(Color.RED, 16));
+					JLabel myLabel = new JLabel(new ColorIcon(Color.WHITE, 16));
+					gui.add(myLabel);
+					myLabel.setLocation(i, j);
 				} else if (map.get(j, i) instanceof Road) {
 					Road car = (Road) map.get(j, i);
 					if (car.getFilled() > 0)
-						gui.add(new JLabel(new ColorIcon(Color.PINK, 16)));
+					{
+						//labels[i][j] = new JLabel(new ColorIcon(Color.RED, 16));
+						JLabel myLabel = new JLabel(new ColorIcon(Color.PINK, 16));
+						gui.add(myLabel);
+						System.out.printf("Drawing a car at (%d, %d)\n", i, j);
+						myLabel.setLocation(i, j);
+					}
 					else
-						gui.add(new JLabel(new ColorIcon(Color.BLACK, 16)));
+					{
+						//labels[i][j] = new JLabel(new ColorIcon(Color.RED, 16));
+						JLabel myLabel = new JLabel(new ColorIcon(Color.BLACK, 16));
+						gui.add(myLabel);
+						myLabel.setLocation(i, j);	
+					}
 				}
 			}
 		}
 
 		// step();
 	}
-
+	
 	static class ColorIcon implements Icon {
 
 		Color color;
@@ -98,7 +131,7 @@ public class Runner extends JFrame {
 		@Override
 		public void paintIcon(Component c, Graphics g, int x, int y) {
 			g.setColor(color);
-			g.fillRect(0, 0, preferredSize, preferredSize);
+			g.fillRect(x, y, preferredSize, preferredSize);
 		}
 
 		@Override
@@ -134,6 +167,6 @@ public class Runner extends JFrame {
 				c.move();
 		}
 
-		System.out.println(map);
+		//System.out.println(map);
 	}
 }
