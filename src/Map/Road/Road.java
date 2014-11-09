@@ -7,16 +7,16 @@ public class Road extends Tile
 {
 	private final int speedLimit;
 	protected final int dir;
-	private final int MAX;
-	private Car[] occupants;
+	private int max;
+	protected Car[] occupants;
 	protected boolean hasCar=false;
 	
 	public Road(int x, int y, int speed, int direction, int lanes) {
 		super(x, y);
 		speedLimit = speed;
 		dir = direction;
-		MAX = lanes;
-		occupants = new Car[MAX];
+		max = lanes;
+		occupants = new Car[max];
 	}
 	
 	public int getSpeed() {
@@ -29,25 +29,60 @@ public class Road extends Tile
 	public void setCar(boolean b) {
 		hasCar = b;
 	}
+	public boolean carIncrement(Car c){
+		for(int i = 0; i<occupants.length; i++)
+		{
+			if(occupants[i] == null) {
+				occupants[i] = c;
+				hasCar = true;
+				return true;
+			}
+		}
+		return false;
+	}
 	
-	public void carIncrement(Car c){
+	public boolean carDecrement(Car c){
+		for(int i = 0; i<occupants.length; i++)
+		{
+			if(occupants[i]!=null && occupants[i].equals(c)) {
+				occupants[i] = null;
+				for(Car car:occupants) {
+					if(car!=null) {
+						hasCar = true;
+						break;
+					}
+					else  {
+						hasCar = false;
+					}
+				}
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public int getRemaining(){
+		int empty = 0;
 		for(int i = 0; i<occupants.length; i++)
 		{
 			if(occupants[i] == null)
-				occupants[i] = c;
+				empty++;
 		}
+		return empty;
 	}
-	
-	public void carDecrement(Car c){
-		for(int i = 0; i<occupants.length; i++)
-		{
-			if(occupants[i].equals(c))
-				occupants[i] = null;
+	public int getFilled() {
+		int filled = 0;
+		for(int i = 0; i < occupants.length; i++) {
+			if(occupants[i] != null)
+				filled++;
 		}
+		return filled;
 	}
-
+	public int getMaxOccupants() {
+		return occupants.length;
+	}
 	public String toString() {
-		if(hasCar) return "::";
+		if(hasCar) return getFilled() + "" + getFilled();
 		switch(dir){
             case 0: return "UR";
             case 1: return "RR";

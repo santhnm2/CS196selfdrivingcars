@@ -1,8 +1,7 @@
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import Car.Car;
-import Graphics.JPanelRunner;
 import Map.Map;
 import Map.Tile;
 import Map.NonRoad.House;
@@ -31,25 +30,19 @@ public class CarLogicDemo {
             }
         }
         Car[] y = new Car[20];
-        map = new Map(testMap, y);
-        map.createHorizontalRoad(3, 2, 1, 99, 5, 2);
-        map.createVerticalRoad(4, 2, 3, 99, 5, 2);
-        map.createHorizontalRoad(7, 2, 5, 99, 5, 2);
-        map.createVerticalRoad(16, 2, 4, 99, 5, 2);
+        map = new Map(testMap, new ArrayList<Car>());
+//        map.createHorizontalRoad(3, 2, 1, 99, 5, 2);
+//        map.createVerticalRoad(4, 2, 3, 99, 5, 2);
+//        map.createHorizontalRoad(7, 2, 5, 99, 5, 2);
+//        map.createVerticalRoad(16, 2, 4, 99, 5, 2);
         System.out.println(map);
-        JPanelRunner a = new JPanelRunner();
+        //JPanelRunner a = new JPanelRunner();
         Scanner scan=new Scanner(System.in);
-        
-        System.out.println("Please set your statring point in the format x,y");
-        String start=scan.nextLine();
-        int startx= Integer.parseInt(start.substring(0,start.indexOf(",")));
-        int starty= Integer.parseInt(start.substring(start.indexOf(",")+1));
-        System.out.println("Please set your destination in the format x,y");
-        String dest=scan.nextLine();
-        int destx= Integer.parseInt(dest.substring(0,dest.indexOf(",")));
-        int desty= Integer.parseInt(dest.substring(dest.indexOf(",")+1));
-        //Write different versions of y[0] here as test cases
-        y[0] = new Car(startx,starty , destx, desty, map);
+        y[0] = new Car(2,4,18,8, map);
+        y[1] = new Car(2,4,18,8, map);
+        y[2] = new Car(1,4,18,8, map);
+        y[3] = new Car(3,4,18,8, map);
+        //y[0] = new Car(2,4,18,8, map);
         System.out.println(map);
     }
     public static void step() {

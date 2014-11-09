@@ -2,27 +2,31 @@ package Map;
 
 import Car.Car;
 import Constants.Directions;
+import Map.Road.Intersection;
 import Map.Road.Road;
 import Map.Road.TrafficLight;
-import Map.Coord;
+
+import java.util.ArrayList;
+
 
 public class Map {
     private final Tile[][] grid;
-    private final Car[] cars;
-    private final double[][] density;
-    public Map(Tile[][] grid, Car[] cars) {
+    private final ArrayList<Car> cars;
+    private TrafficLightHandler handler = new TrafficLightHandler(new ArrayList<Intersection>());
+
+    public Map(Tile[][] grid, ArrayList<Car> cars) {
         this.grid = grid;
         this.cars = cars;
-        density = new double[grid.length][grid[0].length];
-    }
-    public Map(Tile[][] grid, Car[] cars, double[][] density){
-        this.grid = grid;
-        this.cars = cars;
-        this.density = density;
     }
 
     public Tile get(int x, int y) {
-        return this.grid[x][y];
+        if (0 <= x && x < grid.length &&
+                0 <= y && y < grid[x].length) {
+
+            return this.grid[x][y];
+        }
+
+        return null;
     }
 
     public int getLengthX() {
@@ -33,7 +37,7 @@ public class Map {
         return grid.length;
     }
 
-    public Car[] getCars() {
+    public ArrayList<Car> getCars() {
         return this.cars;
     }
 
@@ -45,81 +49,111 @@ public class Map {
             for (int j = 0; j < this.grid[i].length; j++) {
                 total.append(grid[j][i]).append(" ");
             }
+
             total.append('\n');
         }
+
         return total.toString();
     }
 
-    //will create road with least turns between the two density coordinates.
-    public void createRoadBetweenDensities(Coord one, Coord two, double avgDens){
-        if(Math.random() > .5){
-            if(one.x < two.x) {
-                this.createHorizontalRoad(one.y, 2, one.x, two.x, 25, 3);
+    void createVerticalRoad(int startX, int startY, int width, int lanes, int speed){
+        startX += startX % 2;
+        startY += startY % 2;
+        width  += width % 2;
+
+        for (int i = 0; i < width; i++) {
+            if (startY + i >= getLengthY()) break;
+
+            if (grid[startX][startY + i] instanceof Road) {
+                if (((Road) grid[startX][startY + i]).getDirection() == Directions.DOWN) break;
+
+                grid[startX][startY + i] = new TrafficLight(startX, startY + i, true);
             } else {
-                this.createHorizontalRoad(one.y, 2, two.x, one.x, 25, 3);
+                grid[startX][startY + i] = new Road(startX, startY + i, speed, Directions.DOWN, lanes);
             }
-            if(one.y < two.y){
-                this.createVerticalRoad(two.x, 2, one.y, two.y, 25, 3);
+
+            if (grid[startX + 1][startY + i] instanceof Road) {
+                grid[startX + 1][startY + i] = new TrafficLight(startX + 1, startY + i, true);
             } else {
-                this.createVerticalRoad(two.x, 2, two.y, one.y, 25, 3);
-            }
-        } else {
-            if(one.y > two.y){
-                this.createVerticalRoad(one.x, 2, one.y, two.y, 25, 3);
-            } else {
-                this.createVerticalRoad(one.x, 2, one.y, two.y, 25, 3);
-            }
-            if(one.x < two.x) {
-                this.createHorizontalRoad(two.y, 2, one.x, two.x, 25, 3);
-            } else {
-                this.createHorizontalRoad(two.y, 2, two.x, one.x, 25, 3);
+                grid[startX + 1][startY + i] = new Road(startX + 1, startY + i, speed, Directions.UP, lanes);
             }
         }
 
+        fixLights();
     }
 
+    private void fixLights() {
+        ArrayList<Intersection> intersections = new ArrayList<Intersection>();
 
-    //width should always be 2. Lanes refers to occupancy of road.
-    public void createVerticalRoad(int col, int width, int start, int end, int speed, int lanes){
-        for(int i = 0; i < width; i++){
-            for(int j = start; j <= end; j++){
-                if(j > 0 && j < grid[1].length - 1){
-                    if(grid[col + i][j] instanceof Road || grid[col + i][j] instanceof TrafficLight){
-                        if(grid[col + i][j + 1] instanceof Road) // look ahead to the right first, then check behind.
-                            grid[col + i][j + 1] = new TrafficLight(col + i, j + 1, false);
-                        else if(grid[col + i][j - 1] instanceof Road) // if ahead is not a road, check behind to make sure you haven't started on a road
-                            grid[col + i][j - 1] = new TrafficLight(col+i, j-1,false);
-                        // should turn above block of if/else into a method. Fosho. Seriously this code is a pain.
-                        grid[col + i][j] = new TrafficLight(col+i, j, false);
-                    } else
-                        grid[col + i][j] = new Road(col + i, j, speed, (i == 0 ? Directions.DOWN : Directions.UP), lanes);
+        for (int i = 0; i < grid.length; i += 2) {
+            for (int j = 0; j < grid[i].length; j += 2) {
+                if (grid[i][j] instanceof TrafficLight) {
+                    int[] dx = { 0, 1, 1, 0 };
+                    int[] dy = { 0, 0, 1, 1 };
+
+
+                    ArrayList<TrafficLight> l = new ArrayList<TrafficLight>();
+
+
+                    for (int k = 0; k < 4; k++)
+                        l.add((TrafficLight) grid[i + dx[k]][j + dy[k]]);
+
+
+                    intersections.add(new Intersection(l, this));
                 }
             }
         }
+
+        this.handler = new TrafficLightHandler(intersections);
     }
 
-    public void createHorizontalRoad(int row, int width, int start, int end, int speed, int lanes){
-        for(int i = 0; i < width; i++){
-            for(int j = start; j <= end; j++){
-                if(j > 0 && j < grid.length - 1){
+    void placeCar(Car c) {
+        cars.add(c);
+    }
 
-                    if(grid[j][row + i] instanceof Road || grid[j][row + i] instanceof TrafficLight){
-                        if(grid[j + 1][row + i] instanceof Road)
-                            grid[j + 1][row + i] = new TrafficLight(j+1, row+i, false);
-                        else if(grid[j - 1][row + i] instanceof Road)
-                            grid[j - 1][row + i] = new TrafficLight(j-1, row+i, false);
-                        //same as above; should turn above block into method.
-                        grid[j][row + i] = new TrafficLight(j, row+i, false);
-                    } else
-                        grid[j][row + i] = new Road(j, row + i, speed, (i == 1 ? Directions.RIGHT : Directions.LEFT), lanes);
-                }
+    void createHorizontalRoad(int startX, int startY, int width, int lanes, int speed){
+        startX += startX % 2;
+        startY += startY % 2;
+        width  += width % 2;
+
+        for (int i = 0; i < width; i++) {
+            if (startX + i >= getLengthX()) break;
+
+            if (grid[startX + i][startY] instanceof Road) {
+                if (((Road) grid[startX + i][startY]).getDirection() == Directions.LEFT) break;
+
+                grid[startX + i][startY] = new TrafficLight(startX + i, startY, true);
+            } else {
+                grid[startX + i][startY] = new Road(startX + i, startY, speed, Directions.LEFT, lanes);
+            }
+
+            if (grid[startX + i][startY + 1] instanceof Road) {
+                grid[startX + i][startY + 1] = new TrafficLight(startX + i, startY + 1, true);
+            } else {
+                grid[startX + i][startY + 1] = new Road(startX + i, startY + 1, speed, Directions.RIGHT, lanes);
             }
         }
+
+        fixLights();
     }
 
     public boolean pointIsValid(int x, int y) {
         return 0 <= y && y < grid.length &&
                0 <= x && x < grid[y].length;
     }
+    
+    //Written by Car Logic
+    public Tile getInDir(Tile t, int dir) {
+    	int x = t.getX();
+        int y = t.getY();
 
+        int[] dx = { 0, 1, 0, -1 };
+        int[] dy = { 1, 0, -1, 0 };
+
+    	return get(x + dx[dir], y + dy[dir]);
+    }
+
+    public TrafficLightHandler getHandler() {
+        return handler;
+    }
 }

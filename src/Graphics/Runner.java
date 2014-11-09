@@ -1,150 +1,139 @@
-//UIUC CS125 FALL 2014 MP. File: Photoscoop.java, CS125 Project: Challenge4-Photoscoop, Version: 2014-10-05T14:10:49-0500.839509640
+package Graphics;
+
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Graphics;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
+import java.awt.GridLayout;
+import java.util.ArrayList;
+
+import javax.swing.Icon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.imageio.*;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
-import Map.*;
-/* * @author angrave
- */
-public class Runner {
-	static JFrame mainFrame; // the main window
-	static JFileChooser chooser = null;
-	static Map<JFrame, BufferedImage> frameMap = new HashMap<JFrame, BufferedImage>();
-	static JFrame backgroundFrame;
-	static int[][] sourcePixels;
-	static JFrame lastSourceFrame;
+import Map.Map;
+import Map.RandomMapGenerator;
+import Map.Tile;
+import Map.NonRoad.NonRoad;
+import Map.Road.Road;
+import Map.Road.TrafficLight;
+import Car.Car;
 
-	public static void main(String[] args) throws IOException {
-		Runner r=new Runner();
-	}
-		public Runner()throws IOException{
-		BufferedImage img;
-		img = ImageIO.read(new File("C:\\Users\\Shim\\workspace\\CS196SelfDrivingCars\\src\\Graphics\\car.png"));
-		String title="Cars";
-		JFrame frame = new JFrame();
-		JMenuBar menubar = new JMenuBar();
-		JMenu fileMenu = new JMenu("File");
-		JMenuItem openItem = new JMenuItem("Open");
-		fileMenu.add(openItem);
-		menubar.add(fileMenu);
-		frame.setLocationByPlatform(true);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setTitle(title);
-		addMenus(frame);
-		
-		//setImageForFrame(frame, img);
-		frame.setJMenuBar(menubar);
-		//frame.pack(); // calculate its size
-		frame.setSize(100, 100);
-		frame.setVisible(true); // display it
+public class Runner extends JFrame {
+	static int iterations = 0;
+	static JPanel gui = new JPanel(new BorderLayout());
+
+	public static void main(String[] args) throws InterruptedException {
+
+		// the GUI as seen by the user (without frame)
+
+		gui.setBorder(new EmptyBorder(2, 3, 2, 3));
+		gui.setBackground(Color.WHITE.darker().darker());
+		RandomMapGenerator generator = new RandomMapGenerator(30, 1);
+
+		Map map = generator.generateMap();
+		System.out.println(map);
+		int w = map.getLengthX();
+		int h = map.getLengthY();
+		gui.setLayout(new GridLayout(h, w, 2, 2));
+
+		color(gui, map);
+
+		JFrame f = new JFrame("Demo");
+		f.add(gui);
+		f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		f.setLocationByPlatform(true);
+		f.pack();
+		f.setVisible(true);
+
+		for (int i = 0; i < 100; i++) {
+			step(map);
+			color(gui, map);
+			gui.repaint();
+
+			Thread.sleep(2000);
 		}
-	
-		
-			
-	
-
-	/**
-	 * Opens a file and displays the image. This method is used by main and open
-	 * item.
-	 * 
-	 * @param filename
-	 *            the file to be opened
-	 */
-	/*
-	private static void openImageFile(String filename) {
-		// Delegate the problem of reading the filename to another method!
-		BufferedImage img = ImageUtilities.loadImage(filename);
-		if (img == null) {
-			JOptionPane.showMessageDialog(null, filename + " could not be opened.");
-		} else
-			openImage(img, filename); // create the window with a title - see
-		// below
 	}
 
-	/**
-	 * Creates a window ('jframe') and performs the necessary voodoo to display
-	 * the window and a menu too.
-	 */
-	public void paintComponent(Graphics g)
-	   {
-	      File img = new File("C:\\Users\\Shim\\workspace\\CS196SelfDrivingCars\\src\\Graphics\\car.png");
-	      File img1 = new File("C:\\Users\\Shim\\workspace\\CS196SelfDrivingCars\\src\\Graphics\\car.jpg");
-	      BufferedImage buffImg = new BufferedImage(1,1,1);
-	      BufferedImage buffImg1 = new BufferedImage(1,1,1); 
-	      try
-	      {
-	         buffImg = ImageIO.read(img);
-	         buffImg1=ImageIO.read(img1);
-	      }
-	      catch (IOException e)
-	      {
-	         System.exit(0);
-	      }
-	      
-	      //buffImg = Thumbnails.of(buffImg).size(200,200).asBufferedImage();
-	    	  g.drawImage(buffImg, 0, 0, null);
-	    	  
-	      
-	    
-	   }
+	private static void color(JPanel gui, Map map) {
+		for (int i = 0; i < map.getLengthX(); i++) {
+			for (int j = 0; j < map.getLengthY(); j++) {
+				if (map.get(j, i) instanceof TrafficLight) {
+					TrafficLight light = (TrafficLight) map.get(j, i);
 
-
-	/**
-	 * Add drop-down menus to the JFrame
-	 * 
-	 * @param frame
-	 */
-	public static void addMenus(final JFrame frame) {
-		JMenuBar menubar = new JMenuBar();
-		JMenu fileMenu = new JMenu("File");
-		JMenu editMenu = new JMenu("Edit");
-		JMenu tools = new JMenu("Tools");
-		menubar.add(fileMenu);
-		menubar.add(editMenu);
-		menubar.add(tools);
-		JMenuItem openItem = new JMenuItem("Open");
-		JMenuItem saveAsItem = new JMenuItem("SaveAs");
-		JMenuItem quitItem = new JMenuItem("Exit");
-		JMenuItem backgroundItem = new JMenuItem("Use as background");
-		JMenuItem undoItem = new JMenuItem("Undo");
-		JMenuItem copyItem = new JMenuItem("Copy");
-		JMenuItem pasteItem = new JMenuItem("Paste");
-		JMenuItem captureScreenItem = new JMenuItem("Capture Screen");
-
-		fileMenu.add(openItem);
-		fileMenu.add(saveAsItem);
-		fileMenu.add(quitItem);
-		editMenu.add(copyItem);
-		editMenu.add(pasteItem);
-		editMenu.add(captureScreenItem);
-		editMenu.add(undoItem);
-		/*
-		 * Inner anonymous classes hold the code to perform the operation.
-		 */
-		/*quitItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				frame.setVisible(false);
-				frame.dispose();
-				System.exit(0);
+					if (light.isRed())
+						gui.add(new JLabel(new ColorIcon(Color.RED, 16)));
+					else
+						gui.add(new JLabel(new ColorIcon(Color.GREEN, 16)));
+				} else if (map.get(j, i) instanceof NonRoad) {
+					gui.add(new JLabel(new ColorIcon(Color.WHITE, 16)));
+				} else if (map.get(j, i) instanceof Road) {
+					Road car = (Road) map.get(j, i);
+					if (car.getFilled() > 0)
+						gui.add(new JLabel(new ColorIcon(Color.PINK, 16)));
+					else
+						gui.add(new JLabel(new ColorIcon(Color.BLACK, 16)));
+				}
 			}
-		});
-		
-	*/
-}
-}// end class
+		}
 
+		// step();
+	}
+
+	static class ColorIcon implements Icon {
+
+		Color color;
+		int preferredSize = -1;
+
+		private ColorIcon() {
+		}
+
+		public ColorIcon(Color color, int preferredSize) {
+			this.color = color;
+			this.preferredSize = preferredSize;
+		}
+
+		@Override
+		public void paintIcon(Component c, Graphics g, int x, int y) {
+			g.setColor(color);
+			g.fillRect(0, 0, preferredSize, preferredSize);
+		}
+
+		@Override
+		public int getIconWidth() {
+			return preferredSize;
+		}
+
+		@Override
+		public int getIconHeight() {
+			return preferredSize;
+		}
+
+	}
+
+	public static void step(Map map) {
+		//Print out state
+		iterations++;
+		if(iterations % 10 == 0) { //Toggle all lights every ten iterations
+			for(int i = 0; i < map.getLengthX(); i++) {
+				for (int j = 0; j < map.getLengthY(); j++) {
+					Tile t = map.get(i, j);
+
+					if(t instanceof TrafficLight) {
+						TrafficLight l  = (TrafficLight) t;
+						l.toggle();
+					}
+				}
+			}
+		}
+
+		for (Car c : map.getCars()) {
+			if (c != null && c.getPath().size() > 0)
+				c.move();
+		}
+
+		System.out.println(map);
+	}
+}
