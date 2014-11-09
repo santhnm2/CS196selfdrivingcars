@@ -9,7 +9,7 @@ import Car.Car;
  */
 
 public class RandomMapGenerator implements MapGenerator {
-    private static final double DENSITY = 0.75;
+    private static final double DENSITY = 0.34;
 
     private final int length;
 
@@ -29,15 +29,24 @@ public class RandomMapGenerator implements MapGenerator {
 
         Map m = new Map(grid, new Car[0]);
 
-        for(int i = 0; i < length; i += 4){
-            if(Math.random() < DENSITY){
-                m.createHorizontalRoad(i, 2, (int) (Math.random() * length) / 2 * 2, length - 1, 5, 2);
-            }
-        }
+        for (int t = 0; t < 3; t++) {
+            for (int i = 0; i < length; i += 4){
+                if(Math.random() < .85){
+                    int start = (int) (Math.random() * length / 2) * 2;
+                    int width = (int) (Math.random() * (length - start - 6) / 2) * 2 + 6;
 
-        for(int j = 0; j < length; j += 4){
-            if(Math.random() < DENSITY)
-                m.createVerticalRoad(j, 2, (int) (Math.random() * length) / 2 * 2, length - 1, 5, 2);
+                    m.createHorizontalRoad(start, i, width, 2, 4);
+                }
+            }
+
+            for (int i = 0; i < length; i += 4){
+                if(Math.random() < .85) {
+                    int start = (int) (Math.random() * length / 2) * 2;
+                    int width = (int) (Math.random() * (length - start - 6) / 2) * 2 + 6;
+
+                    m.createVerticalRoad(i, start, width, 2, 4);
+                }
+            }
         }
 
         return m;

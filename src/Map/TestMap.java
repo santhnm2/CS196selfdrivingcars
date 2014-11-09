@@ -17,14 +17,10 @@ public class TestMap {
 		}
 		
 		Car[] y = new Car[20];
-		Map x = new Map(testMap, y);
+		Map x = new RandomMapGenerator(30).generateMap();
 		//hardcoded threeway intersection
 		System.out.println("Road initialized");
-		
-		x.createHorizontalRoad(3, 2, 0, 99, 5, 2);
-		x.createVerticalRoad(4, 2, 3, 99, 5, 2);
-		x.createHorizontalRoad(7, 2, 5, 99, 5, 2);
-		x.createVerticalRoad(16, 2, 4, 99, 5, 2);
+
 		System.out.print(x.toString());
 		System.out.println("Road with roads created");
 		
