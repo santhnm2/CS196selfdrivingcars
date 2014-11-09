@@ -15,6 +15,7 @@ public class graphNode {
    public graphNode(int x, int y, int index) {
       this.x = x;
       this.y = y;
+      this.index = index;
    }
 
    public int getX() {

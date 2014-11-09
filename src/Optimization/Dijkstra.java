@@ -2,6 +2,7 @@ package Optimization;
 
 import Car.Car;
 import Map.Map;
+import Map.Road.Road;
 import Constants.Directions;
 import java.util.ArrayList;
 
@@ -15,11 +16,46 @@ public class Dijkstra {
    // destination, and add those two nodes to the converted map.
    // find the shortest path between those two points. Return an arraylist with
    // the directions.
-   public static ArrayList<Integer> findPath(Map map, graphNode[] graph, Car car) {
+   public static ArrayList<Integer> findPath(Map map, Car car) {
       ArrayList<Integer> path = new ArrayList<Integer>();
+      graphNode[] graph = MapConverter.toGraph(map);
       int[][] completed = new int[2][0];
-      MapConverter.addNode(graph, car.getXPos(), car.getYPos(), map);
-      MapConverter.addNode(graph, car.getDestX(), car.getDestY(), map);
+      
+      graph = MapConverter.addNode(graph, car.getXPos(), car.getYPos(), map);
+      if(((Road)map.get(car.getXPos(), car.getYPos())).getDirection() == Directions.UP) {
+         graph[graph.length - 1].setHorizontal(Directions.LEFT);
+         graph =  MapConverter.addNode(graph, car.getXPos() - 1, car.getYPos(), map);
+      }
+      if(((Road)map.get(car.getXPos(), car.getYPos())).getDirection() == Directions.RIGHT) {
+         graph[graph.length - 1].setVertical(Directions.UP);
+         graph =  MapConverter.addNode(graph, car.getXPos(), car.getYPos() - 1, map);
+      }
+      if(((Road)map.get(car.getXPos(), car.getYPos())).getDirection() == Directions.DOWN) {
+         graph[graph.length - 1].setHorizontal(Directions.RIGHT);
+         graph =  MapConverter.addNode(graph, car.getXPos() + 1, car.getYPos(), map);
+      }
+      if(((Road)map.get(car.getXPos(), car.getYPos())).getDirection() == Directions.LEFT) {
+         graph[graph.length - 1].setVertical(Directions.DOWN);
+         graph =  MapConverter.addNode(graph, car.getXPos(), car.getYPos() + 1, map);
+      }
+      
+      graph = MapConverter.addNode(graph, car.getDestX(), car.getDestY(), map);
+      if(((Road)map.get(car.getDestX(), car.getDestY())).getDirection() == Directions.UP) {
+         graph[graph.length - 1].setHorizontal(Directions.LEFT);
+         graph =  MapConverter.addNode(graph, car.getDestX() - 1, car.getDestY(), map);
+      }
+      if(((Road)map.get(car.getDestX(), car.getDestY())).getDirection() == Directions.RIGHT) {
+         graph[graph.length - 1].setVertical(Directions.UP);
+         graph =  MapConverter.addNode(graph, car.getDestX(), car.getDestY() - 1, map);
+      }
+      if(((Road)map.get(car.getDestX(), car.getDestY())).getDirection() == Directions.DOWN) {
+         graph[graph.length - 1].setHorizontal(Directions.RIGHT);
+         graph =  MapConverter.addNode(graph, car.getDestX() + 1, car.getDestY(), map);
+      }
+      if(((Road)map.get(car.getDestX(), car.getDestY())).getDirection() == Directions.LEFT) {
+         graph[graph.length - 1].setVertical(Directions.DOWN);
+         graph =  MapConverter.addNode(graph, car.getDestX(), car.getDestY() + 1, map);
+      }
       // put start position in priority queue with 'weight' of 0
       PriorityQueue pq = new PriorityQueue();
       pq.add(0, MapConverter.nodeIndex(graph, car.getXPos(), car.getYPos()), -1);
@@ -34,7 +70,7 @@ public class Dijkstra {
             destination = true;
          else
             relax(current, graph, pq);
-         completedItem(completed, current);
+         completed = completedItem(completed, current);
       }
 
       // repeat until you pop the destination
@@ -61,31 +97,32 @@ public class Dijkstra {
       // Adding all the new weights for all four directions to the priority
       // queue
       if (graph[pos].getUp() != null && graph[pos].getVertical() == Directions.UP) {
-         weight += graph[pos].getY() - graph[pos].getUp().getY();
-         pq.add(weight, graph[pos].getUp().getIndex(), pos);
+         int tempWeight = weight + graph[pos].getY() - graph[pos].getUp().getY();
+         pq.add(tempWeight, graph[pos].getUp().getIndex(), pos);
       }
       if (graph[pos].getRight() != null && graph[pos].getHorizontal() == Directions.RIGHT) {
-         weight += graph[pos].getRight().getX() - graph[pos].getX();
-         pq.add(weight, graph[pos].getRight().getIndex(), pos);
+         int tempWeight = weight + graph[pos].getRight().getX() - graph[pos].getX();
+         pq.add(tempWeight, graph[pos].getRight().getIndex(), pos);
       }
       if (graph[pos].getDown() != null && graph[pos].getVertical() == Directions.DOWN) {
-         weight += graph[pos].getDown().getY() - graph[pos].getY();
-         pq.add(weight, graph[pos].getDown().getIndex(), pos);
+         int tempWeight = weight + graph[pos].getDown().getY() - graph[pos].getY();
+         pq.add(tempWeight, graph[pos].getDown().getIndex(), pos);
       }
       if (graph[pos].getLeft() != null && graph[pos].getHorizontal() == Directions.LEFT) {
-         weight += graph[pos].getX() - graph[pos].getLeft().getX();
-         pq.add(weight, graph[pos].getLeft().getIndex(), pos);
+         int tempWeight = weight + graph[pos].getX() - graph[pos].getLeft().getX();
+         pq.add(tempWeight, graph[pos].getLeft().getIndex(), pos);
       }
    }
 
-   public static void completedItem(int[][] completed, int[] current) {
-      int[][] temp = new int[0][completed[0].length + 1];
+   public static int[][] completedItem(int[][] completed, int[] current) {
+      int[][] temp = new int[2][completed[0].length + 1];
       for (int i = 0; i < completed[0].length; i++) {
          temp[0][i] = completed[0][i];
          temp[1][i] = completed[1][i];
       }
       temp[0][completed[0].length] = current[1];
       temp[1][completed[0].length] = current[2];
+      return temp;
    }
 
    public static Boolean finalDestOneDirection(int start, int end) {
