@@ -3,11 +3,11 @@ package Graphics;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 
 import javax.swing.Icon;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -32,7 +32,7 @@ public class Runner extends JFrame {
 
 		gui.setBorder(new EmptyBorder(2, 3, 2, 3));
 		gui.setBackground(Color.WHITE.darker().darker());
-		RandomMapGenerator generator = new RandomMapGenerator(30, 1);
+		RandomMapGenerator generator = new RandomMapGenerator(40, 10);
 
 		Map map = generator.generateMap();
 		System.out.println(map);
@@ -94,11 +94,10 @@ public class Runner extends JFrame {
 				} else if (map.get(j, i) instanceof Road) {
 					Road car = (Road) map.get(j, i);
 					if (car.getFilled() > 0)
-					{
-						//labels[i][j] = new JLabel(new ColorIcon(Color.RED, 16));
-						JLabel myLabel = new JLabel(new ColorIcon(Color.PINK, 16));
+					{	int fill=car.getFilled();
+						
+						JLabel myLabel = new JLabel(new ColorIcon(Color.PINK, 16,fill));
 						gui.add(myLabel);
-						System.out.printf("Drawing a car at (%d, %d)\n", i, j);
 						myLabel.setLocation(i, j);
 					}
 					else
@@ -119,20 +118,31 @@ public class Runner extends JFrame {
 
 		Color color;
 		int preferredSize = -1;
-
+		int cars=0;
 		private ColorIcon() {
 		}
-
 		public ColorIcon(Color color, int preferredSize) {
 			this.color = color;
 			this.preferredSize = preferredSize;
+		}
+
+		public ColorIcon(Color color, int preferredSize, int cars) {
+			this.color = color;
+			this.preferredSize = preferredSize;
+			this.cars=cars;
 		}
 
 		@Override
 		public void paintIcon(Component c, Graphics g, int x, int y) {
 			g.setColor(color);
 			g.fillRect(x, y, preferredSize, preferredSize);
-		}
+			if(this.cars>0){
+				
+				g.setColor(Color.black);
+				for(int a=0;a<this.cars;a++)
+					g.drawOval(x+a*3, y+a*3, 3, 3);
+			}
+			}
 
 		@Override
 		public int getIconWidth() {
