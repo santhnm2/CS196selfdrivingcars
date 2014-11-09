@@ -56,12 +56,12 @@ public class Map {
         return total.toString();
     }
 
-    void createVerticalRoad(int startX, int startY, int width, int lanes, int speed){
+    void createVerticalRoad(int startX, int startY, int length, int lanes, int speed){
         startX += startX % 2;
         startY += startY % 2;
-        width  += width % 2;
+        length  += length % 2;
 
-        for (int i = 0; i < width; i++) {
+        for (int i = 0; i < length; i++) {
             if (startY + i >= getLengthY()) break;
 
             if (grid[startX][startY + i] instanceof Road) {
@@ -111,12 +111,12 @@ public class Map {
         cars.add(c);
     }
 
-    void createHorizontalRoad(int startX, int startY, int width, int lanes, int speed){
+    void createHorizontalRoad(int startX, int startY, int length, int lanes, int speed){
         startX += startX % 2;
         startY += startY % 2;
-        width  += width % 2;
+        length  += length % 2;
 
-        for (int i = 0; i < width; i++) {
+        for (int i = 0; i < length; i++) {
             if (startX + i >= getLengthX()) break;
 
             if (grid[startX + i][startY] instanceof Road) {
@@ -141,7 +141,7 @@ public class Map {
         return 0 <= y && y < grid.length &&
                0 <= x && x < grid[y].length;
     }
-    
+
     //Written by Car Logic
     public Tile getInDir(Tile t, int dir) {
     	int x = t.getX();
