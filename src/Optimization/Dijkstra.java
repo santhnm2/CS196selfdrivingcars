@@ -70,8 +70,8 @@ public class Dijkstra {
          int[] current = pq.remove();
          if (current[1] == -1)
             return path;
-         if (finalDestOneDirection(graph[current[1]].getX(), car.getDestX())
-               && finalDestOneDirection(graph[current[1]].getY(), car.getDestY()))
+         if (graph[current[1]].getX() == car.getDestX()
+               && graph[current[1]].getY() == car.getDestY())
             destination = true;
          else
             relax(current, graph, pq, completed);
@@ -136,11 +136,11 @@ public class Dijkstra {
       return temp;
    }
 
-   public static boolean finalDestOneDirection(int start, int end) {
-      if (start == end || start + 1 == end || start - 1 == end)
-         return true;
-      return false;
-   }
+//   public static boolean finalDestOneDirection(int start, int end) {
+//      if (start == end || start + 1 == end || start - 1 == end)
+//         return true;
+//      return false;
+//   }
 
    // function to add one direction to the list at a time
    public static void moveInDirection(graphNode a, graphNode b, ArrayList<Integer> path) {
