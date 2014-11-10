@@ -53,8 +53,10 @@ public class PriorityQueue {
    public void swap(int index1, int index2) {
       int[] temp = new int[3];
       for (int i = 0; i < 3; i++)
+      {
          temp[i] = heap[index1][i];
-      heap[index1] = heap[index2];
+      heap[index1][i] = heap[index2][i];
+      }
       heap[index2] = temp;
    }
 
@@ -109,12 +111,17 @@ public class PriorityQueue {
 
    // removes the leading item in the array.
    public int[] remove() {
-      int[] removed = heap[1];
+      if (length == 0)
+         return new int[]{-1,-1,-1};
+      int[] removed = new int[3];
+      
       // sets first item to one of the largest in the array so as to completely
       // reorganize the array.
-      heap[1] = heap[length];
+      for (int i = 0; i<3; i++){
+         removed[i] = heap[1][i];
+         heap[1][i] = heap[length][i];
+      }
       length--;
-      resize();
       heap(1);
       return removed;
    }

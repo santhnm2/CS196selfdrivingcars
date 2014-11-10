@@ -22,6 +22,7 @@ public class Dijkstra {
       int[][] completed = new int[2][0];
       
       graph = MapConverter.addNode(graph, car.getXPos(), car.getYPos(), map);
+      //adds the point next to the destination as a node
       if(((Road)map.get(car.getXPos(), car.getYPos())).getDirection() == Directions.UP) {
          graph[graph.length - 1].setHorizontal(Directions.LEFT);
          graph =  MapConverter.addNode(graph, car.getXPos() - 1, car.getYPos(), map);
@@ -41,20 +42,22 @@ public class Dijkstra {
       
       graph = MapConverter.addNode(graph, car.getDestX(), car.getDestY(), map);
       if(((Road)map.get(car.getDestX(), car.getDestY())).getDirection() == Directions.UP) {
-         graph[graph.length - 1].setHorizontal(Directions.LEFT);
          graph =  MapConverter.addNode(graph, car.getDestX() - 1, car.getDestY(), map);
+         graph[graph.length - 1].setHorizontal(Directions.RIGHT);
+
       }
       if(((Road)map.get(car.getDestX(), car.getDestY())).getDirection() == Directions.RIGHT) {
-         graph[graph.length - 1].setVertical(Directions.UP);
          graph =  MapConverter.addNode(graph, car.getDestX(), car.getDestY() - 1, map);
+         graph[graph.length - 1].setVertical(Directions.DOWN);
+
       }
       if(((Road)map.get(car.getDestX(), car.getDestY())).getDirection() == Directions.DOWN) {
-         graph[graph.length - 1].setHorizontal(Directions.RIGHT);
          graph =  MapConverter.addNode(graph, car.getDestX() + 1, car.getDestY(), map);
+         graph[graph.length - 1].setHorizontal(Directions.LEFT);
       }
       if(((Road)map.get(car.getDestX(), car.getDestY())).getDirection() == Directions.LEFT) {
-         graph[graph.length - 1].setVertical(Directions.DOWN);
          graph =  MapConverter.addNode(graph, car.getDestX(), car.getDestY() + 1, map);
+         graph[graph.length - 1].setVertical(Directions.UP  );
       }
       // put start position in priority queue with 'weight' of 0
       PriorityQueue pq = new PriorityQueue();
@@ -65,16 +68,19 @@ public class Dijkstra {
          pq.heapMyArray();
          // pop the top
          int[] current = pq.remove();
+         if (current[1] == -1)
+            return path;
          if (finalDestOneDirection(graph[current[1]].getX(), car.getDestX())
                && finalDestOneDirection(graph[current[1]].getY(), car.getDestY()))
             destination = true;
          else
-            relax(current, graph, pq);
+            relax(current, graph, pq, completed);
          completed = completedItem(completed, current);
+         System.out.println(current[0] + " " + current[1] + " " + current[2]);
       }
 
       // repeat until you pop the destination
-      toArrayList(path, completed, completed[0].length, graph);
+      toArrayList(path, completed, completed[0][completed[0].length-1], graph);
       return path;
    }
 
@@ -82,38 +88,43 @@ public class Dijkstra {
       // converts an array of connected items to an an ArrayList.
       // as stated at the top, it doesn't stay in the right lane to get to the
       // next node.
-      if (arr[1][index] != -1)
-         toArrayList(path, arr, arr[1][index], graph);
+      if (arr[1][indexInCompleted(arr, index)] != -1)
+         toArrayList(path, arr, arr[1][indexInCompleted(arr, index)], graph);
       else
          return;
-      moveInDirection(graph[arr[1][index]], graph[arr[0][index]], path);
-
+      moveInDirection(graph[arr[1][indexInCompleted(arr, index)]], graph[arr[0][indexInCompleted(arr, index)]], path);
    }
 
-   public static void relax(int[] current, graphNode[] graph, PriorityQueue pq) {
+   public static void relax(int[] current, graphNode[] graph, PriorityQueue pq, int[][] completed) {
       int pos = current[1];
       int weight = current[0];
 
       // Adding all the new weights for all four directions to the priority
       // queue
-      if (graph[pos].getUp() != null && graph[pos].getVertical() == Directions.UP) {
+      if (graph[pos].getUp() != null && graph[pos].getVertical() == Directions.UP && indexInCompleted(completed, graph[pos].getUp().getIndex()) == -1) {
          int tempWeight = weight + graph[pos].getY() - graph[pos].getUp().getY();
          pq.add(tempWeight, graph[pos].getUp().getIndex(), pos);
       }
-      if (graph[pos].getRight() != null && graph[pos].getHorizontal() == Directions.RIGHT) {
+      if (graph[pos].getRight() != null && graph[pos].getHorizontal() == Directions.RIGHT && indexInCompleted(completed, graph[pos].getRight().getIndex()) == -1) {
          int tempWeight = weight + graph[pos].getRight().getX() - graph[pos].getX();
          pq.add(tempWeight, graph[pos].getRight().getIndex(), pos);
       }
-      if (graph[pos].getDown() != null && graph[pos].getVertical() == Directions.DOWN) {
+      if (graph[pos].getDown() != null && graph[pos].getVertical() == Directions.DOWN && indexInCompleted(completed, graph[pos].getDown().getIndex()) == -1) {
          int tempWeight = weight + graph[pos].getDown().getY() - graph[pos].getY();
          pq.add(tempWeight, graph[pos].getDown().getIndex(), pos);
       }
-      if (graph[pos].getLeft() != null && graph[pos].getHorizontal() == Directions.LEFT) {
+      if (graph[pos].getLeft() != null && graph[pos].getHorizontal() == Directions.LEFT && indexInCompleted(completed, graph[pos].getLeft().getIndex()) == -1) {
          int tempWeight = weight + graph[pos].getX() - graph[pos].getLeft().getX();
          pq.add(tempWeight, graph[pos].getLeft().getIndex(), pos);
       }
    }
-
+   public static int indexInCompleted(int[][] completed, int item)
+   {
+      for (int i = 0; i< completed[0].length; i++)
+         if (completed[0][i] == item)
+            return i;
+      return -1;
+   }
    public static int[][] completedItem(int[][] completed, int[] current) {
       int[][] temp = new int[2][completed[0].length + 1];
       for (int i = 0; i < completed[0].length; i++) {
@@ -125,7 +136,7 @@ public class Dijkstra {
       return temp;
    }
 
-   public static Boolean finalDestOneDirection(int start, int end) {
+   public static boolean finalDestOneDirection(int start, int end) {
       if (start == end || start + 1 == end || start - 1 == end)
          return true;
       return false;
