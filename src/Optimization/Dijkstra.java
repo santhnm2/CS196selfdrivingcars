@@ -76,7 +76,6 @@ public class Dijkstra {
          else
             relax(current, graph, pq, completed);
          completed = completedItem(completed, current);
-         System.out.println(current[0] + " " + current[1] + " " + current[2]);
       }
 
       // repeat until you pop the destination
