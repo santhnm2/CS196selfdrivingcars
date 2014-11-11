@@ -128,29 +128,24 @@ public class Car {
         Road curr = (Road) map.get(xPos, yPos);
 
         for (int i = 0; i < 100; i++) {
-            int[] dx = { 0, 1, 0, -1 };
-            int[] dy = { 1, 0, -1, 0 };
-
             int altX, altY;
             int rand;
             do {
                 rand = (int) (Math.random() * 4);
 
-                altX = curr.getX() + dx[rand];
-                altY = curr.getY() + dy[rand];
+                altX = curr.getX() + Directions.dx[rand];
+                altY = curr.getY() + Directions.dy[rand];
             } while (!(map.get(altX, altY) instanceof Road));
 
             path.add(rand);
-
-            if (!(map.getInDir(curr, rand) instanceof Road) && map.getInDir(curr, rand) == map.get(altX, altY)) {
-                throw new RuntimeException("FUCK FUCK FUCK FUCK FUCK FUCK FUCK");
-            }
 
             curr = (Road) map.get(altX, altY);
         }
 
         return path;
     }
+
+
 
     private ArrayList<Integer> leftTurn(int dir) {
         ArrayList<Integer> dirs = new ArrayList<Integer>();
