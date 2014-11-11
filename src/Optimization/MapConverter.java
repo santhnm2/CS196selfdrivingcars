@@ -1,5 +1,6 @@
 package Optimization;
 
+import Constants.Directions;
 import Map.*;
 import Map.Road.*;
 import Map.NonRoad.*;
@@ -14,17 +15,20 @@ public class MapConverter {
       graphNode[] graph = new graphNode[0];
       for (int x = 0; x < map.getLengthX(); x++)
          for (int y = 0; y < map.getLengthY(); y++)
-            if (map.get(x, y) instanceof TrafficLight)
-               addNode(graph, x, y, map);
+            if (map.get(x, y) instanceof TrafficLight){
+               graph = addNode(graph, x, y, map);
+            }
       return graph;
    }
-
-   public static void addNode(graphNode[] graph, int x, int y, Map map) {
+   
+   public static graphNode[] addNode(graphNode[] graph, int x, int y, Map map) {
       graphNode[] temp = new graphNode[graph.length + 1];
       for(int i = 0; i < graph.length; i++) {
     	  temp[i] = graph[i];
       }
-      temp[graph.length] = new graphNode(x, y,graph.length);
+    	 temp[graph.length] = new graphNode(x, y,graph.length);
+    	 
+      
       // search up until you get to a node and then set this node's up and that node's
       // down.
       for(int i = y; i >= 0; i--) {
@@ -32,9 +36,10 @@ public class MapConverter {
     		  temp[graph.length].setUp(temp[nodeIndex(graph, x, i)]);
     		  temp[nodeIndex(graph, x, i)].setDown(temp[graph.length]);
            //forces the for loop to end because there is a break in the road.
-           if (map.get(x, i) instanceof NonRoad)
-              i = 0;
+           i=0;
     	  }
+    	 if (map.get(x, i) instanceof NonRoad)
+          i = 0;
       }
       // search left until you get to a node and then set this node's left and that
       // node's right.
@@ -43,9 +48,10 @@ public class MapConverter {
     		  temp[graph.length].setLeft(temp[nodeIndex(graph, i, y)]);
     		  temp[nodeIndex(graph, i, y)].setRight(temp[graph.length]);
            //forces the for loop to end because there is a break in the road.
-           if (map.get(i, x) instanceof NonRoad)
-              i = 0;
+           i = 0;
     	  }
+    	 if (map.get(i, y) instanceof NonRoad)
+          i = 0;
       }
       // search down until you get to a node and then set this node's down and that
       // node's up. This is done only when we add a source or a destination.
@@ -54,9 +60,10 @@ public class MapConverter {
     		  temp[graph.length].setDown(temp[nodeIndex(graph, x, i)]);
     		  temp[nodeIndex(graph, x, i)].setUp(temp[graph.length]);
            //forces the for loop to end because there is a break in the road.
-           if (map.get(x, i) instanceof NonRoad)
               i = map.getLengthY();
     	  }
+        if (map.get(x, i) instanceof NonRoad)
+           i = map.getLengthY();
       }
       // search right until you get to a node and then set this node's right and that
       // node's left.  This is done only when we add a source or a destination.
@@ -65,10 +72,20 @@ public class MapConverter {
     		  temp[graph.length].setRight(temp[nodeIndex(graph, i, y)]);
     		  temp[nodeIndex(graph, i, y)].setLeft(temp[graph.length]);
     		//forces the for loop to end because there is a break in the road.
-           if (map.get(i, y) instanceof NonRoad)
               i = map.getLengthX();
     	  }
+        if (map.get(i, y) instanceof NonRoad)
+           i = map.getLengthX();
       }
+      for (int i = -2; i <= 2; i++){     
+         if (x+i > 0 && x+i < map.getLengthX()) 
+            if (map.get(x+i, y) instanceof Road && !(map.get(x+i, y) instanceof TrafficLight) && temp[temp.length -1].getHorizontal() == Directions.NO_DIR)
+               temp[temp.length-1].setHorizontal(((Road)map.get(x+i,y)).getDirection());
+         if (y+i > 0 && y+i < map.getLengthY()) 
+            if (map.get(x, y+i) instanceof Road && !(map.get(x, y+i) instanceof TrafficLight) && temp[temp.length -1].getVertical() == Directions.NO_DIR)
+               temp[temp.length-1].setVertical(((Road)map.get(x,y+i)).getDirection());
+      }
+      return temp;
    }
 
    public static int nodeIndex(graphNode[] graph, int x, int y) {

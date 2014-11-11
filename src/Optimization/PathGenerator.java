@@ -2,13 +2,18 @@ package Optimization;
 
 import Constants.Directions;
 import Car.Car;
+import Map.Map;
 import Map.Road.TrafficLight;
+import Optimization.Dijkstra;
 
 import java.util.ArrayList;
 
 public class PathGenerator {
 
    // determines baseline path
+   public static ArrayList<Integer> useDijkstra(Map map, Car car){
+      return Dijkstra.findPath(map, car);
+   }
    public ArrayList<Integer> baseline(Car car) {
       ArrayList<Integer> path = new ArrayList<Integer>();
       int[] position = new int[2];
