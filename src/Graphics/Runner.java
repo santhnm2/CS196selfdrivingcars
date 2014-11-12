@@ -46,7 +46,6 @@ public class Runner extends JFrame{
 		RandomMapGenerator generator = new RandomMapGenerator(size, cars);
 
 		map = generator.generateMap();
-		System.out.println(map);
 		int w = map.getLengthX();
 		int h = map.getLengthY();
 		gui.setLayout(new GridLayout(h, w, 2, 2));
