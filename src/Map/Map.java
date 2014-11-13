@@ -2,6 +2,7 @@ package Map;
 
 import Car.Car;
 import Constants.Directions;
+import Map.NonRoad.NonRoad;
 import Map.Road.Intersection;
 import Map.Road.Road;
 import Map.Road.TrafficLight;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 
 
 public class Map {
-    private final Tile[][] grid;
+    final Tile[][] grid;
     private final ArrayList<Car> cars;
     private TrafficLightHandler handler = new TrafficLightHandler(new ArrayList<Intersection>());
 
@@ -56,12 +57,12 @@ public class Map {
         return total.toString();
     }
 
-    public void createVerticalRoad(int startX, int startY, int width, int lanes, int speed){
+    void createVerticalRoad(int startX, int startY, int length, int lanes, int speed){
         startX += startX % 2;
         startY += startY % 2;
-        width  += width % 2;
+        length  += length % 2;
 
-        for (int i = 0; i < width; i++) {
+        for (int i = 0; i < length; i++) {
             if (startY + i >= getLengthY()) break;
 
             if (grid[startX][startY + i] instanceof Road) {
@@ -91,9 +92,7 @@ public class Map {
                     int[] dx = { 0, 1, 1, 0 };
                     int[] dy = { 0, 0, 1, 1 };
 
-
                     ArrayList<TrafficLight> l = new ArrayList<TrafficLight>();
-
 
                     for (int k = 0; k < 4; k++)
                         l.add((TrafficLight) grid[i + dx[k]][j + dy[k]]);
@@ -111,13 +110,12 @@ public class Map {
         cars.add(c);
     }
 
-  ///  void createHorizontalRoad(int startX, int startY, int width, int lanes, int speed){
-    public void createHorizontalRoad(int startX, int startY, int width, int lanes, int speed){
+    void createHorizontalRoad(int startX, int startY, int length, int lanes, int speed){
         startX += startX % 2;
         startY += startY % 2;
-        width  += width % 2;
+        length  += length % 2;
 
-        for (int i = 0; i < width; i++) {
+        for (int i = 0; i < length; i++) {
             if (startX + i >= getLengthX()) break;
 
             if (grid[startX + i][startY] instanceof Road) {
@@ -138,20 +136,61 @@ public class Map {
         fixLights();
     }
 
+    public boolean[] generateValidMoves(int x, int y) {
+        Tile curr = get(x, y);
+
+        if (curr instanceof NonRoad)
+            return new boolean[4];
+
+        boolean[] valid = new boolean[4];
+
+        if (curr instanceof TrafficLight) {
+            for (int i = 0; i < 4; i++) {
+                if (get(x + Directions.dx[i], y + Directions.dy[i]) instanceof Road) {
+                    valid[i] = true;
+                }
+            }
+
+            return valid;
+        }
+
+        Road r = (Road) curr;
+
+        int dir = r.getDirection();
+
+        if (get(x + Directions.dx[dir], y + Directions.dy[dir]) instanceof Road) {
+            Road potential = (Road) get(x + Directions.dx[dir], y + Directions.dy[dir]);
+
+            if (potential.getDirection() == dir || potential instanceof TrafficLight)
+                valid[dir] = true;
+        }
+
+        boolean anyValid = valid[0] || valid[1] || valid[2] || valid[3];
+
+        int altDir = (dir + 3) % 4;
+
+        if (getInDir(curr, altDir) instanceof Road) {
+            Road adj = (Road) getInDir(curr, altDir);
+
+            if ((adj.getDirection() + 2) % 4 == dir) {
+                valid[altDir] = true;
+            }
+        }
+
+        return valid;
+    }
+
     public boolean pointIsValid(int x, int y) {
         return 0 <= y && y < grid.length &&
                0 <= x && x < grid[y].length;
     }
-    
+
     //Written by Car Logic
     public Tile getInDir(Tile t, int dir) {
     	int x = t.getX();
         int y = t.getY();
 
-        int[] dx = { 0, 1, 0, -1 };
-        int[] dy = { 1, 0, -1, 0 };
-
-    	return get(x + dx[dir], y + dy[dir]);
+    	return get(x + Directions.dx[dir], y + Directions.dy[dir]);
     }
 
     public TrafficLightHandler getHandler() {

@@ -52,15 +52,19 @@ public class Car {
     
     public boolean move() // plug off the first item of the arraylist and execute that
     {
-        Tile nextTile=getNextTile(xPos, yPos, path.get(0));
+        Tile nextTile= map.getInDir(map.get(xPos, yPos), path.get(0));
         if(nextTile instanceof TrafficLight) { //No red traffic lights
             TrafficLight l = (TrafficLight)nextTile;
             if(l.isRed() && !(map.get(xPos,yPos) instanceof TrafficLight)) {
                 return false;
             }
         }
-        if(nextTile.getX()>=0 && nextTile.getY()>=0 && nextTile.getX()<map.getLengthX() && nextTile.getY()<map.getLengthY()) {
-        	if(((Road)(map.get(nextTile.getX(), nextTile.getY()))).getRemaining()>0) {
+        if(nextTile.getX() >= 0 && nextTile.getY()>=0 && nextTile.getX()<map.getLengthX() && nextTile.getY()<map.getLengthY()) {
+        	if (!(nextTile instanceof Road)) {
+                System.out.println(nextTile.getX() + " " + nextTile.getY());
+            }
+
+            if(nextTile instanceof Road && ((Road) nextTile).getRemaining()>0) {
 	            Road road = (Road)map.get(xPos, yPos);
 	            road.carDecrement(this);
 	            xPos=nextTile.getX();
@@ -87,27 +91,6 @@ public class Car {
      * @param Direction to check in
      * @return Tile in the given direction, or null if it doesn't exist.
      */
-    public Tile getNextTile(int x, int y, int dir)
-    {
-        switch(dir) {
-            case Directions.UP:
-                y--;
-                break;
-            case Directions.DOWN:
-                y++;
-                break;
-            case Directions.RIGHT:
-                x++;
-                break;
-            case Directions.LEFT:
-                x--;
-                break;
-        }
-        if(map.pointIsValid(x, y)) //Ensure tile is in grid
-            return map.get(x, y);
-        else
-            return null; //If not in grid, return null
-    }
     public int getSpeed()
     {
         return speed;
@@ -147,5 +130,9 @@ public class Car {
     
     public String toString() {
         return (xPos+","+yPos);
+    }
+
+    public Tile getNextTile(int x, int y, int dir) {
+        return map.getInDir(map.get(x, y), dir);
     }
 }

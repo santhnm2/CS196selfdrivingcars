@@ -1,11 +1,15 @@
 package Map;
 
+import Constants.Directions;
 import Map.NonRoad.House;
 import Car.Car;
 import Map.Road.Road;
 import Map.Road.TrafficLight;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Queue;
 
 /**
  * @author arshsab
@@ -76,9 +80,81 @@ public class RandomMapGenerator implements MapGenerator {
             m.placeCar(new Car(start.x, start.y, end.x, end.y, m));
         }
 
+        removeIslands(m);
+
         return m;
     }
 
+    private void removeIslands(Map m) {
+        int[][] dp = new int[length][length];
+
+        int num = 1;
+
+        for (int[] arr : dp) {
+            Arrays.fill(arr, Integer.MAX_VALUE);
+        }
+
+        int max = -1;
+        int maxNum = 0;
+        for (int i = 0; i < dp.length; i++) {
+            for (int j = 0; j < dp[i].length; j++) {
+                if (m.grid[i][j] instanceof House) {
+                    dp[i][j] = 0;
+                } else if (dp[i][j] > num) {
+                    int count = floodfill(m, dp, num, i, j);
+
+                    if (count > max) {
+                        max = count;
+                        maxNum = num;
+                    }
+
+                    ++num;
+
+                }
+            }
+        }
+
+        for (int i = 0; i < dp.length; i++) {
+            for (int j = 0; j < dp[i].length; j++) {
+                if (dp[i][j] != maxNum) {
+                    m.grid[i][j] = new House(i, j);
+                }
+            }
+        }
+
+    }
+
+    private int floodfill(Map m, int[][] dp, int val, int x, int y) {
+        Queue<Coord> q = new ArrayDeque<Coord>();
+
+        q.add(new Coord(x, y));
+
+        dp[x][y] = val;
+        int count = 1;
+        while (!q.isEmpty()) {
+            Coord nex = q.poll();
+
+            boolean[] valid = m.generateValidMoves(nex.x, nex.y);
+
+            for (int i = 0; i < 4; i++) {
+                if (!valid[i]) continue;
+
+                int altX = nex.x + Directions.dx[i];
+                int altY = nex.y + Directions.dy[i];
+
+                if (!m.pointIsValid(altX, altY)
+                        || dp[altX][altY] <= val) continue;
+
+                dp[altX][altY] = val;
+                q.add(new Coord(altX, altY));
+
+                count++;
+            }
+        }
+
+
+        return count;
+    }
 
     private class Coord {
         final int x, y;
@@ -102,6 +178,11 @@ public class RandomMapGenerator implements MapGenerator {
             Coord other = (Coord) o;
 
             return this.x == other.x && this.y == other.y;
+        }
+
+        @Override
+        public String toString() {
+            return "(" + x + " " + y + ")";
         }
     }
 
