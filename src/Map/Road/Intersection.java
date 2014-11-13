@@ -25,7 +25,7 @@ public class Intersection {
         	lights.get(3).setRed(false);
         }
 
-//        findInputRoads();
+        findInputRoads();
 	}
     public void toggle() {
 		for (TrafficLight light : lights) {
@@ -58,13 +58,15 @@ public class Intersection {
     	//Find the roots around the light
     	for(TrafficLight light:lights) {
     		for(int dir:Directions.dirs) {
-	    		Tile check = map.getInDir(light, dir);
-	    		if(check instanceof Road && !(check instanceof TrafficLight)) {
-	    			if(map.getInDir(check, ((Road) check).getDirection()).equals(light)) {
-	    				inputRoads.add((Road) check);
-	    				light.setTraffic(traceBack((Road)check));
-	    			}
-	    		}
+    			if(dir!=-1){
+    				Tile check = map.getInDir(light, dir);
+    				if(check instanceof Road && !(check instanceof TrafficLight)) {
+    					if(map.getInDir(check, ((Road) check).getDirection()).equals(light)) {
+    						inputRoads.add((Road) check);
+    						light.setTraffic(traceBack((Road)check));
+    					}
+    				}
+    			}
     		}
     	}
     	//Find the rest of the road back to the last light or beginning of road
@@ -74,8 +76,9 @@ public class Intersection {
 		int oppositeDir = r.getDirection()-2;
 		if(oppositeDir<0) oppositeDir+=4;
 		Road curRoad = r;
-		while(map.getInDir(r, oppositeDir) instanceof Road && !(map.getInDir(r, oppositeDir) instanceof TrafficLight)) {
-			curRoad = (Road)map.getInDir(r, oppositeDir);
+		while(map.getInDir(curRoad, oppositeDir) instanceof Road && !(map.getInDir(curRoad, oppositeDir) instanceof TrafficLight)) {
+			
+			curRoad = (Road)map.getInDir(curRoad, oppositeDir);
 			result.add(curRoad);
 		}
 		return result;

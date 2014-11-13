@@ -11,11 +11,11 @@ import Map.Road.TrafficLight;
 import Optimization.PathGenerator;
 
 public class Car {
-    private int speed = 0;
-    private int dir = 0;
-    private int xPos = 0;
-    private int yPos = 0;
-    private int previousDir = 0;
+    private int speed=0;
+    private int dir=0;
+    private int xPos=0;
+    private int yPos=0;
+    private int previousDir=0;
     //	final private Tile destination=new Tile();   waiting to be implemented
     ArrayList<Integer> path=new ArrayList<Integer>();
     Map map; //Grid that the car is in
@@ -31,11 +31,8 @@ public class Car {
         road.carIncrement(this);
         this.dir = road.getDirection();
         this.map = map;
-
-        genPath();
+        path = PathGenerator.useDijkstra(map, this);
     }
-
-
     public int getXPos()
     {
        return xPos;
@@ -55,22 +52,30 @@ public class Car {
     
     public boolean move() // plug off the first item of the arraylist and execute that
     {
+        Tile nextTile= map.getInDir(map.get(xPos, yPos), path.get(0));
+        if(nextTile instanceof TrafficLight) { //No red traffic lights
+            TrafficLight l = (TrafficLight)nextTile;
+            if(l.isRed() && !(map.get(xPos,yPos) instanceof TrafficLight)) {
+                return false;
+            }
+        }
+        if(nextTile.getX() >= 0 && nextTile.getY()>=0 && nextTile.getX()<map.getLengthX() && nextTile.getY()<map.getLengthY()) {
+        	if (!(nextTile instanceof Road)) {
+                System.out.println(nextTile.getX() + " " + nextTile.getY());
+            }
 
-        int dir = path.remove(0);
-        Tile nextTile = map.getInDir(map.get(getXPos(), getYPos()), dir);
-
-        Road r2 = (Road) map.get(xPos, yPos);
-        r2.carDecrement(this);
-
-        xPos = nextTile.getX();
-        yPos = nextTile.getY();
-
-        Road r = (Road) map.get(xPos, yPos);
-
-
-        r.carIncrement(this);
-
-        return true;
+            if(nextTile instanceof Road && ((Road) nextTile).getRemaining()>0) {
+	            Road road = (Road)map.get(xPos, yPos);
+	            road.carDecrement(this);
+	            xPos=nextTile.getX();
+	            yPos=nextTile.getY();
+	            road = (Road) map.get(xPos, yPos);
+	            road.carIncrement(this);
+	            path.remove(0);
+	            return true;
+        	}
+        }
+        return false;
     }
     public boolean turn()
     {
@@ -86,27 +91,6 @@ public class Car {
      * @param Direction to check in
      * @return Tile in the given direction, or null if it doesn't exist.
      */
-    public Tile getNextTile(int x, int y, int dir)
-    {
-        switch(dir) {
-            case Directions.UP:
-                y--;
-                break;
-            case Directions.DOWN:
-                y++;
-                break;
-            case Directions.RIGHT:
-                x++;
-                break;
-            case Directions.LEFT:
-                x--;
-                break;
-        }
-        if(map.pointIsValid(x, y)) //Ensure tile is in grid
-            return map.get(x, y);
-        else
-            return null; //If not in grid, return null
-    }
     public int getSpeed()
     {
         return speed;
@@ -123,29 +107,6 @@ public class Car {
     {
         dir=this.dir;
     }
-    // unsafe, do not use.
-    public ArrayList<Integer> genPath() {
-        Road curr = (Road) map.get(xPos, yPos);
-
-        for (int i = 0; i < 100; i++) {
-            int altX, altY;
-            int rand;
-            do {
-                rand = (int) (Math.random() * 4);
-
-                altX = curr.getX() + Directions.dx[rand];
-                altY = curr.getY() + Directions.dy[rand];
-            } while (!(map.get(altX, altY) instanceof Road));
-
-            path.add(rand);
-
-            curr = (Road) map.get(altX, altY);
-        }
-
-        return path;
-    }
-
-
 
     private ArrayList<Integer> leftTurn(int dir) {
         ArrayList<Integer> dirs = new ArrayList<Integer>();
@@ -169,5 +130,9 @@ public class Car {
     
     public String toString() {
         return (xPos+","+yPos);
+    }
+
+    public Tile getNextTile(int x, int y, int dir) {
+        return map.getInDir(map.get(x, y), dir);
     }
 }
