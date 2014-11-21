@@ -21,6 +21,7 @@ public class Car {
     Map map; //Grid that the car is in
     private int destX;
     private int destY;
+    public boolean hasMoved=false;
     
     public Car(int x, int y, int destX, int destY, Map map) {
         xPos = x;
@@ -56,11 +57,13 @@ public class Car {
         if(nextTile instanceof TrafficLight) { //No red traffic lights
             TrafficLight l = (TrafficLight)nextTile;
             if(l.isRed() && !(map.get(xPos,yPos) instanceof TrafficLight)) {
+            	hasMoved=true;
                 return false;
             }
         }
         if(nextTile.getX()>=0 && nextTile.getY()>=0 && nextTile.getX()<map.getLengthX() && nextTile.getY()<map.getLengthY()) {
         	if(((Road)(map.get(nextTile.getX(), nextTile.getY()))).getRemaining()>0) {
+        		hasMoved=true;
 	            Road road = (Road)map.get(xPos, yPos);
 	            road.carDecrement(this);
 	            xPos=nextTile.getX();
@@ -70,6 +73,7 @@ public class Car {
 	            path.remove(0);
 	            return true;
         	}
+        	
         }
         return false;
     }
