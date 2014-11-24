@@ -10,7 +10,8 @@ import java.util.ArrayList;
 
 
 public class Map {
-    private final Tile[][] grid;
+    private static final String Road = null;
+	private final Tile[][] grid;
     private final ArrayList<Car> cars;
     private TrafficLightHandler handler = new TrafficLightHandler(new ArrayList<Intersection>());
 
@@ -142,7 +143,13 @@ public class Map {
         return 0 <= y && y < grid.length &&
                0 <= x && x < grid[y].length;
     }
-    
+    public void destroyCar(Car c)
+    {
+    	Road r=(Road)get(c.getXPos(),c.getYPos());
+    	r.carDecrement(c);
+    	cars.remove(c);
+    	
+    }
     //Written by Car Logic
     public Tile getInDir(Tile t, int dir) {
     	int x = t.getX();
