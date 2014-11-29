@@ -37,8 +37,11 @@ public class TrafficLight extends Road {
     }
     public double getTrafficDensity() {
     	int total = 0;
+    	if(traffic==null)
+    		return 0;
     	for(Road r:traffic) {
-    		total += r.getMaxOccupants();
+    		
+    		total += 2-r.getRemaining(); //get number of cars in the input roads
     	}
     	int len = traffic.size();
     	return (double)(total)/len;

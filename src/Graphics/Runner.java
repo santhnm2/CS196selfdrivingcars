@@ -7,6 +7,7 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -24,6 +25,7 @@ import Map.Map;
 import Map.RandomMapGenerator;
 import Map.Tile;
 import Map.NonRoad.NonRoad;
+import Map.Road.Intersection;
 import Map.Road.Road;
 import Map.Road.TrafficLight;
 
@@ -170,18 +172,19 @@ public class Runner extends JFrame{
 	public static void step(Map map) {
 		//Print out state
 		iterations++;
-		if(iterations % 10 == 0) { //Toggle all lights every ten iterations
-			for(int i = 0; i < map.getLengthX(); i++) {
-				for (int j = 0; j < map.getLengthY(); j++) {
-					Tile t = map.get(i, j);
+		ArrayList<Intersection> intersections=map.getHandler().intersections;
+		//if(iterations % 10 == 0) { //Toggle all lights every ten iterations
+			for(int i = 0; i < intersections.size(); i++) {
+				
 
-					if(t instanceof TrafficLight) {
-						TrafficLight l  = (TrafficLight) t;
-						l.toggle();
-					}
+					if(intersections.get(i).shouldToggle()) {
+						intersections.get(i).toggle();
+						System.out.println("toggled");
+						
+					
 				}
 			}
-		}
+		//}
 		int t=0;
 		while(!haveAllMoved()&&t<=5)
 		{

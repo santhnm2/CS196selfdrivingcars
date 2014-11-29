@@ -14,6 +14,7 @@ public class TrafficLightHandler {
 	public void toggleAll() {
 		for(Intersection i:intersections) {
 			i.toggle();
+			
 		}
 	}
 }

@@ -156,7 +156,7 @@ public class Map {
         int y = t.getY();
 
         int[] dx = { 0, 1, 0, -1 };
-        int[] dy = { 1, 0, -1, 0 };
+        int[] dy = { -1, 0, 1, 0 };
 
     	return get(x + dx[dir], y + dy[dir]);
     }
