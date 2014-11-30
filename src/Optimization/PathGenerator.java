@@ -10,10 +10,17 @@ import java.util.ArrayList;
 
 public class PathGenerator {
 
-   // determines baseline path
    public static ArrayList<Integer> useDijkstra(Map map, Car car){
-      return Dijkstra.findPath(map, car);
+      return Dijkstra.findPath(map, car, true);
    }
+   public static ArrayList<Integer> minimizeDistance(Map map, Car car){
+       return Dijkstra.findPath(map, car, false);
+   }
+   //this is meant to find a path, by heading until it reaches the correct
+   //lattitude or longitude.
+   //only works if the map is a grid with no anomalies.
+   //a better way to implement this would be to use dijkstra ignoring speed.
+   //it is probably possible to adapt this to road anomalies, will atempt.
    public ArrayList<Integer> baseline(Car car) {
       ArrayList<Integer> path = new ArrayList<Integer>();
       int[] position = new int[2];

@@ -80,10 +80,16 @@ public class MapConverter {
       for (int i = -2; i <= 2; i++){     
          if (x+i > 0 && x+i < map.getLengthX()) 
             if (map.get(x+i, y) instanceof Road && !(map.get(x+i, y) instanceof TrafficLight) && temp[temp.length -1].getHorizontal() == Directions.NO_DIR)
-               temp[temp.length-1].setHorizontal(((Road)map.get(x+i,y)).getDirection());
+            {
+                temp[temp.length-1].setHorizontal(((Road)map.get(x+i,y)).getDirection());
+                temp[temp.length-1].setHorizontalSpeed(((Road)map.get(x+i,y)).getSpeed());                
+            }
          if (y+i > 0 && y+i < map.getLengthY()) 
             if (map.get(x, y+i) instanceof Road && !(map.get(x, y+i) instanceof TrafficLight) && temp[temp.length -1].getVertical() == Directions.NO_DIR)
-               temp[temp.length-1].setVertical(((Road)map.get(x,y+i)).getDirection());
+            {
+                temp[temp.length-1].setVertical(((Road)map.get(x,y+i)).getDirection());
+                temp[temp.length-1].setVerticalSpeed(((Road)map.get(x,y+i)).getSpeed());
+            }
       }
       return temp;
    }
