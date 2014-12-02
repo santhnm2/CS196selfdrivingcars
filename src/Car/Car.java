@@ -32,7 +32,7 @@ public class Car {
         road.carIncrement(this);
         this.dir = road.getDirection();
         this.map = map;
-        path = PathGenerator.useDijkstra(map, this);
+        path = PathGenerator.minimizeTime(map, this);
     }
     public int getXPos()
     {
