@@ -8,6 +8,8 @@ public class graphNode {
    private graphNode down;
    private int dirHorizontal = Directions.NO_DIR;
    private int dirVertical = Directions.NO_DIR;
+   private int speedHorizontal = 1;
+   private int speedVertical = 1;
    private int x;
    private int y;
    private int index;
@@ -59,6 +61,21 @@ public class graphNode {
    
    public int getVertical() {
 	   return this.dirVertical;
+   }
+    public void setHorizontalSpeed(int h) {
+	   this.speedHorizontal = h;
+   }
+   
+   public void setVerticalSpeed(int v) {
+	   this.speedVertical = v;
+   }
+   
+   public int getHorizontalSpeed() {
+	   return this.speedHorizontal;
+   }
+   
+   public int getVerticalSpeed() {
+	   return this.speedVertical;
    }
 
    public graphNode getLeft() {
