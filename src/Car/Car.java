@@ -61,20 +61,25 @@ public class Car {
                 return false;
             }
         }
-        if(nextTile.getX()>=0 && nextTile.getY()>=0 && nextTile.getX()<map.getLengthX() && nextTile.getY()<map.getLengthY()) {
-        	if(((Road)(map.get(nextTile.getX(), nextTile.getY()))).getRemaining()>0) {
-        		hasMoved=true;
-	            Road road = (Road)map.get(xPos, yPos);
-	            road.carDecrement(this);
-	            xPos=nextTile.getX();
-	            yPos=nextTile.getY();
-	            road = (Road) map.get(xPos, yPos);
-	            road.carIncrement(this);
-	            path.remove(0);
-	            return true;
-        	}
-        	
-        }
+        Road road = (Road)map.get(xPos, yPos);
+        int speedInit = road.getSpeed();
+        for(int remaining = road.getSpeed(); remaining>=0; remaining--) {
+        	road = (Road)map.get(xPos, yPos);
+        	if(road.getSpeed()!=speedInit) break;
+	        if(nextTile.getX()>=0 && nextTile.getY()>=0 && nextTile.getX()<map.getLengthX() && nextTile.getY()<map.getLengthY()) {
+	        	if(((Road)(map.get(nextTile.getX(), nextTile.getY()))).getRemaining()>0) {
+	        		hasMoved=true;
+		            road.carDecrement(this);
+		            xPos=nextTile.getX();
+		            yPos=nextTile.getY();
+		            road = (Road) map.get(xPos, yPos);
+		            road.carIncrement(this);
+		            path.remove(0);
+		            return true;
+	        	}
+	        	
+	        }
+    	}
         return false;
     }
     public boolean turn()

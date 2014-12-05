@@ -1,4 +1,4 @@
-
+package Graphics;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -179,7 +179,6 @@ public class Runner extends JFrame{
 
 					if(intersections.get(i).shouldToggle()) {
 						intersections.get(i).toggle();
-						System.out.println("toggled");
 						
 					
 				}
