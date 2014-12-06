@@ -10,7 +10,7 @@ import Map.Road.Road;
 import Map.Road.TrafficLight;
 import Optimization.PathGenerator;
 
-public class Car {
+public class Car implements java.io.Serializable {
     private int speed=0;
     private int dir=0;
     private int xPos=0;

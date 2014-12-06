@@ -6,7 +6,7 @@ import Constants.Directions;
 import Map.Map;
 import Map.Tile;
 
-public class Intersection {
+public class Intersection implements java.io.Serializable{
 	
 	private final ArrayList<TrafficLight> lights;
 	private ArrayList<Road> inputRoads = new ArrayList<Road>();
