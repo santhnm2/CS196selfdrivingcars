@@ -34,6 +34,12 @@ public class Car {
         this.map = map;
         path = PathGenerator.minimizeTime(map, this);
     }
+    public void setPath(int a){
+    	if(a==0)
+    		this.path=PathGenerator.minimizeTime(map, this);
+      	if(a==1)
+    		this.path=PathGenerator.minimizeDistance(map, this);
+    }
     public int getXPos()
     {
        return xPos;

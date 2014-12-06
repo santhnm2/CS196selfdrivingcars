@@ -23,7 +23,6 @@ import javax.swing.border.EmptyBorder;
 import Car.Car;
 import Map.Map;
 import Map.RandomMapGenerator;
-import Map.Tile;
 import Map.NonRoad.NonRoad;
 import Map.Road.Intersection;
 import Map.Road.Road;
@@ -35,11 +34,12 @@ public class Runner extends JFrame{
 	static JLabel [][] labels;
 	static boolean run=true;
 	// for ease of access during demo
-	static int size=40;//size of the map
+	static int size=20;//size of the map
 	static int cars=100;//number of cars
 	static int sizeBox=14;//size of each box
 	static Map map;
-	static 		JFrame f ;
+	static 	JFrame f ;
+	static Thread mythread=new MyThread();
 	public static void main(String[] args) throws InterruptedException {
 	
 		gui.setBorder(new EmptyBorder(2, 3, 2, 3));
@@ -57,8 +57,6 @@ public class Runner extends JFrame{
 				labels[i][j] = new JLabel();
 				gui.add(labels[i][j]);
 			}
-		color(gui, map);
-
 		f = new JFrame("Demo");
 		f.add(gui);
 		f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -67,15 +65,35 @@ public class Runner extends JFrame{
 		addMenus(f);
 		f.pack();
 		f.setVisible(true);
-		run();
 	}
-
+		public static class MyThread extends Thread
+		{	
+			public void run(){
+			color(gui, map);
+			f.pack();
+			while(run){
+			gui.removeAll();
+			
+			sizeBox=f.getWidth()/size;
+			color(gui, map);
+			step(map);
+			gui.updateUI();
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			}
+			}
+	}
 	private static void run() throws InterruptedException{
-	while(run){
+		while(run){
 		gui.removeAll();
-		step(map);
+		
+		sizeBox=f.getWidth()/size;
 		color(gui, map);
-		f.pack();
+		step(map);
 		gui.updateUI();
 		Thread.sleep(500);
 		}
@@ -148,12 +166,14 @@ public class Runner extends JFrame{
 		@Override
 		public void paintIcon(Component c, Graphics g, int x, int y) {
 			g.setColor(color);
-			g.fillRect(x, y, preferredSize, preferredSize);
+			g.fillRect(x, y,preferredSize ,preferredSize);
+			//g.drawImage(img, x, y, bgcolor, observer)
+			//g.drawIma
 			if(this.cars>0){
 				
 				g.setColor(Color.black);
 				for(int a=0;a<this.cars;a++)
-					g.drawOval(x+a*3, y+a*3, 3, 3);
+					g.fillOval(x+a*sizeBox/3, y, sizeBox/3,sizeBox/3);
 			}
 			}
 
@@ -179,7 +199,7 @@ public class Runner extends JFrame{
 
 					if(intersections.get(i).shouldToggle()) {
 						intersections.get(i).toggle();
-						System.out.println("toggled");
+						//System.out.println("toggled");
 						
 					
 				}
@@ -207,7 +227,7 @@ public class Runner extends JFrame{
 			if(map.getCars().get(i).getPath().size()==0)
 				{	
 					map.destroyCar(map.getCars().get(i));
-					
+					cars--;
 					i--;
 				}
 				
@@ -226,35 +246,44 @@ public class Runner extends JFrame{
 	public static void Jbutton(final JFrame f) {
 		JToolBar vertical = new JToolBar(JToolBar.VERTICAL);
 		JButton stop = new JButton("Stop");
-        JButton step = new JButton("Step");
-
+        JButton step = new JButton("Quick Pause(5000 mil)");
+        JButton time = new JButton("Start");
+        JButton dist = new JButton("Distance efficient");
 		stop.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				run=false;
+				mythread.stop();
 			}
 		});
 		
         step.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				gui.removeAll();
-				step(map);
-				color(gui, map);
-				f.pack();
-				//run=true;
-//				try {
-//					run();
-//				} catch (InterruptedException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-			 }
+				mythread.resume(); 
+			}
 		});
-        
+        time.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				mythread.start();
+			}
+		});
+        dist.addActionListener(new ActionListener() {
+    			public void actionPerformed(ActionEvent ae) {
+    			for(int a=0;a<cars;a++)
+    				map.getCars().get(a).setPath(1);
+    			Thread mythread=new MyThread();
+				mythread.start();
+			
+    			}
+    			
+    		});
+           
         vertical.add(stop);
         vertical.add(step);
+        vertical.add(time);
+       // vertical.add(dist);
 //        add(label, BorderLayout.WEST);
-        f.add(vertical, BorderLayout.WEST); 
-        f.pack();
+        f.add(vertical, BorderLayout.WEST
+        		); 
+        //f.pack();
 	
 	}
 
@@ -262,12 +291,12 @@ public class Runner extends JFrame{
 	public static void addMenus(final JFrame frame) {
 		JMenuBar menubar = new JMenuBar();
 		JMenu fileMenu = new JMenu("File");
+		JMenu Opt = new JMenu("Optimize");
 		menubar.add(fileMenu);
 		
 		JMenuItem StopItem = new JMenuItem("Stop");
 		JMenuItem StartItem = new JMenuItem("Start (doesnt work yet)");
-
-		fileMenu.add(StopItem);
+				fileMenu.add(StopItem);
 		StopItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				run=false;
@@ -276,14 +305,40 @@ public class Runner extends JFrame{
 		fileMenu.add(StartItem);
 		StartItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				run=true;
-				System.out.println("should i run again?"+run+" but i dont");
+				
 			}
 		});
+		menubar.add(Opt);
+		JMenuItem time = new JMenuItem("Time efficient");
+		JMenuItem dist = new JMenuItem("Distance efficient");
+		Opt.add(time);
+		Opt.add(dist);
+		
+        time.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+			for(int a=0;a<cars;a++)
+				map.getCars().get(a).setPath(0);
+				
+				mythread.start();
+			}
+		});
+        dist.addActionListener(new ActionListener() {
+    			public void actionPerformed(ActionEvent ae) {
+    			for(int a=0;a<cars;a++)
+    				map.getCars().get(a).setPath(1);
+    			Thread mythread=new MyThread();
+				mythread.start();
+			
+    			}
+    			
+    		});
+           
+
+		
 
 		
 		frame.setJMenuBar(menubar);
-		frame.pack();
+		//frame.pack();
 
 	}
 
