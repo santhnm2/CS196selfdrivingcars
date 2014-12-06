@@ -9,7 +9,7 @@ import Map.Road.TrafficLight;
 import java.util.ArrayList;
 
 
-public class Map {
+public class Map implements java.io.Serializable {
     private static final String Road = null;
 	private final Tile[][] grid;
     private final ArrayList<Car> cars;
