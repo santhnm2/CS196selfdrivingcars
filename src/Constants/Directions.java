@@ -7,4 +7,10 @@ public class Directions {
 	public static final int LEFT = 3;
 	
 	public static final int[] dirs = {0,1,2,3};
+
+	public static int getOppositeDir(int dir) { 
+		int val = dir + 2;
+		if(val >= 4) val -= 4;
+		return val;
+	}
 }
