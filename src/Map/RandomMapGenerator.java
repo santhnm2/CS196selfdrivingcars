@@ -59,6 +59,8 @@ public class RandomMapGenerator implements MapGenerator {
             }
         }
 
+        removeIslands(m);
+
         ArrayList<Road> roads = new ArrayList<Road>();
 
         for (Tile[] a : grid) {
@@ -80,7 +82,6 @@ public class RandomMapGenerator implements MapGenerator {
             m.placeCar(new Car(start.x, start.y, end.x, end.y, m));
         }
 
-        removeIslands(m);
 
         return m;
     }
