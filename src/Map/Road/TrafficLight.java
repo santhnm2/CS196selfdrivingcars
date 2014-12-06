@@ -10,7 +10,7 @@ public class TrafficLight extends Road {
 	
 	public TrafficLight(int x, int y, boolean isRed) {
         //ASSUME THAT TRAFFIC LIGHTS ALWAYS HAVE 2 LANES BECAUSE I SAID SO
-		super(x, y, 0, Directions.NO_DIR, 2); //Temporary Speed and Direction are 0 and 0
+		super(x, y, 1, Directions.NO_DIR, 2); //Temporary Speed and Direction are 1 and -1
 		this.isRed = isRed;
 	}
 	
