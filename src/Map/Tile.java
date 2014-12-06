@@ -1,6 +1,6 @@
 package Map;
 
-public class Tile {
+public class Tile implements java.io.Serializable{
     protected final int x, y;
 
     public Tile(int x, int y) {
@@ -16,5 +16,10 @@ public class Tile {
 	public int getY()
 	{
 		return y;
+	}
+
+	@Override
+	public String toString() {
+		return "(" + x + ", " + y + ")";
 	}
 }

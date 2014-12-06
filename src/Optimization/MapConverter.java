@@ -1,5 +1,6 @@
 package Optimization;
 
+import Car.Car;
 import Constants.Directions;
 import Map.*;
 import Map.Road.*;
@@ -100,5 +101,46 @@ public class MapConverter {
             return i;
 		return -1;
 	}
+   public static graphNode[] addEndPoints(graphNode[] graph, Car car, Map map){
+      graph = MapConverter.addNode(graph, car.getXPos(), car.getYPos(), map);
+      //adds the point next to the destination as a node
+      if(((Road)map.get(car.getXPos(), car.getYPos())).getDirection() == Directions.UP) {
+         graph[graph.length - 1].setHorizontal(Directions.LEFT);
+         graph =  MapConverter.addNode(graph, car.getXPos() - 1, car.getYPos(), map);
+      }
+      if(((Road)map.get(car.getXPos(), car.getYPos())).getDirection() == Directions.RIGHT) {
+         graph[graph.length - 1].setVertical(Directions.UP);
+         graph =  MapConverter.addNode(graph, car.getXPos(), car.getYPos() - 1, map);
+      }
+      if(((Road)map.get(car.getXPos(), car.getYPos())).getDirection() == Directions.DOWN) {
+         graph[graph.length - 1].setHorizontal(Directions.RIGHT);
+         graph =  MapConverter.addNode(graph, car.getXPos() + 1, car.getYPos(), map);
+      }
+      if(((Road)map.get(car.getXPos(), car.getYPos())).getDirection() == Directions.LEFT) {
+         graph[graph.length - 1].setVertical(Directions.DOWN);
+         graph =  MapConverter.addNode(graph, car.getXPos(), car.getYPos() + 1, map);
+      }
+      
+      graph = MapConverter.addNode(graph, car.getDestX(), car.getDestY(), map);
+      if(((Road)map.get(car.getDestX(), car.getDestY())).getDirection() == Directions.UP) {
+         graph =  MapConverter.addNode(graph, car.getDestX() - 1, car.getDestY(), map);
+         graph[graph.length - 1].setHorizontal(Directions.RIGHT);
+
+      }
+      if(((Road)map.get(car.getDestX(), car.getDestY())).getDirection() == Directions.RIGHT) {
+         graph =  MapConverter.addNode(graph, car.getDestX(), car.getDestY() - 1, map);
+         graph[graph.length - 1].setVertical(Directions.DOWN);
+
+      }
+      if(((Road)map.get(car.getDestX(), car.getDestY())).getDirection() == Directions.DOWN) {
+         graph =  MapConverter.addNode(graph, car.getDestX() + 1, car.getDestY(), map);
+         graph[graph.length - 1].setHorizontal(Directions.LEFT);
+      }
+      if(((Road)map.get(car.getDestX(), car.getDestY())).getDirection() == Directions.LEFT) {
+         graph =  MapConverter.addNode(graph, car.getDestX(), car.getDestY() + 1, map);
+         graph[graph.length - 1].setVertical(Directions.UP  );
+      }
+      return graph;
+   }
 
 }
