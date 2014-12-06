@@ -1,4 +1,4 @@
-
+package Graphics;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -329,7 +329,7 @@ public class Runner extends JFrame{
     			Thread mythread=new MyThread();
 				mythread.start();
 			
-    			}
+    			} 
     			
     		});
            

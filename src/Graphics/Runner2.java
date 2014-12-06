@@ -1,4 +1,4 @@
-
+package Graphics;
 
 
 import java.awt.BorderLayout;
@@ -77,7 +77,7 @@ public class Runner2 extends JFrame{
 	while(run){
 		gui.removeAll();
 		step(map);
-		sizeBox=f.getWidth();
+		sizeBox=f.getWidth()/size;
 		color(gui, map);
 //		f.pack();
 		gui.updateUI();
@@ -106,7 +106,7 @@ public class Runner2 extends JFrame{
 						myLabel.setLocation(i, j);
 					}
 				} else if (map.get(j, i) instanceof NonRoad) {
-					//labels[i][j] = new JLabel(new ColorIcon(Color.RED, 16));
+					//labels[i][j] = new JLabel(new Col	orIcon(Color.RED, 16));
 					JLabel myLabel = new JLabel(new ColorIcon(Color.WHITE, sizeBox));
 					gui.add(myLabel);
 					myLabel.setLocation(i, j);
@@ -115,11 +115,11 @@ public class Runner2 extends JFrame{
 					if (road.getFilled() > 0)
 					{	boolean done=false;
 						int fill=road.getFilled();
-						Car[] cars=road.getOccupance();
-						for(int a=0;a<cars.length;a++){
-							if(cars[a]!=null && !cars[a].exists())
-								done=true;
-						}
+						//Car[] cars=road.getOccupance();
+						//for(int a=0;a<cars.length;a++){
+							//if(cars[a]!=null && !cars[a].exists())
+								//done=true;
+						//}
 						JLabel myLabel = new JLabel(new ColorIcon(Color.PINK, sizeBox,fill));
 						if(done)
 							myLabel = new JLabel(new ColorIcon(Color.BLUE, sizeBox,fill));
@@ -159,7 +159,7 @@ public class Runner2 extends JFrame{
 		@Override
 		public void paintIcon(Component c, Graphics g, int x, int y) {
 			g.setColor(color);
-			g.fillRect(x, y, preferredSize, preferredSize);
+			g.fillRect(x, y, f.getWidth()/size, f.getHeight()/size);
 			if(this.cars>0){
 				g.setColor(Color.black);
 				for(int a=0;a<this.cars;a++)
