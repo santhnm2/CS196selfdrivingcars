@@ -1,5 +1,6 @@
 package Graphics;
 
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -7,7 +8,6 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -23,24 +23,23 @@ import javax.swing.border.EmptyBorder;
 import Car.Car;
 import Map.Map;
 import Map.RandomMapGenerator;
+import Map.Tile;
 import Map.NonRoad.NonRoad;
-import Map.Road.Intersection;
 import Map.Road.Road;
 import Map.Road.TrafficLight;
 
-public class Runner extends JFrame{
+public class Runner2 extends JFrame{
 	static int iterations = 0;
 	static JPanel gui = new JPanel(new BorderLayout());
 	static JLabel [][] labels;
 	static boolean run=true;
 	// for ease of access during demo
-	static int size=20;//size of the map
-	static int cars=100;//number of cars
-	static int sizeBox=14;//size of each box
+	static int size=40;//size of the map
+	static int cars=20;//number of cars
+	static int sizeBox=00;//size of each box
 	static Map map;
-	static 	JFrame f ;
-	static Thread mythread=new MyThread();
-	public static void main(String[] args) throws InterruptedException {
+	static JFrame f ;
+	public static void main(String[] args)  {
 	
 		gui.setBorder(new EmptyBorder(2, 3, 2, 3));
 		gui.setBackground(Color.WHITE.darker().darker());
@@ -50,53 +49,41 @@ public class Runner extends JFrame{
 		int w = map.getLengthX();
 		int h = map.getLengthY();
 		gui.setLayout(new GridLayout(h, w, 2, 2));
-		labels = new JLabel[w][h];
-		for (int i = 0; i < w; i++) 
-			for (int j = 0; j < h; j++)
-			{
-				labels[i][j] = new JLabel();
-				gui.add(labels[i][j]);
-			}
+		
+		color(gui, map);
+
 		f = new JFrame("Demo");
 		f.add(gui);
 		f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		f.setLocationByPlatform(true);
 		Jbutton(f);
 		addMenus(f);
-		f.pack();
+		f.setSize(1000, 1000);
+		f.setLocation(0, 0);
 		f.setVisible(true);
+		gui.removeAll();
+		//step(map);
+		sizeBox=f.getWidth()/size;
+		run();
 	}
-		public static class MyThread extends Thread
-		{	
-			public void run(){
-			color(gui, map);
-			f.pack();
-			while(run){
-			gui.removeAll();
-			
-			sizeBox=f.getWidth()/size;
-			color(gui, map);
-			step(map);
-			gui.updateUI();
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			}
-			}
+	private static void delay(Long ms){
+
+	       Long dietime = System.currentTimeMillis()+ms;
+	       while(System.currentTimeMillis()<dietime+100){
+	           //do nothing
+	       }
+	   }
+	private static void run() {
+	while(run){
+		gui.removeAll();
+		step(map);
+		sizeBox=f.getWidth()/size;
+		color(gui, map);
+//		f.pack();
+		gui.updateUI();
+		delay(500L);
 	}
-	private static void run() throws InterruptedException{
-		while(run){
-			gui.removeAll();
-			step(map);
-			color(gui, map);
-			f.pack();
-			gui.updateUI();
-			Thread.sleep(500);
-		}
-	}
+}
 	private static void color(JPanel gui, Map map) {
 		for (int i = 0; i < map.getLengthX(); i++) {
 			for (int j = 0; j < map.getLengthY(); j++) {
@@ -119,16 +106,23 @@ public class Runner extends JFrame{
 						myLabel.setLocation(i, j);
 					}
 				} else if (map.get(j, i) instanceof NonRoad) {
-					//labels[i][j] = new JLabel(new ColorIcon(Color.RED, 16));
+					//labels[i][j] = new JLabel(new Col	orIcon(Color.RED, 16));
 					JLabel myLabel = new JLabel(new ColorIcon(Color.WHITE, sizeBox));
 					gui.add(myLabel);
 					myLabel.setLocation(i, j);
 				} else if (map.get(j, i) instanceof Road) {
-					Road car = (Road) map.get(j, i);
-					if (car.getFilled() > 0)
-					{	int fill=car.getFilled();
-						
+					Road road = (Road) map.get(j, i);
+					if (road.getFilled() > 0)
+					{	boolean done=false;
+						int fill=road.getFilled();
+						//Car[] cars=road.getOccupance();
+						//for(int a=0;a<cars.length;a++){
+							//if(cars[a]!=null && !cars[a].exists())
+								//done=true;
+						//}
 						JLabel myLabel = new JLabel(new ColorIcon(Color.PINK, sizeBox,fill));
+						if(done)
+							myLabel = new JLabel(new ColorIcon(Color.BLUE, sizeBox,fill));
 						gui.add(myLabel);
 						myLabel.setLocation(i, j);
 					}
@@ -165,14 +159,11 @@ public class Runner extends JFrame{
 		@Override
 		public void paintIcon(Component c, Graphics g, int x, int y) {
 			g.setColor(color);
-			g.fillRect(x, y,preferredSize ,preferredSize);
-			//g.drawImage(img, x, y, bgcolor, observer)
-			//g.drawIma
+			g.fillRect(x, y, f.getWidth()/size, f.getHeight()/size);
 			if(this.cars>0){
-				
 				g.setColor(Color.black);
 				for(int a=0;a<this.cars;a++)
-					g.fillOval(x+a*sizeBox/3, y, sizeBox/3,sizeBox/3);
+					g.fillOval(sizeBox, sizeBox, sizeBox*2, sizeBox*2);
 			}
 			}
 
@@ -191,97 +182,66 @@ public class Runner extends JFrame{
 	public static void step(Map map) {
 		//Print out state
 		iterations++;
-		ArrayList<Intersection> intersections=map.getHandler().intersections;
-		//if(iterations % 10 == 0) { //Toggle all lights every ten iterations
-			for(int i = 0; i < intersections.size(); i++) {
-				
+		if(iterations % 10 == 0) { //Toggle all lights every ten iterations
+			for(int i = 0; i < map.getLengthX(); i++) {
+				for (int j = 0; j < map.getLengthY(); j++) {
+					Tile t = map.get(i, j);
 
-					if(intersections.get(i).shouldToggle()) {
-						intersections.get(i).toggle();
-						
-					
+					if(t instanceof TrafficLight) {
+						TrafficLight l  = (TrafficLight) t;
+						l.toggle();
+					}
 				}
 			}
-		//}
-		int t=0;
-		while(!haveAllMoved()&&t<=5)
-		{
-			
-			for (Car c : map.getCars()) {
-				if (c != null && c.getPath().size() > 0)
-					if(!c.hasMoved) c.move();
-				else if(c!=null)
-					c.hasMoved=true;
-					
-			}
-			t++;
-			
 		}
+
 		for (Car c : map.getCars()) {
-			c.hasMoved=false;
+			if (c != null && c.getPath().size() > 0)
+				c.move();
 		}
-		
-		for (int i=0;i<map.getCars().size();i++) {
-			if(map.getCars().get(i).getPath().size()==0)
-				{	
-					map.destroyCar(map.getCars().get(i));
-					cars--;
-					i--;
-				}
-				
-		}
+
 		//System.out.println(map);
 	}
-	private static boolean haveAllMoved()
-	{
-		for(Car c: map.getCars())
-		{
-			if(!c.hasMoved)
-				return false;
-		}
-		return true;
-	}
+
 	public static void Jbutton(final JFrame f) {
 		JToolBar vertical = new JToolBar(JToolBar.VERTICAL);
 		JButton stop = new JButton("Stop");
-        JButton step = new JButton("Quick Pause(5000 mil)");
-        JButton time = new JButton("Start");
-        JButton dist = new JButton("Distance efficient");
+        JButton step = new JButton("Step");
+        JButton start = new JButton("Start");
 		stop.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				mythread.stop();
+				run=false;
 			}
 		});
-		
+		start.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				run=true;
+				
+				run();
+			}
+		}); 
+
         step.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				mythread.resume(); 
-			}
+				gui.removeAll();
+				step(map);
+				color(gui, map);
+				f.pack();
+				//run=true;
+//				try {
+//					run();
+//				} catch (InterruptedException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+			 }
 		});
-        time.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				mythread.start();
-			}
-		});
-        dist.addActionListener(new ActionListener() {
-    			public void actionPerformed(ActionEvent ae) {
-    			for(int a=0;a<cars;a++)
-    				map.getCars().get(a).setPath(1);
-    			Thread mythread=new MyThread();
-				mythread.start();
-			
-    			}
-    			
-    		});
-           
+        vertical.add(start);
         vertical.add(stop);
         vertical.add(step);
-        vertical.add(time);
-       // vertical.add(dist);
 //        add(label, BorderLayout.WEST);
-        f.add(vertical, BorderLayout.WEST
-        		); 
-        //f.pack();
+        f.add(vertical, BorderLayout.WEST); 
+        f.pack();
 	
 	}
 
@@ -289,12 +249,12 @@ public class Runner extends JFrame{
 	public static void addMenus(final JFrame frame) {
 		JMenuBar menubar = new JMenuBar();
 		JMenu fileMenu = new JMenu("File");
-		JMenu Opt = new JMenu("Optimize");
 		menubar.add(fileMenu);
 		
 		JMenuItem StopItem = new JMenuItem("Stop");
 		JMenuItem StartItem = new JMenuItem("Start (doesnt work yet)");
-				fileMenu.add(StopItem);
+
+		fileMenu.add(StopItem);
 		StopItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				run=false;
@@ -303,40 +263,14 @@ public class Runner extends JFrame{
 		fileMenu.add(StartItem);
 		StartItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				
+				run=true;
+				//System.out.println("should i run again?"+run+" but i dont");
 			}
 		});
-		menubar.add(Opt);
-		JMenuItem time = new JMenuItem("Time efficient");
-		JMenuItem dist = new JMenuItem("Distance efficient");
-		Opt.add(time);
-		Opt.add(dist);
-		
-        time.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-			for(int a=0;a<cars;a++)
-				map.getCars().get(a).setPath(0);
-				
-				mythread.start();
-			}
-		});
-        dist.addActionListener(new ActionListener() {
-    			public void actionPerformed(ActionEvent ae) {
-    			for(int a=0;a<cars;a++)
-    				map.getCars().get(a).setPath(1);
-    			Thread mythread=new MyThread();
-				mythread.start();
-			
-    			} 
-    			
-    		});
-           
-
-		
 
 		
 		frame.setJMenuBar(menubar);
-		//frame.pack();
+		frame.pack();
 
 	}
 
