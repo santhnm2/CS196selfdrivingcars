@@ -53,7 +53,7 @@ public class Car implements java.io.Serializable {
     
     public boolean move() // plug off the first item of the arraylist and execute that
     {
-        Tile nextTile=getNextTile(xPos, yPos, path.get(0));
+        Tile nextTile= map.getInDir(map.get(xPos, yPos), path.get(0));
         if(nextTile instanceof TrafficLight) { //No red traffic lights
             TrafficLight l = (TrafficLight)nextTile;
             if(l.isRed() && !(map.get(xPos,yPos) instanceof TrafficLight)) {
@@ -61,6 +61,7 @@ public class Car implements java.io.Serializable {
                 return false;
             }
         }
+
         Road road = (Road)map.get(xPos, yPos);
         int speedInit = road.getSpeed();
         for(int remaining = road.getSpeed(); remaining>=0; remaining--) {
@@ -96,27 +97,6 @@ public class Car implements java.io.Serializable {
      * @param Direction to check in
      * @return Tile in the given direction, or null if it doesn't exist.
      */
-    public Tile getNextTile(int x, int y, int dir)
-    {
-        switch(dir) {
-            case Directions.UP:
-                y--;
-                break;
-            case Directions.DOWN:
-                y++;
-                break;
-            case Directions.RIGHT:
-                x++;
-                break;
-            case Directions.LEFT:
-                x--;
-                break;
-        }
-        if(map.pointIsValid(x, y)) //Ensure tile is in grid
-            return map.get(x, y);
-        else
-            return null; //If not in grid, return null
-    }
     public int getSpeed()
     {
         return speed;
@@ -156,5 +136,9 @@ public class Car implements java.io.Serializable {
     
     public String toString() {
         return (xPos+","+yPos);
+    }
+
+    public Tile getNextTile(int x, int y, int dir) {
+        return map.getInDir(map.get(x, y), dir);
     }
 }

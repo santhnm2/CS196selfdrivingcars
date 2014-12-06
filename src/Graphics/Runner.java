@@ -71,15 +71,15 @@ public class Runner extends JFrame{
 	}
 
 	private static void run() throws InterruptedException{
-	while(run){
-		gui.removeAll();
-		step(map);
-		color(gui, map);
-		f.pack();
-		gui.updateUI();
-		Thread.sleep(500);
+		while(run){
+			gui.removeAll();
+			step(map);
+			color(gui, map);
+			f.pack();
+			gui.updateUI();
+			Thread.sleep(500);
 		}
-}
+	}
 	private static void color(JPanel gui, Map map) {
 		for (int i = 0; i < map.getLengthX(); i++) {
 			for (int j = 0; j < map.getLengthY(); j++) {

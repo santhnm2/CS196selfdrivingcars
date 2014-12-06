@@ -17,4 +17,9 @@ public class Tile implements java.io.Serializable{
 	{
 		return y;
 	}
+
+	@Override
+	public String toString() {
+		return "(" + x + ", " + y + ")";
+	}
 }
