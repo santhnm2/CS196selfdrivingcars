@@ -5,7 +5,7 @@ import Car.*;
 
 public class Road extends Tile
 {
-	private final int speedLimit;
+	private int speedLimit;
 	protected final int dir;
 	private int max;
 	protected Car[] occupants;
@@ -28,6 +28,9 @@ public class Road extends Tile
 	}
 	public void setCar(boolean b) {
 		hasCar = b;
+	}
+	public void setSpeed(int speed) {
+		speedLimit = speed;
 	}
 	public boolean carIncrement(Car c){
 		for(int i = 0; i<occupants.length; i++)
