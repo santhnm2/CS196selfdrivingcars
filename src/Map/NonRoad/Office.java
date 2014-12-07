@@ -7,6 +7,6 @@ public class Office extends NonRoad {
     }
 
     public String toString(){
-        return "..";
+        return "OF";
     }
 }

@@ -7,6 +7,6 @@ public class Mall extends NonRoad {
     }
 
     public String toString(){
-        return "..";
+        return "MA";
     }
 }

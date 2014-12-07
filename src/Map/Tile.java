@@ -2,7 +2,7 @@ package Map;
 
 public class Tile implements java.io.Serializable{
 	protected final int x, y;
-	protected final double density;
+	protected double density;
 
 	public Tile(int x, int y, double density) {
 		this.x = x;

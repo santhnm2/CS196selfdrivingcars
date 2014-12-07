@@ -7,6 +7,6 @@ public class House extends NonRoad {
 	}
 
 	public String toString(){
-		return "..";
+		return "HO";
 	}
 }

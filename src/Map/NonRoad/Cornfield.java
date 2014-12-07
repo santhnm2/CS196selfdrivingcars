@@ -7,6 +7,6 @@ public class Cornfield extends NonRoad {
     }
 
     public String toString(){
-        return "..";
+        return "CR";
     }
 }

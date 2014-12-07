@@ -137,6 +137,13 @@ public class Map implements java.io.Serializable {
 
         fixLights();
     }
+    public Road getRoad(int x, int y)
+    {
+        if (grid[x][y] instanceof Road) {
+            return (Road)grid[x][y];
+        }
+        return null;
+    }
 
     public boolean[] generateValidMoves(int x, int y) {
         Tile curr = get(x, y);
@@ -156,8 +163,7 @@ public class Map implements java.io.Serializable {
             return valid;
         }
 
-        Road r = (Road) curr;
-
+        Road r = getRoad(x, y);
         int dir = r.getDirection();
 
         if (get(x + Directions.dx[dir], y + Directions.dy[dir]) instanceof Road) {
@@ -166,7 +172,6 @@ public class Map implements java.io.Serializable {
             if (potential.getDirection() == dir || potential instanceof TrafficLight)
                 valid[dir] = true;
         }
-
         boolean anyValid = valid[0] || valid[1] || valid[2] || valid[3];
 
         int altDir = (dir + 3) % 4;

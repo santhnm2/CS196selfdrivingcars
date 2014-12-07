@@ -23,15 +23,26 @@ public class RandomMapGenerator implements MapGenerator {
     private final int cars;
 
     public RandomMapGenerator(int length, int cars) {
+
         this.length = length;
         this.cars = cars;
     }
 
+    public void initDensities(Tile[][] grid)
+    {
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                grid[i][j] = new Tile(i, j, 0);
+            }
+        }
+    }
+
+
     public boolean checkCorn (Tile[][] grid, int corn_coord_x, int corn_coord_y, int middle_coord, int middle_l)
     {
-        for (int i = corn_coord_x; i <= corn_coord_x + 8; i++)
+        for (int i = corn_coord_x; i < corn_coord_x + 8; i++)
         {
-            for(int j = corn_coord_y; j <= corn_coord_y + 8; j++)
+            for(int j = corn_coord_y; j < corn_coord_y + 8; j++)
             {
                 if((i >= middle_coord - middle_l / 2 && i <= middle_coord + middle_l / 2)
                         || (j >= middle_coord - middle_l / 2 && j <= middle_coord + middle_l / 2))
@@ -50,7 +61,7 @@ public class RandomMapGenerator implements MapGenerator {
     }
 
     public static boolean checkCoord (int x, int y, int l, int w, int map_length) {
-        if ((x + l) > map_length || (y + w) > map_length) {
+        if ((x + l) >= map_length || (y + w) >= map_length) {
             return false;
         }
         else {
@@ -59,9 +70,16 @@ public class RandomMapGenerator implements MapGenerator {
     }
 
     public static boolean checkValidArea (Tile[][] t, int x, int y, int l, int w) {
+//        System.out.println("density = " + t[0][0]);
+//        System.out.println("row length: " + t.length);
+//        System.out.println("column length: " + t[0].length);
+//        System.out.println("Will iterate in x up to " + (x+l));
+//        System.out.println("Will iterate in y up to " + (y+w));
         for (int i = x; i < x + l; i++) {
             for (int j = y; j < y + w; j++) {
+
                 if (t[i][j].density != 0) {
+                    System.out.println(t[i][j].density);
                     return false;
                 }
             }
@@ -85,8 +103,17 @@ public class RandomMapGenerator implements MapGenerator {
     @Override
     public Map generateMap() {
         Tile[][] grid = new Tile[length][length];
+        initDensities(grid);
         int area = length * length;
         int x, y;
+
+        for (int i = 0; i < length; i++)
+        {
+            for (int j = 0; j < length; j++)
+            {
+                grid[i][j] = new NonRoad(i, j, 0);
+            }
+        }
 
         int cornfield_area = (int) ((0.065 * area) % 64) * 64;
         int mall_area = (int) ((0.02 * area) % 10) * 10;
@@ -107,19 +134,19 @@ public class RandomMapGenerator implements MapGenerator {
             corn_coord_y = (int) (length * Math.random());
         }
 
-        while(!checkCorn (grid, corn_coord_x, corn_coord_y, middle_coord, middle_l))
+       while(!checkCorn (grid, corn_coord_x, corn_coord_y, middle_coord, middle_l))
         {
             corn_coord_x = (int) (length * Math.random());
             corn_coord_y = (int) (length * Math.random());
         }
-
-        for (int i = corn_coord_x; i < corn_coord_x + 8; i++)
-        {
-            for (int j = corn_coord_y; j < corn_coord_y + 8; j++)
-            {
-                grid[i][j] = new Cornfield(i, j);
-            }
-        }
+//
+//        for (int i = corn_coord_x; i < corn_coord_x + 8; i++)
+//        {
+//            for (int j = corn_coord_y; j < corn_coord_y + 8; j++)
+//            {
+//                grid[i][j] = new Cornfield(i, j);
+//            }
+//        }
 
         boolean flag = true;
         int count = 0;
@@ -130,15 +157,18 @@ public class RandomMapGenerator implements MapGenerator {
             x = generateCoord(length);
             y = generateCoord(length);
 
-            if (checkCoord(x, y, 5, 2, length) && checkValidArea(grid, x, y, 5, 2)) {
-                for (int i = x; i < 5; i++) {
-                    for (int j = y; j < 2; j++) {
-                        grid[i][j] = new Mall(i, j);
-                        count++;
+            if (checkCoord(x, y, 5, 2, length)) {
+                System.out.println("checkCoord passes");
+                if (checkValidArea(grid, x, y, 5, 2)) {
+                    for (int i = x; i < x + 5; i++) {
+                        for (int j = y; j < y + 2; j++) {
+                            grid[i][j] = new Mall(i, j);
+                            count++;
+                        }
                     }
                 }
             }
-
+            System.out.println("count = " + count);
             if (checkArea(count, 5, 2, mall_area))
             {
                 flag = false;
@@ -146,7 +176,7 @@ public class RandomMapGenerator implements MapGenerator {
         }
         flag = true;
         count = 0;
-
+        System.out.println("flag1");
         // office
         while (flag)
         {
@@ -169,7 +199,7 @@ public class RandomMapGenerator implements MapGenerator {
         }
         flag = true;
         count = 0;
-
+        System.out.println("flag2");
         // house
         while (flag)
         {
@@ -192,32 +222,38 @@ public class RandomMapGenerator implements MapGenerator {
         }
         flag = true;
         count = 0;
-
+        System.out.println("flag3");
         Map m = new Map(grid, new ArrayList<Car>());
-
+        //System.out.println("t.length = " + grid.length);
+        //System.out.println("t[0].length = " + grid[0].length);
         while (flag) {
-            for (int i = 0; i < length; i += 4) {
+            for (int i = 0; i < length && flag; i += 4) {
                 if (Math.random() < .85) {
+                    System.out.println("I am getting stuck in this loop");
                     int start = (int) (Math.random() * length / 2) * 2;
                     int width = (int) (Math.random() * (length - start - 6) / 2) * 2 + 6;
 
-
-                    for (int k = start; k < start + width; k++) {
-                        if (!(grid[k][i] instanceof NonRoad)) {
+                    //System.out.println(start + " + " + width + " = " + (start+width));
+                    for (int k = start; k < length && flag; k++) {
+                        //System.out.println("i = " + i);
+                        //System.out.println("k = " + k);
+                        //System.out.println();
+                        if (grid[k][i] instanceof NonRoad && grid[k][i].density == 0) {
                             m.createHorizontalRoad(start, i, width, 2, 4);
                             count++;
+                            if (count >= (.75 * length)) {
+                                flag = false;
+                                System.out.println("flag1");
+                            } else {
+                                System.out.println("count = " + count);
+                            }
                         }
                     }
                 }
             }
-
-            if (count == (3/4)*length)
-            {
-                flag = false;
-            }
         }
-
-        flag = true;
+        System.out.println("flag4");
+        //flag = true;
         count = 0;
 
         while (flag) {
@@ -236,12 +272,12 @@ public class RandomMapGenerator implements MapGenerator {
                 }
             }
 
-            if (count == (3/4)*length)
+            if (count == (3/4.0)*length)
             {
                 flag = false;
             }
         }
-
+        System.out.println("flag5");
         //}
 
                /* for (int i = 0; i < length; i += 4){
@@ -385,6 +421,7 @@ public class RandomMapGenerator implements MapGenerator {
 
     public static void main(String[] args) {
         MapGenerator mapGen = new RandomMapGenerator(30, 1);
+
 
         System.out.println(mapGen.generateMap());
     }
