@@ -12,7 +12,7 @@ public class Road extends Tile
 	protected boolean hasCar=false;
 	
 	public Road(int x, int y, int speed, int direction, int lanes) {
-		super(x, y, 0);
+		super(x, y);
 		speedLimit = speed;
 		dir = direction;
 		max = lanes;

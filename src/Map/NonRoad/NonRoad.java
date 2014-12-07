@@ -6,7 +6,7 @@ public class NonRoad extends Tile {
     public final double density;
 
     public NonRoad(int x, int y, double density) {
-        super(x, y, density);
+        super(x, y);
         this.density = density;
     }
 
