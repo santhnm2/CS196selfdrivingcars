@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.border.EmptyBorder;
 
@@ -34,14 +36,13 @@ public class Runner extends JFrame{
 	static JLabel [][] labels;
 	static boolean run=true;
 	// for ease of access during demo
-	static int size=20;//size of the map
+	static int size=30;//size of the map
 	static int cars=100;//number of cars
 	static int sizeBox=14;//size of each box
 	static Map map;
 	static 	JFrame f ;
 	static Thread mythread=new MyThread();
 	public static void main(String[] args) throws InterruptedException {
-	
 		gui.setBorder(new EmptyBorder(2, 3, 2, 3));
 		gui.setBackground(Color.WHITE.darker().darker());
 		RandomMapGenerator generator = new RandomMapGenerator(size, cars);
@@ -51,6 +52,7 @@ public class Runner extends JFrame{
 		int h = map.getLengthY();
 		gui.setLayout(new GridLayout(h, w, 2, 2));
 		labels = new JLabel[w][h];
+		System.out.println(map.toString());
 		for (int i = 0; i < w; i++) 
 			for (int j = 0; j < h; j++)
 			{
@@ -122,7 +124,7 @@ public class Runner extends JFrame{
 					//labels[i][j] = new JLabel(new ColorIcon(Color.RED, 16));
 					JLabel myLabel = new JLabel(new ColorIcon(Color.WHITE, sizeBox));
 					gui.add(myLabel);
-					myLabel.setLocation(i, j);
+					myLabel.setLocation(j, i);
 				} else if (map.get(j, i) instanceof Road) {
 					Road car = (Road) map.get(j, i);
 					if (car.getFilled() > 0)
@@ -145,11 +147,15 @@ public class Runner extends JFrame{
 	}
 	
 	static class ColorIcon implements Icon {
-
+		Image image;
 		Color color;
 		int preferredSize = -1;
 		int cars=0;
 		private ColorIcon() {
+		}
+		public ColorIcon(Image image, int preferredSize){
+			this.image=image;
+			this.preferredSize=preferredSize;
 		}
 		public ColorIcon(Color color, int preferredSize) {
 			this.color = color;
@@ -164,9 +170,9 @@ public class Runner extends JFrame{
 
 		@Override
 		public void paintIcon(Component c, Graphics g, int x, int y) {
-			g.setColor(color);
-			g.fillRect(x, y,preferredSize ,preferredSize);
-			//g.drawImage(img, x, y, bgcolor, observer)
+			//g.setColor(color);
+			//g.fillRect(x, y,preferredSize ,preferredSize);
+			g.drawImage(image, x, y, sizeBox,sizeBox,Color.black, null);
 			//g.drawIma
 			if(this.cars>0){
 				
@@ -292,12 +298,16 @@ public class Runner extends JFrame{
 		JMenu Opt = new JMenu("Optimize");
 		menubar.add(fileMenu);
 		
-		JMenuItem StopItem = new JMenuItem("Stop");
+		JMenuItem StopItem = new JMenuItem("Save Map");
 		JMenuItem StartItem = new JMenuItem("Start (doesnt work yet)");
-				fileMenu.add(StopItem);
-		StopItem.addActionListener(new ActionListener() {
+
+		final JTextField textField = new JTextField(20);
+		
+		fileMenu.add(StopItem);
+		textField.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				run=false;
+				String text = textField.getText();
+				System.out.println(text);
 			}
 		});
 		fileMenu.add(StartItem);
