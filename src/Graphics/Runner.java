@@ -39,7 +39,7 @@ public class Runner extends JFrame{
 	static int cars=100;//number of cars
 	static int sizeBox=14;//size of each box
 	static Map map;
-	static 		JFrame f ;
+	static 	JFrame f ;
 	public static void main(String[] args) throws InterruptedException {
 	
 		gui.setBorder(new EmptyBorder(2, 3, 2, 3));
