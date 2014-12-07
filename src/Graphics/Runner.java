@@ -142,7 +142,7 @@ public class Runner extends JFrame{
 	}
 
 
-	private static ArrayList<Integer> paint_buffer;
+	//private static ArrayList<Integer> paint_buffer;
 	private static void paintWithColor(JPanel gui, Map map, Color color, int x, int y) {
 			JLabel myLabel = new JLabel(new ColorIcon(color, sizeBox));
 			gui.add(myLabel);
@@ -153,11 +153,11 @@ public class Runner extends JFrame{
 	private static int CT=0;
 	private static int CT2=0;
 	private static void paintWithBuffer(Color[][] mapColor, int x, int y, int height, int width){
-		int nonCounter = height*width;
+		int non_road_counter = height*width;
 		Color color;
-		if (nonCounter<5){
+		if (non_road_counter<5){
 			 color = Color.YELLOW;
-		}else if(nonCounter<15){
+		}else if(non_road_counter<15){
 			if (CT2%2==0){
 				color = Color.CYAN;
 			}else{
@@ -178,7 +178,7 @@ public class Runner extends JFrame{
 			}
 		}
 	}
-	private static boolean isWhite(int x, int y, int height, int width, Map map, Color[][] mapColor){
+	private static boolean is_non_road(int x, int y, int height, int width, Map map, Color[][] mapColor){
 		for (int i=y; i<y+height; i++){
 			for (int j=x; j<x+width; j++){
 				if (!(map.get(j, i) instanceof NonRoad)){
@@ -194,11 +194,11 @@ public class Runner extends JFrame{
 			int height = 1;
 			int width = 1;
 			mapColor[y][x] = Color.WHITE;
-			while (isWhite(x, y, height, width, map, mapColor) && width<5){
+			while (is_non_road(x, y, height, width, map, mapColor) && width<5){
 				width++;
 			}
 			width--;
-			while (isWhite(x, y, height, width, map, mapColor) && height<5) {
+			while (is_non_road(x, y, height, width, map, mapColor) && height<5) {
 				height++;
 			}
 			height--;
@@ -241,13 +241,13 @@ public class Runner extends JFrame{
 		}
 		for (int i=0; i<map.getLengthY(); i++){
 			for (int j = 0; j < map.getLengthX(); j++) {
-				System.out.print(mapColor[i][j]);
+				//System.out.print(mapColor[i][j]);
 				paintWithColor(gui, map, mapColor[i][j], j, i);
 			}
 			System.out.println();
 		}
-		System.out.println("==============");
-		CT = 0;
+		//System.out.println("==============");
+		CT = 0;			//optimization, avoid huge chunk of boxes
 		CT2 = 0;
 	}
 	static class ColorIcon implements Icon {
