@@ -237,7 +237,7 @@ public class DensityBasedMapGenerator implements MapGenerator {
     }
 
     public static void main(String[] args) {
-        double[][] density_map = RandomDensity.generateDensity(50);
+       /* double[][] density_map = RandomDensity.generateDensity(50);
 
 
 
@@ -245,7 +245,7 @@ public class DensityBasedMapGenerator implements MapGenerator {
         MapGenerator x = new DensityBasedMapGenerator(grid);
         Car[] cars = new Car[5];
         Map y = x.generateMap();
-        System.out.println(y);
+        System.out.println(y);*/
 
     }
 }
