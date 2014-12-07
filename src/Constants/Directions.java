@@ -8,6 +8,9 @@ public class Directions {
 	
 	public static final int[] dirs = {0,1,2,3};
 
+	public static final int[] dx = { 0, 1, 0, -1 };
+	public static final int[] dy = { -1, 0, 1, 0 };
+	
 	public static int getOppositeDir(int dir) { 
 		int val = dir + 2;
 		if(val >= 4) val -= 4;

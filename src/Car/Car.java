@@ -10,7 +10,7 @@ import Map.Road.Road;
 import Map.Road.TrafficLight;
 import Optimization.PathGenerator;
 
-public class Car {
+public class Car implements java.io.Serializable {
     private int speed=0;
     private int dir=0;
     private int xPos=0;
@@ -97,27 +97,6 @@ public class Car {
      * @param Direction to check in
      * @return Tile in the given direction, or null if it doesn't exist.
      */
-    public Tile getNextTile(int x, int y, int dir)
-    {
-        switch(dir) {
-            case Directions.UP:
-                y--;
-                break;
-            case Directions.DOWN:
-                y++;
-                break;
-            case Directions.RIGHT:
-                x++;
-                break;
-            case Directions.LEFT:
-                x--;
-                break;
-        }
-        if(map.pointIsValid(x, y)) //Ensure tile is in grid
-            return map.get(x, y);
-        else
-            return null; //If not in grid, return null
-    }
     public int getSpeed()
     {
         return speed;
@@ -157,5 +136,9 @@ public class Car {
     
     public String toString() {
         return (xPos+","+yPos);
+    }
+
+    public Tile getNextTile(int x, int y, int dir) {
+        return map.getInDir(map.get(x, y), dir);
     }
 }
