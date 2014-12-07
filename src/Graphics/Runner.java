@@ -1,6 +1,5 @@
 package Graphics;
 
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -8,6 +7,7 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -25,6 +25,7 @@ import Map.Map;
 import Map.RandomMapGenerator;
 import Map.Tile;
 import Map.NonRoad.NonRoad;
+import Map.Road.Intersection;
 import Map.Road.Road;
 import Map.Road.TrafficLight;
 
@@ -35,7 +36,7 @@ public class Runner extends JFrame{
 	static boolean run=true;
 	// for ease of access during demo
 	static int size=40;//size of the map
-	static int cars=20;//number of cars
+	static int cars=100;//number of cars
 	static int sizeBox=14;//size of each box
 	static Map map;
 	static 		JFrame f ;
@@ -171,27 +172,56 @@ public class Runner extends JFrame{
 	public static void step(Map map) {
 		//Print out state
 		iterations++;
-		if(iterations % 10 == 0) { //Toggle all lights every ten iterations
-			for(int i = 0; i < map.getLengthX(); i++) {
-				for (int j = 0; j < map.getLengthY(); j++) {
-					Tile t = map.get(i, j);
+		ArrayList<Intersection> intersections=map.getHandler().intersections;
+		//if(iterations % 10 == 0) { //Toggle all lights every ten iterations
+			for(int i = 0; i < intersections.size(); i++) {
+				
 
-					if(t instanceof TrafficLight) {
-						TrafficLight l  = (TrafficLight) t;
-						l.toggle();
-					}
+					if(intersections.get(i).shouldToggle()) {
+						intersections.get(i).toggle();
+						
+					
 				}
 			}
+		//}
+		int t=0;
+		while(!haveAllMoved()&&t<=5)
+		{
+			
+			for (Car c : map.getCars()) {
+				if (c != null && c.getPath().size() > 0)
+					if(!c.hasMoved) c.move();
+				else if(c!=null)
+					c.hasMoved=true;
+					
+			}
+			t++;
+			
 		}
-
 		for (Car c : map.getCars()) {
-			if (c != null && c.getPath().size() > 0)
-				c.move();
+			c.hasMoved=false;
 		}
-
+		
+		for (int i=0;i<map.getCars().size();i++) {
+			if(map.getCars().get(i).getPath().size()==0)
+				{	
+					map.destroyCar(map.getCars().get(i));
+					
+					i--;
+				}
+				
+		}
 		//System.out.println(map);
 	}
-
+	private static boolean haveAllMoved()
+	{
+		for(Car c: map.getCars())
+		{
+			if(!c.hasMoved)
+				return false;
+		}
+		return true;
+	}
 	public static void Jbutton(final JFrame f) {
 		JToolBar vertical = new JToolBar(JToolBar.VERTICAL);
 		JButton stop = new JButton("Stop");

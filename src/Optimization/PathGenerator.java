@@ -3,18 +3,33 @@ package Optimization;
 import Constants.Directions;
 import Car.Car;
 import Map.Map;
-import Map.Road.TrafficLight;
+import Map.Road.*;
 import Optimization.Dijkstra;
 
 import java.util.ArrayList;
 
 public class PathGenerator {
 
-   // determines baseline path
-   public static ArrayList<Integer> useDijkstra(Map map, Car car){
-      return Dijkstra.findPath(map, car);
+   public static ArrayList<Integer> minimizeTime(Map map, Car car){
+      return Dijkstra.findPath(map, car, 0);
    }
-   public ArrayList<Integer> baseline(Car car) {
+   public static ArrayList<Integer> minimizeDistance(Map map, Car car){
+       return Dijkstra.findPath(map, car, 1);
+   }
+   
+
+   public static ArrayList<Integer> base(Map map, Car car){
+       return Dijkstra.findPath(map, car, 2);
+             
+             
+   }
+   
+   //this is meant to find a path, by heading until it reaches the correct
+   //lattitude or longitude.
+   //only works if the map is a grid with no anomalies.
+   //a better way to implement this would be to use dijkstra ignoring speed.
+   //it is probably possible to adapt this to road anomalies, will atempt.
+   public ArrayList<Integer> baseline(Map map, Car car) {
       ArrayList<Integer> path = new ArrayList<Integer>();
       int[] position = new int[2];
       position[0] = car.getXPos();

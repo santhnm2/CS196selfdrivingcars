@@ -6,7 +6,7 @@ import Constants.Directions;
 import Map.Map;
 import Map.Tile;
 
-public class Intersection {
+public class Intersection implements java.io.Serializable{
 	
 	private final ArrayList<TrafficLight> lights;
 	private ArrayList<Road> inputRoads = new ArrayList<Road>();
@@ -30,6 +30,7 @@ public class Intersection {
     public void toggle() {
 		for (TrafficLight light : lights) {
 			light.toggle();
+			
 		}
 	}
     public boolean shouldToggle() {
@@ -74,6 +75,7 @@ public class Intersection {
     private ArrayList<Road> traceBack(Road r) {
     	ArrayList<Road> result = new ArrayList<Road>();
 		int oppositeDir = r.getDirection()-2;
+		result.add(r);
 		if(oppositeDir<0) oppositeDir+=4;
 		Road curRoad = r;
 		while(map.getInDir(curRoad, oppositeDir) instanceof Road && !(map.getInDir(curRoad, oppositeDir) instanceof TrafficLight)) {

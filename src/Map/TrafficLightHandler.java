@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import Map.Road.Intersection;
 
-public class TrafficLightHandler {
+public class TrafficLightHandler implements java.io.Serializable {
 	
 	public ArrayList<Intersection> intersections;
 	
@@ -14,6 +14,7 @@ public class TrafficLightHandler {
 	public void toggleAll() {
 		for(Intersection i:intersections) {
 			i.toggle();
+			
 		}
 	}
 }

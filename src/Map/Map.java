@@ -10,8 +10,10 @@ import Map.Road.TrafficLight;
 import java.util.ArrayList;
 
 
-public class Map {
+public class Map implements java.io.Serializable {
+    private static final String Road = null;
     final Tile[][] grid;
+
     private final ArrayList<Car> cars;
     private TrafficLightHandler handler = new TrafficLightHandler(new ArrayList<Intersection>());
 
@@ -188,10 +190,18 @@ public class Map {
                0 <= x && x < grid[y].length;
     }
 
+    public void destroyCar(Car c) {
+    	Road r=(Road)get(c.getXPos(),c.getYPos());
+    	r.carDecrement(c);
+    	cars.remove(c);
+    	
+    }
+
     //Written by Car Logic
     public Tile getInDir(Tile t, int dir) {
     	int x = t.getX();
         int y = t.getY();
+
 
     	return get(x + Directions.dx[dir], y + Directions.dy[dir]);
     }

@@ -10,7 +10,7 @@ import Map.Road.Road;
 import Map.Road.TrafficLight;
 import Optimization.PathGenerator;
 
-public class Car {
+public class Car implements java.io.Serializable {
     private int speed=0;
     private int dir=0;
     private int xPos=0;
@@ -21,6 +21,7 @@ public class Car {
     Map map; //Grid that the car is in
     private int destX;
     private int destY;
+    public boolean hasMoved=false;
     
     public Car(int x, int y, int destX, int destY, Map map) {
         xPos = x;
@@ -31,7 +32,7 @@ public class Car {
         road.carIncrement(this);
         this.dir = road.getDirection();
         this.map = map;
-        path = PathGenerator.useDijkstra(map, this);
+        path = PathGenerator.minimizeTime(map, this);
     }
     public int getXPos()
     {
@@ -56,25 +57,30 @@ public class Car {
         if(nextTile instanceof TrafficLight) { //No red traffic lights
             TrafficLight l = (TrafficLight)nextTile;
             if(l.isRed() && !(map.get(xPos,yPos) instanceof TrafficLight)) {
+            	hasMoved=true;
                 return false;
             }
         }
-        if(nextTile.getX() >= 0 && nextTile.getY()>=0 && nextTile.getX()<map.getLengthX() && nextTile.getY()<map.getLengthY()) {
-        	if (!(nextTile instanceof Road)) {
-                System.out.println(nextTile.getX() + " " + nextTile.getY());
-            }
 
-            if(nextTile instanceof Road && ((Road) nextTile).getRemaining()>0) {
-	            Road road = (Road)map.get(xPos, yPos);
-	            road.carDecrement(this);
-	            xPos=nextTile.getX();
-	            yPos=nextTile.getY();
-	            road = (Road) map.get(xPos, yPos);
-	            road.carIncrement(this);
-	            path.remove(0);
-	            return true;
-        	}
-        }
+        Road road = (Road)map.get(xPos, yPos);
+        int speedInit = road.getSpeed();
+        for(int remaining = road.getSpeed(); remaining>=0; remaining--) {
+        	road = (Road)map.get(xPos, yPos);
+        	if(road.getSpeed()!=speedInit) break;
+	        if(nextTile.getX()>=0 && nextTile.getY()>=0 && nextTile.getX()<map.getLengthX() && nextTile.getY()<map.getLengthY()) {
+	        	if(((Road)(map.get(nextTile.getX(), nextTile.getY()))).getRemaining()>0) {
+	        		hasMoved=true;
+		            road.carDecrement(this);
+		            xPos=nextTile.getX();
+		            yPos=nextTile.getY();
+		            road = (Road) map.get(xPos, yPos);
+		            road.carIncrement(this);
+		            path.remove(0);
+		            return true;
+	        	}
+	        	
+	        }
+    	}
         return false;
     }
     public boolean turn()
