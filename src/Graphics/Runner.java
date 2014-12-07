@@ -8,8 +8,12 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -36,7 +40,7 @@ public class Runner extends JFrame{
 	static JLabel [][] labels;
 	static boolean run=true;
 	// for ease of access during demo
-	static int size=30;//size of the map
+	static int size=10;//size of the map
 	static int cars=100;//number of cars
 	static int sizeBox=14;//size of each box
 	static Map map;
@@ -122,7 +126,15 @@ public class Runner extends JFrame{
 					}
 				} else if (map.get(j, i) instanceof NonRoad) {
 					//labels[i][j] = new JLabel(new ColorIcon(Color.RED, 16));
-					JLabel myLabel = new JLabel(new ColorIcon(Color.WHITE, sizeBox));
+					Image image=null;
+					try {
+						 image = ImageIO.read(new File("C:\\Users\\Shim\\workspace\\CS196selfdrivingcars\\grass.png"));
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					JLabel myLabel = new JLabel(new ColorIcon(image, sizeBox));
+					//JLabel myLabel = new JLabel(new ColorIcon(Color.WHITE, sizeBox));
 					gui.add(myLabel);
 					myLabel.setLocation(j, i);
 				} else if (map.get(j, i) instanceof Road) {
@@ -173,7 +185,6 @@ public class Runner extends JFrame{
 			//g.setColor(color);
 			//g.fillRect(x, y,preferredSize ,preferredSize);
 			g.drawImage(image, x, y, sizeBox,sizeBox,Color.black, null);
-			//g.drawIma
 			if(this.cars>0){
 				
 				g.setColor(Color.black);
