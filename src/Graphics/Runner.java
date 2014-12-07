@@ -40,7 +40,7 @@ public class Runner extends JFrame{
 	static JLabel [][] labels;
 	static boolean run=true;
 	// for ease of access during demo
-	static int size=10;//size of the map
+	static int size=20;//size of the map
 	static int cars=100;//number of cars
 	static int sizeBox=14;//size of each box
 	static Map map;
@@ -111,16 +111,31 @@ public class Runner extends JFrame{
 					TrafficLight light = (TrafficLight) map.get(j, i);
 
 					if (light.isRed()) {
+						Image image=null;
+						try {
+							 image = ImageIO.read(new File("C:\\Users\\Shim\\workspace\\CS196selfdrivingcars\\red.jpg"));
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						JLabel myLabel = new JLabel(new ColorIcon(image, sizeBox));
 						//labels[i][j] = new JLabel(new ColorIcon(Color.RED, 16));
-						JLabel myLabel = new JLabel(new ColorIcon(Color.RED, sizeBox));
+						//JLabel myLabel = new JLabel(new ColorIcon(Color.RED, sizeBox));
 						gui.add(myLabel);
 						myLabel.setLocation(i, j);
 
 					}
 					else
-					{
+					{Image image=null;
+					try {
+						 image = ImageIO.read(new File("C:\\Users\\Shim\\workspace\\CS196selfdrivingcars\\green.jpg"));
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					JLabel myLabel = new JLabel(new ColorIcon(image, sizeBox));
 						//labels[i][j] = new JLabel(new ColorIcon(Color.RED, 16));
-						JLabel myLabel = new JLabel(new ColorIcon(Color.GREEN, sizeBox));
+					//	JLabel myLabel = new JLabel(new ColorIcon(Color.GREEN, sizeBox));
 						gui.add(myLabel);
 						myLabel.setLocation(i, j);
 					}
@@ -141,8 +156,15 @@ public class Runner extends JFrame{
 					Road car = (Road) map.get(j, i);
 					if (car.getFilled() > 0)
 					{	int fill=car.getFilled();
-						
-						JLabel myLabel = new JLabel(new ColorIcon(Color.PINK, sizeBox,fill));
+					Image image=null;
+					try {
+						 image = ImageIO.read(new File("cae.png"));
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					JLabel myLabel = new JLabel(new ColorIcon(image, sizeBox));
+						//JLabel myLabel = new JLabel(new ColorIcon(Color.PINK, sizeBox,fill));
 						gui.add(myLabel);
 						myLabel.setLocation(i, j);
 					}
