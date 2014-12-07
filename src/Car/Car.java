@@ -53,18 +53,17 @@ public class Car implements java.io.Serializable {
     
     public boolean move() // plug off the first item of the arraylist and execute that
     {
-        Tile nextTile= map.getInDir(map.get(xPos, yPos), path.get(0));
-        if(nextTile instanceof TrafficLight) { //No red traffic lights
-            TrafficLight l = (TrafficLight)nextTile;
-            if(l.isRed() && !(map.get(xPos,yPos) instanceof TrafficLight)) {
-            	hasMoved=true;
-                return false;
-            }
-        }
-
         Road road = (Road)map.get(xPos, yPos);
-        int speedInit = road.getSpeed();
-        for(int remaining = road.getSpeed(); remaining>=0; remaining--) {
+        for(int remaining = road.getSpeed(); remaining>0 && path.size()>0; remaining--) {
+        	Tile nextTile=getNextTile(xPos, yPos, path.get(0));
+	        if(nextTile instanceof TrafficLight) { //No red traffic lights
+	            TrafficLight l = (TrafficLight)nextTile;
+	            if(l.isRed() && !(map.get(xPos,yPos) instanceof TrafficLight)) {
+	            	hasMoved=true;
+	                return false;
+	            }
+	        }
+	        int speedInit = road.getSpeed();
         	road = (Road)map.get(xPos, yPos);
         	if(road.getSpeed()!=speedInit) break;
 	        if(nextTile.getX()>=0 && nextTile.getY()>=0 && nextTile.getX()<map.getLengthX() && nextTile.getY()<map.getLengthY()) {
@@ -76,11 +75,12 @@ public class Car implements java.io.Serializable {
 		            road = (Road) map.get(xPos, yPos);
 		            road.carIncrement(this);
 		            path.remove(0);
-		            return true;
+		            //return true;
 	        	}
 	        	
 	        }
     	}
+        if(hasMoved) return true;
         return false;
     }
     public boolean turn()
