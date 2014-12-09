@@ -113,7 +113,7 @@ public class Runner extends JFrame{
 					if (light.isRed()) {
 						Image image=null;
 						try {
-							 image = ImageIO.read(new File("C:\\Users\\Shim\\workspace\\CS196selfdrivingcars\\red.jpg"));
+							 image = ImageIO.read(new File("red.jpg"));
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -128,7 +128,7 @@ public class Runner extends JFrame{
 					else
 					{Image image=null;
 					try {
-						 image = ImageIO.read(new File("C:\\Users\\Shim\\workspace\\CS196selfdrivingcars\\green.jpg"));
+						 image = ImageIO.read(new File("green.jpg"));
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -143,7 +143,7 @@ public class Runner extends JFrame{
 					//labels[i][j] = new JLabel(new ColorIcon(Color.RED, 16));
 					Image image=null;
 					try {
-						 image = ImageIO.read(new File("C:\\Users\\Shim\\workspace\\CS196selfdrivingcars\\grass.png"));
+						 image = ImageIO.read(new File("grass.png"));
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
