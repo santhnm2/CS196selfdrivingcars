@@ -8,7 +8,6 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,6 +28,7 @@ import javax.swing.border.EmptyBorder;
 import Car.Car;
 import Map.Map;
 import Map.RandomMapGenerator;
+import Map.Tile;
 import Map.NonRoad.NonRoad;
 import Map.Road.Intersection;
 import Map.Road.Road;
@@ -230,55 +230,25 @@ public class Runner extends JFrame{
 	public static void step(Map map) {
 		//Print out state
 		iterations++;
-		ArrayList<Intersection> intersections=map.getHandler().intersections;
-		//if(iterations % 10 == 0) { //Toggle all lights every ten iterations
-			for(int i = 0; i < intersections.size(); i++) {
-				
+		if(iterations % 10 == 0) { //Toggle all lights every ten iterations
+			for(int i = 0; i < map.getLengthX(); i++) {
+				for (int j = 0; j < map.getLengthY(); j++) {
+					Tile t = map.get(i, j);
 
-					if(intersections.get(i).shouldToggle()) {
-						intersections.get(i).toggle();
-						
-					
+					if(t instanceof TrafficLight) {
+						TrafficLight l  = (TrafficLight) t;
+						l.toggle();
+					}
 				}
 			}
-		//}
-		int t=0;
-		while(!haveAllMoved()&&t<=5)
-		{
-			
-			for (Car c : map.getCars()) {
-				if (c != null && c.getPath().size() > 0)
-					if(!c.hasMoved) c.move();
-				else if(c!=null)
-					c.hasMoved=true;
-					
-			}
-			t++;
-			
 		}
+
 		for (Car c : map.getCars()) {
-			c.hasMoved=false;
+			if (c != null && c.getPath().size() > 0)
+				c.move();
 		}
-		
-		for (int i=0;i<map.getCars().size();i++) {
-			if(map.getCars().get(i).getPath().size()==0)
-				{	
-					map.destroyCar(map.getCars().get(i));
-					cars--;
-					i--;
-				}
-				
-		}
+
 		//System.out.println(map);
-	}
-	private static boolean haveAllMoved()
-	{
-		for(Car c: map.getCars())
-		{
-			if(!c.hasMoved)
-				return false;
-		}
-		return true;
 	}
 	public static void Jbutton(final JFrame f) {
 		JToolBar vertical = new JToolBar(JToolBar.VERTICAL);
