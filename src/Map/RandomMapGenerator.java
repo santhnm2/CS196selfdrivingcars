@@ -46,7 +46,7 @@ public class RandomMapGenerator implements MapGenerator {
                     int start = (int) (Math.random() * length / 2) * 2;
                     int width = (int) (Math.random() * (length - start - 6) / 2) * 2 + 6;
 
-                    m.createHorizontalRoad(start, i, width, 2, 2);
+                    m.createHorizontalRoad(start, i, width, 2, 1);
                 }
             }
 
@@ -55,7 +55,7 @@ public class RandomMapGenerator implements MapGenerator {
                     int start = (int) (Math.random() * length / 2) * 2;
                     int width = (int) (Math.random() * (length - start - 6) / 2) * 2 + 6;
 
-                    m.createVerticalRoad(i, start, width, 2, 2);
+                    m.createVerticalRoad(i, start, width, 2, 1);
                 }
             }
         }
@@ -69,8 +69,8 @@ public class RandomMapGenerator implements MapGenerator {
                 }
             }
         }
-     //   if(!assignSpeeds(m, roads))
-       //     for(int i = 0; i < 30; i++) System.out.println("MAPGEN DONE GOOFED");
+        if(!assignSpeeds(m, roads))
+            for(int i = 0; i < 30; i++) System.out.println("MAPGEN DONE GOOFED");
 
         for (int i = 0; i < cars; i++) {
             Road start, end;
@@ -102,56 +102,78 @@ public class RandomMapGenerator implements MapGenerator {
     }
     private boolean assignSpeeds(Map m, ArrayList<Road> roads){
         int[][] speeds = new int[m.getLengthX()][m.getLengthY()];
+        int count = 0;
         for(Road r : roads){
+
             Tile[] adjTiles = getAdjTiles(m.grid, m.grid[r.getX()][r.getY()]);
             Road start = null;
             for(int i = 0; i < 4; i++){
-                if(adjTiles[i] != null && adjTiles[i] instanceof TrafficLight){
+                if(adjTiles[i] instanceof TrafficLight){
                     start = r;
                 }
-            }
-       //     m.pointIsValid(m.getInDir(r, dir).getX(), m.getInDir(r,dir).getY())
-            if(start != null){
-                int dir = start.getDirection();
-                int length = 1;
-                Tile t = r;
-                if(m.getInDir(r,dir) != null){
-                    System.out.println(m.getInDir(r, dir).getX() +" " + m.getInDir(r,dir).getY());
-                    t = m.getInDir(r, dir);
-
-                    if(t instanceof TrafficLight){
-                       int reverseDir = (dir + 2 > 3)? dir - 2 : dir + 2;
-                     if(m.getInDir(r, reverseDir) != null)
-                         t = m.getInDir(r, reverseDir);
-                     while(!(t == null || t instanceof TrafficLight || t instanceof NonRoad)){
-                         length++;
-                         if(m.getInDir(t, reverseDir) != null)
-                            t = m.getInDir(t, reverseDir);
-                         else
-                             break;
-                     }
-                     for(int i = 0; i < length; i++){
-                         t = m.getInDir(t, dir); // reverse direction
-                         speeds[t.getX()][t.getY()] = determineSpeed(length);
-                     }
-
-                    } else {
-                     while(!(t == null || t instanceof TrafficLight || t instanceof NonRoad)){
-                         length++;
-                         if(m.getInDir(t, dir) != null)
-                             t = m.getInDir(t, dir);
-                         else
-                             break;
-                        }
-                        int reverseDir = (dir + 2 > 3)? dir - 2: dir + 2;
-                     for(int i = 0; i < length; i ++){
-                         t = m.getInDir(t, reverseDir); //reverse directions
-                         speeds[t.getX()][t.getY()] = determineSpeed(length);
-                     }
-
+                if(adjTiles[i] == null || adjTiles[i] instanceof NonRoad){
+                    if(i == r.getDirection() || i == Math.abs(r.getDirection() - 4)){
+                        start = r;
                     }
                 }
             }
+
+            if(start != null){
+                System.out.println("Start point XY:" + start.getX() + " " + start.getY());
+                int dir = start.getDirection();
+                int length = 1;
+                Tile t = r;
+                System.out.println("XY:" + t.getX() + " " + t.getY());
+
+         //       if(m.getInDir(r,dir) != null){
+                    t = m.getInDir(r, dir);
+
+
+
+                    if(t instanceof TrafficLight || t == null || t instanceof NonRoad){
+
+                        int reverseDir = (dir + 2 > 3)? dir - 2 : dir + 2;
+                        if(m.getInDir(r, reverseDir) != null)
+                            t = m.getInDir(r, reverseDir);
+
+                        while(!(t == null || t instanceof TrafficLight || t instanceof NonRoad)){
+                            System.out.println("Count: " + count + "XY:" + t.getX() + " " + t.getY());
+
+                            length++;
+                            if(m.getInDir(t, reverseDir) != null)
+                                t = m.getInDir(t, reverseDir);
+                            else
+                                break;
+                        }
+                        System.out.println("Length:" + length);
+                        for(int i = 0; i < length; i++){
+                            t = m.getInDir(t, dir); // reverse direction
+                            speeds[t.getX()][t.getY()] = determineSpeed(length);
+                        }
+
+                    } else {
+
+                        while(!(t == null || t instanceof TrafficLight || t instanceof NonRoad)){
+                            System.out.println("Count: " + count + "XY:" + t.getX() + " " + t.getY());
+
+                            length++;
+                            if(m.getInDir(t, dir) != null)
+                                t = m.getInDir(t, dir);
+                            else
+                                break;
+                        }
+                        int reverseDir = (dir + 2 > 3)? dir - 2: dir + 2;
+                        System.out.println("Length:" + length);
+
+                        for(int i = 0; i < length; i ++){
+                            t = m.getInDir(t, reverseDir); //reverse directions
+                            speeds[t.getX()][t.getY()] = determineSpeed(length);
+                        }
+
+                    }
+                }
+         //   }
+            count++;
         }
         for(Road r : roads){
             r.setSpeed(speeds[r.getX()][r.getY()]);
@@ -159,8 +181,8 @@ public class RandomMapGenerator implements MapGenerator {
         return true;
     }
     private int determineSpeed(int length){
-        if(length <= 4) return 1;
-        if(length <= 8) return 2;
+        if(length <= 6) return 1;
+        if(length <= 10) return 2;
         return 3;
 
     }
@@ -266,7 +288,7 @@ public class RandomMapGenerator implements MapGenerator {
     }
 
     public static void main(String[] args) {
-        MapGenerator mapGen = new RandomMapGenerator(30, 1);
+        MapGenerator mapGen = new RandomMapGenerator(10, 1);
 
         System.out.println(mapGen.generateMap());
     }
