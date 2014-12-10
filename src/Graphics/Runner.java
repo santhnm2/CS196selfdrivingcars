@@ -44,6 +44,8 @@ public class Runner extends JFrame{
 	static boolean tLOptimized;
 	static int path;
 	
+	static boolean stopped = true;
+	
 	public static void main(String[] args) throws InterruptedException {
 	
 		gui.setBorder(new EmptyBorder(2, 3, 2, 3));
@@ -77,7 +79,9 @@ public class Runner extends JFrame{
 	private static void run() throws InterruptedException{
 		while(run){
 			gui.removeAll();
-			step(map);
+			if(!stopped) {
+				step(map);
+			}
 			color(gui, map);
 			f.pack();
 			gui.updateUI();
@@ -233,12 +237,18 @@ public class Runner extends JFrame{
 	}
 	public static void Jbutton(final JFrame f) {
 		JToolBar vertical = new JToolBar(JToolBar.VERTICAL);
+		JButton start = new JButton("Start");
 		JButton stop = new JButton("Stop");
         JButton step = new JButton("Step");
 
-		stop.addActionListener(new ActionListener() {
+        start.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				run=false;
+				stopped = false;
+			}
+		});
+        stop.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				stopped = true;
 			}
 		});
 		
@@ -258,6 +268,7 @@ public class Runner extends JFrame{
 			 }
 		});
         
+        vertical.add(start);
         vertical.add(stop);
         vertical.add(step);
 //        add(label, BorderLayout.WEST);
