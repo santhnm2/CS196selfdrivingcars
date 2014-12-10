@@ -76,9 +76,10 @@ public class Car implements java.io.Serializable {
 		            road.carIncrement(this);
 		            path.remove(0);
 		            //return true;
-	        	}
-	        	
+	        	}	
 	        }
+	        road = (Road)map.get(xPos, yPos);
+	        if(road instanceof TrafficLight) break; //Potentially buggy line
     	}
         if(hasMoved) return true;
         return false;
