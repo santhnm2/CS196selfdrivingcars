@@ -17,11 +17,13 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.border.EmptyBorder;
 
 import Car.Car;
+import FileIO.MapIO;
 import Map.Map;
 import Map.RandomMapGenerator;
 import Map.NonRoad.NonRoad;
@@ -282,21 +284,22 @@ public class Runner extends JFrame{
 		JMenuBar menubar = new JMenuBar();
 		JMenu fileMenu = new JMenu("File");
 		menubar.add(fileMenu);
-		
-		JMenuItem StopItem = new JMenuItem("Stop");
-		JMenuItem StartItem = new JMenuItem("Start (doesnt work yet)");
 
-		fileMenu.add(StopItem);
-		StopItem.addActionListener(new ActionListener() {
+		JMenuItem save = new JMenuItem("Save");
+		JMenuItem load = new JMenuItem("Load");
+		fileMenu.add(save);
+		fileMenu.add(load);
+		
+		save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				run=false;
+				String path = getFilePath(frame);
+				MapIO.saveMap(map, path);
 			}
 		});
-		fileMenu.add(StartItem);
-		StartItem.addActionListener(new ActionListener() {
+		load.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				run=true;
-				System.out.println("should i run again?"+run+" but i dont");
+				String path = getFilePath(frame);
+				map = MapIO.loadMap(path);
 			}
 		});
 		
@@ -316,5 +319,8 @@ public class Runner extends JFrame{
 		frame.pack();
 
 	}
-
+	public static String getFilePath(JFrame frame) {
+		String s = (String)JOptionPane.showInputDialog(frame, "Enter a file path and name", "File Path", JOptionPane.PLAIN_MESSAGE, null, null, "maps/map1.map");
+		return s;
+	}
 }
