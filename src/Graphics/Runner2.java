@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -26,6 +27,7 @@ import Map.Map;
 import Map.RandomMapGenerator;
 import Map.Tile;
 import Map.NonRoad.NonRoad;
+import Map.Road.Intersection;
 import Map.Road.Road;
 import Map.Road.TrafficLight;
 
@@ -69,6 +71,7 @@ public class Runner2 extends JFrame{
 		Jbutton(f);
 		addMenus(f);
 		f.pack();
+		
 		f.setVisible(true);
 		run();
 	}
@@ -372,7 +375,7 @@ public class Runner2 extends JFrame{
 
 		        start.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent ae) {
-						stopped = false;
+							stopped = false;
 					}
 				});
 		        stop.addActionListener(new ActionListener() {
