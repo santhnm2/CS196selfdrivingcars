@@ -43,7 +43,10 @@ public class Map implements java.io.Serializable {
     public ArrayList<Car> getCars() {
         return this.cars;
     }
-
+    public void setPath(int path){
+       for (int i =0; i< cars.size();i++)
+          cars.get(i).setPath(path);
+    }
     @Override
     public String toString() {
         StringBuilder total = new StringBuilder();
@@ -112,10 +115,13 @@ public class Map implements java.io.Serializable {
         cars.add(c);
     }
 
+
+
+
     void createHorizontalRoad(int startX, int startY, int length, int lanes, int speed){
         startX += startX % 2;
         startY += startY % 2;
-        length  += length % 2;
+        length += length % 2;
 
         for (int i = 0; i < length; i++) {
             if (startX + i >= getLengthX()) break;

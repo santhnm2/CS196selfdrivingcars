@@ -15,17 +15,20 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.border.EmptyBorder;
 
 import Car.Car;
+import FileIO.MapIO;
 import Map.Map;
 import Map.RandomMapGenerator;
 import Map.Tile;
@@ -40,29 +43,37 @@ public class Runner extends JFrame{
 	static JLabel [][] labels;
 	static boolean run=true;
 	// for ease of access during demo
-	static int size=20;//size of the map
+	static int size=40;//size of the map
 	static int cars=100;//number of cars
 	static int sizeBox=14;//size of each box
 	static Map map;
-	static 	JFrame f ;
-	static Thread mythread=new MyThread();
+	static 		JFrame f ;
+	static RandomMapGenerator generator;
+	static boolean tLOptimized = true;
+	
+	static boolean stopped = true;
+	static JLabel timer;
+	static JLabel carLabel;
+	
 	public static void main(String[] args) throws InterruptedException {
+	
 		gui.setBorder(new EmptyBorder(2, 3, 2, 3));
 		gui.setBackground(Color.WHITE.darker().darker());
-		RandomMapGenerator generator = new RandomMapGenerator(size, cars);
+		generator = new RandomMapGenerator(size, cars);
 
 		map = generator.generateMap();
 		int w = map.getLengthX();
 		int h = map.getLengthY();
 		gui.setLayout(new GridLayout(h, w, 2, 2));
 		labels = new JLabel[w][h];
-		System.out.println(map.toString());
 		for (int i = 0; i < w; i++) 
 			for (int j = 0; j < h; j++)
 			{
 				labels[i][j] = new JLabel();
 				gui.add(labels[i][j]);
 			}
+		color(gui, map);
+
 		f = new JFrame("Demo");
 		f.add(gui);
 		f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -71,33 +82,19 @@ public class Runner extends JFrame{
 		addMenus(f);
 		f.pack();
 		f.setVisible(true);
+		run();
 	}
-		public static class MyThread extends Thread
-		{	
-			public void run(){
-			color(gui, map);
-			f.pack();
-			while(run){
-			gui.removeAll();
-			
-			sizeBox=f.getWidth()/size;
-			color(gui, map);
-			step(map);
-			gui.updateUI();
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			}
-			}
-	}
+
 	private static void run() throws InterruptedException{
 		while(run){
 			gui.removeAll();
-			step(map);
+			if(!stopped) {
+				step(map);
+			}
 			color(gui, map);
+	      timer.setText(Integer.toString(iterations));
+	      carLabel.setText(Integer.toString(map.getCars().size()));
+
 			f.pack();
 			gui.updateUI();
 			Thread.sleep(500);
@@ -113,7 +110,7 @@ public class Runner extends JFrame{
 					if (light.isRed()) {
 						Image image=null;
 						try {
-							 image = ImageIO.read(new File("red.jpg"));
+							 image = ImageIO.read(new File("images/red.jpg"));
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -127,7 +124,7 @@ public class Runner extends JFrame{
 					else
 					{Image image=null;
 					try {
-						 image = ImageIO.read(new File("green.jpg"));
+						 image = ImageIO.read(new File("images/green.jpg"));
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -142,7 +139,7 @@ public class Runner extends JFrame{
 					//labels[i][j] = new JLabel(new ColorIcon(Color.RED, 16));
 					Image image=null;
 					try {
-						 image = ImageIO.read(new File("grass.jpg"));
+						 image = ImageIO.read(new File("images/grass.jpg"));
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -158,7 +155,7 @@ public class Runner extends JFrame{
 						if (car.getDirection()==1){
 							Image image=null;
 							try {
-								 image = ImageIO.read(new File("car1r.jpg"));
+								 image = ImageIO.read(new File("images/car1r.jpg"));
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -171,7 +168,7 @@ public class Runner extends JFrame{
 						if (car.getDirection()==2){
 							Image image=null;
 							try {
-								 image = ImageIO.read(new File("car1d.jpg"));
+								 image = ImageIO.read(new File("images/car1d.jpg"));
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -184,7 +181,7 @@ public class Runner extends JFrame{
 						if (car.getDirection()==3){
 							Image image=null;
 							try {
-								 image = ImageIO.read(new File("car1l.jpg"));
+								 image = ImageIO.read(new File("images/car1l.jpg"));
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -197,7 +194,61 @@ public class Runner extends JFrame{
 						if (car.getDirection()==0){
 							Image image=null;
 							try {
-								 image = ImageIO.read(new File("car1u.jpg"));
+								 image = ImageIO.read(new File("images/car1u.jpg"));
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							JLabel myLabel = new JLabel(new ColorIcon(image, sizeBox));
+								//JLabel myLabel = new JLabel(new ColorIcon(Color.PINK, sizeBox,fill));
+								gui.add(myLabel);
+								myLabel.setLocation(i, j);
+						}
+					}
+					else if (fill==2){
+						if (car.getDirection()==1){
+							Image image=null;
+							try {
+								 image = ImageIO.read(new File("images/car2r.jpg"));
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							JLabel myLabel = new JLabel(new ColorIcon(image, sizeBox));
+								//JLabel myLabel = new JLabel(new ColorIcon(Color.PINK, sizeBox,fill));
+								gui.add(myLabel);
+								myLabel.setLocation(i, j);
+						}
+						if (car.getDirection()==2){
+							Image image=null;
+							try {
+								 image = ImageIO.read(new File("images/car2d.jpg"));
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							JLabel myLabel = new JLabel(new ColorIcon(image, sizeBox));
+								//JLabel myLabel = new JLabel(new ColorIcon(Color.PINK, sizeBox,fill));
+								gui.add(myLabel);
+								myLabel.setLocation(i, j);
+						}
+						if (car.getDirection()==3){
+							Image image=null;
+							try {
+								 image = ImageIO.read(new File("images/car2l.jpg"));
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							JLabel myLabel = new JLabel(new ColorIcon(image, sizeBox));
+								//JLabel myLabel = new JLabel(new ColorIcon(Color.PINK, sizeBox,fill));
+								gui.add(myLabel);
+								myLabel.setLocation(i, j);
+						}
+						if (car.getDirection()==0){
+							Image image=null;
+							try {
+								 image = ImageIO.read(new File("images/car2u.jpg"));
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -213,7 +264,7 @@ public class Runner extends JFrame{
 						//labels[i][j] = new JLabel(new ColorIcon(Color.RED, 16));
 						Image image=null;
 						try {
-							 image = ImageIO.read(new File("road.jpg"));
+							 image = ImageIO.read(new File("images/road.jpg"));
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -226,7 +277,8 @@ public class Runner extends JFrame{
 			}
 		}
 	}
-	
+		
+
 	static class ColorIcon implements Icon {
 		Image image;
 		Color color;
@@ -274,70 +326,114 @@ public class Runner extends JFrame{
 
 	}
 
+
 	public static void step(Map map) {
 		//Print out state
-		iterations++;
-		if(iterations % 10 == 0) { //Toggle all lights every ten iterations
-			for(int i = 0; i < map.getLengthX(); i++) {
-				for (int j = 0; j < map.getLengthY(); j++) {
-					Tile t = map.get(i, j);
-
-					if(t instanceof TrafficLight) {
-						TrafficLight l  = (TrafficLight) t;
-						l.toggle();
+		if(map.getCars().size()>0) {
+			iterations++;
+		}
+		ArrayList<Intersection> intersections=map.getHandler().intersections;
+		if(tLOptimized) {
+			for(int i = 0; i < intersections.size(); i++) {
+				if(intersections.get(i).shouldToggle()) {
+					intersections.get(i).toggle();
+				}
+			}
+		}
+		else {
+			if(iterations % 10 == 0) { //Toggle all lights every ten iterations
+				for(int i = 0; i < intersections.size(); i++) {
+					if(intersections.get(i).shouldToggle()) {
+						intersections.get(i).toggle();
 					}
 				}
 			}
 		}
-
-		for (Car c : map.getCars()) {
-			if (c != null && c.getPath().size() > 0)
-				c.move();
+		int t=0;
+		while(!haveAllMoved()&&t<=5)
+		{
+			
+			for (Car c : map.getCars()) {
+				if (c != null && c.getPath().size() > 0)
+					if(!c.hasMoved) c.move();
+				else if(c!=null)
+					c.hasMoved=true;
+					
+			}
+			t++;
+			
 		}
-
+		for (Car c : map.getCars()) {
+			c.hasMoved=false;
+		}
+		
+		for (int i=0;i<map.getCars().size();i++) {
+			if(map.getCars().get(i).getPath().size()==0)
+				{	
+					map.destroyCar(map.getCars().get(i));
+					
+					i--;
+				}
+				
+		}
 		//System.out.println(map);
+	}
+	private static boolean haveAllMoved()
+	{
+		for(Car c: map.getCars())
+		{
+			if(!c.hasMoved)
+				return false;
+		}
+		return true;
 	}
 	public static void Jbutton(final JFrame f) {
 		JToolBar vertical = new JToolBar(JToolBar.VERTICAL);
+		JButton start = new JButton("Start");
 		JButton stop = new JButton("Stop");
-        JButton step = new JButton("Quick Pause(5000 mil)");
-        JButton time = new JButton("Start");
-        JButton dist = new JButton("Distance efficient");
-		stop.addActionListener(new ActionListener() {
+        JButton step = new JButton("Step");
+        JLabel t = new JLabel("Ticks:");
+        timer = new JLabel(""+iterations);
+        JLabel c = new JLabel("Cars:");
+        carLabel = new JLabel(""+map.getCars().size());
+
+        start.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				mythread.stop();
+				stopped = false;
+			}
+		});
+        stop.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				stopped = true;
 			}
 		});
 		
         step.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				mythread.resume(); 
-			}
+				gui.removeAll();
+				step(map);
+				color(gui, map);
+				f.pack();
+				//run=true;
+//				try {
+//					run();
+//				} catch (InterruptedException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+			 }
 		});
-        time.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				mythread.start();
-			}
-		});
-        dist.addActionListener(new ActionListener() {
-    			public void actionPerformed(ActionEvent ae) {
-    			for(int a=0;a<cars;a++)
-    				map.getCars().get(a).setPath(1);
-    			Thread mythread=new MyThread();
-				mythread.start();
-			
-    			}
-    			
-    		});
-           
+        
+        vertical.add(start);
         vertical.add(stop);
         vertical.add(step);
-        vertical.add(time);
-       // vertical.add(dist);
+        vertical.add(t);
+        vertical.add(timer);
+        vertical.add(c);
+        vertical.add(carLabel);
 //        add(label, BorderLayout.WEST);
-        f.add(vertical, BorderLayout.WEST
-        		); 
-        //f.pack();
+        f.add(vertical, BorderLayout.WEST); 
+        f.pack();
 	
 	}
 
@@ -345,59 +441,69 @@ public class Runner extends JFrame{
 	public static void addMenus(final JFrame frame) {
 		JMenuBar menubar = new JMenuBar();
 		JMenu fileMenu = new JMenu("File");
-		JMenu Opt = new JMenu("Optimize");
+		JMenu optimizations = new JMenu("Optimizations");
 		menubar.add(fileMenu);
+
+		JMenuItem save = new JMenuItem("Save");
+		JMenuItem load = new JMenuItem("Load");
+		fileMenu.add(save);
+		fileMenu.add(load);
 		
-		JMenuItem StopItem = new JMenuItem("Save Map");
+		save.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				String path = getFilePath(frame);
+				MapIO.saveMap(map, path);
+			}
+		});
+		load.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				String path = getFilePath(frame);
+				map = MapIO.loadMap(path);
+			}
+		});
+	    JMenu settingsMenu = new JMenu("Settings");
+		JMenuItem StopItem = new JMenuItem("Stop");
 		JMenuItem StartItem = new JMenuItem("Start (doesnt work yet)");
+		JMenuItem minimizeTime = new JMenuItem("Time");
+		JMenuItem minimzeDistance = new JMenuItem("Distance");
+		JMenuItem base = new JMenuItem("Baseline");
 
-		final JTextField textField = new JTextField(20);
+		settingsMenu.add(optimizations);
+		optimizations.add(base);
+      optimizations.addActionListener(new ActionListener() {
+         public void actionPerformed(ActionEvent ae) {
+            map.setPath(2);
+         }
+      });
+      optimizations.add(minimzeDistance);
+      optimizations.addActionListener(new ActionListener() {
+         public void actionPerformed(ActionEvent ae) {
+            map.setPath(1);
+         }
+      });
+      optimizations.add(minimizeTime);
+      optimizations.addActionListener(new ActionListener() {
+         public void actionPerformed(ActionEvent ae) {
+            map.setPath(0);
+         }
+      });
 		
-		fileMenu.add(StopItem);
-		textField.addActionListener(new ActionListener() {
+		menubar.add(settingsMenu);
+		
+		final JCheckBoxMenuItem tL = new JCheckBoxMenuItem("TrafficLight Optimizations", tLOptimized);
+		tL.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				String text = textField.getText();
-				System.out.println(text);
+				tLOptimized = !tLOptimized;
+				tL.setState(tLOptimized);
 			}
 		});
-		fileMenu.add(StartItem);
-		StartItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				
-			}
-		});
-		menubar.add(Opt);
-		JMenuItem time = new JMenuItem("Time efficient");
-		JMenuItem dist = new JMenuItem("Distance efficient");
-		Opt.add(time);
-		Opt.add(dist);
-		
-        time.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-			for(int a=0;a<cars;a++)
-				map.getCars().get(a).setPath(0);
-				
-				mythread.start();
-			}
-		});
-        dist.addActionListener(new ActionListener() {
-    			public void actionPerformed(ActionEvent ae) {
-    			for(int a=0;a<cars;a++)
-    				map.getCars().get(a).setPath(1);
-    			Thread mythread=new MyThread();
-				mythread.start();
-			
-    			} 
-    			
-    		});
-           
-
-		
-
-		
+		settingsMenu.add(tL);		
 		frame.setJMenuBar(menubar);
-		//frame.pack();
+		frame.pack();
 
 	}
-
+	public static String getFilePath(JFrame frame) {
+		String s = (String)JOptionPane.showInputDialog(frame, "Enter a file path and name", "File Path", JOptionPane.PLAIN_MESSAGE, null, null, "maps/map1.map");
+		return s;
+	}
 }
