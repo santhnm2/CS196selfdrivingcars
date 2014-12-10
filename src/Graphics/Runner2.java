@@ -9,17 +9,19 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Icon;
 import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.border.EmptyBorder;
 
 import Car.Car;
+import FileIO.MapIO;
 import Map.Map;
 import Map.RandomMapGenerator;
 import Map.Tile;
@@ -34,18 +36,19 @@ public class Runner2 extends JFrame{
 	static boolean run=true;
 	// for ease of access during demo
 	static int size=40;//size of the map
-	static int cars=40;//number of cars
+	static int cars=100;//number of cars
 	static int sizeBox=14;//size of each box
 	static Map map;
 	static JFrame f ;
-	static int non_road_counter = 0;
-	static int[] paint_array = new int [1000]; 
-	static Thread mythread=new MyThread();
+	static RandomMapGenerator generator;
+	static boolean tLOptimized;
+	static boolean stopped = true;
+	
 	public static void main(String[] args) throws InterruptedException {
 	
 		gui.setBorder(new EmptyBorder(2, 3, 2, 3));
 		gui.setBackground(Color.WHITE.darker().darker());
-		RandomMapGenerator generator = new RandomMapGenerator(size, cars);
+		generator = new RandomMapGenerator(size, cars);
 
 		map = generator.generateMap();
 		int w = map.getLengthX();
@@ -58,6 +61,7 @@ public class Runner2 extends JFrame{
 				labels[i][j] = new JLabel();
 				gui.add(labels[i][j]);
 			}
+		color(gui, map);
 		f = new JFrame("Demo");
 		f.add(gui);
 		f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -66,6 +70,7 @@ public class Runner2 extends JFrame{
 		addMenus(f);
 		f.pack();
 		f.setVisible(true);
+		run();
 	}
 	public static class MyThread extends Thread
 	{	
@@ -86,6 +91,7 @@ public class Runner2 extends JFrame{
 			e.printStackTrace();
 		}
 		}
+		count++;
 		}
 }
 
@@ -285,6 +291,9 @@ public class Runner2 extends JFrame{
 				g.setColor(Color.black);
 				for(int a=0;a<this.cars;a++)
 					g.drawOval(x+a*3, y+a*3, 3, 3);
+				g.setColor(Color.WHITE);
+				g.drawString(""+count, 0, 0);
+				
 			}
 			}
 
@@ -407,7 +416,7 @@ public class Runner2 extends JFrame{
 			menubar.add(fileMenu);
 			
 			JMenuItem StopItem = new JMenuItem("Save Map");
-			JMenuItem StartItem = new JMenuItem("Start (doesnt work yet)");
+			JMenuItem StartItem = new JMenuItem("load map");
 
 			final JTextField textField = new JTextField(20);
 			
