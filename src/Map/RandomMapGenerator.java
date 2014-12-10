@@ -80,7 +80,7 @@ public class RandomMapGenerator implements MapGenerator {
                 end   = roads.get((int) (roads.size() * Math.random()));
             } while (start == end);
 
-            m.placeCar(new Car(start.x, start.y, end.x, end.y, m));
+            m.placeCar(new Car(start.x, start.y, end.x, end.y, m, 0));
         }
 
 
