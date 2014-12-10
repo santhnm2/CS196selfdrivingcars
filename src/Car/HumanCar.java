@@ -27,7 +27,7 @@ public class HumanCar extends Car {
 	        		road=(Road)nextTile;
 	        		xPos=nextTile.getX();yPos=nextTile.getY();
 	        		road.carIncrement(this);
-	        	}
+	        	} 
     	
     }
 }
