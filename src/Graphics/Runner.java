@@ -46,6 +46,8 @@ public class Runner extends JFrame{
 	static boolean tLOptimized;
 	
 	static boolean stopped = true;
+	static JLabel timer;
+	static JLabel carLabel;
 	
 	public static void main(String[] args) throws InterruptedException {
 	
@@ -83,6 +85,8 @@ public class Runner extends JFrame{
 			if(!stopped) {
 				step(map);
 			}
+			//timer.setText(""+iterations);
+			//carLabel.setText(""+map.getCars().size());
 			color(gui, map);
 			f.pack();
 			gui.updateUI();
@@ -180,7 +184,9 @@ public class Runner extends JFrame{
 
 	public static void step(Map map) {
 		//Print out state
-		iterations++;
+		if(map.getCars().size()>0) {
+			iterations++;
+		}
 		ArrayList<Intersection> intersections=map.getHandler().intersections;
 		if(tLOptimized) {
 			for(int i = 0; i < intersections.size(); i++) {
@@ -241,6 +247,10 @@ public class Runner extends JFrame{
 		JButton start = new JButton("Start");
 		JButton stop = new JButton("Stop");
         JButton step = new JButton("Step");
+        JLabel t = new JLabel("Ticks:");
+        timer = new JLabel(""+iterations);
+        JLabel c = new JLabel("Cars:");
+        carLabel = new JLabel(""+map.getCars().size());
 
         start.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
@@ -272,6 +282,10 @@ public class Runner extends JFrame{
         vertical.add(start);
         vertical.add(stop);
         vertical.add(step);
+        vertical.add(t);
+        vertical.add(timer);
+        vertical.add(c);
+        vertical.add(carLabel);
 //        add(label, BorderLayout.WEST);
         f.add(vertical, BorderLayout.WEST); 
         f.pack();
