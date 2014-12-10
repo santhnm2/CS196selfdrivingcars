@@ -27,7 +27,10 @@ public class Car implements java.io.Serializable {
     	this.yPos=y;
     	this.map=map;
     }
-    public Car(int x, int y, int destX, int destY, Map map) {
+
+    
+    public Car(int x, int y, int destX, int destY, Map map, int pathNumber) {
+
         xPos = x;
         yPos = y;
         this.destX = destX;
@@ -36,7 +39,11 @@ public class Car implements java.io.Serializable {
         road.carIncrement(this);
         this.dir = road.getDirection();
         this.map = map;
-        path = PathGenerator.minimizeTime(map, this);
+        switch (pathNumber){
+        case 0: path = PathGenerator.minimizeTime(map, this); break;
+        case 1: path = PathGenerator.minimizeDistance(map, this); break;
+        case 2: path = PathGenerator.base(map, this);
+        }
     }
     public int getXPos()
     {
@@ -54,7 +61,13 @@ public class Car implements java.io.Serializable {
     {
        return destY;
     }
-    
+    public void setPath(int pathNumber){
+       switch (pathNumber){
+       case 0: path = PathGenerator.minimizeTime(map, this); break;
+       case 1: path = PathGenerator.minimizeDistance(map, this); break;
+       case 2: path = PathGenerator.base(map, this);
+       }
+    }
     public boolean move() // plug off the first item of the arraylist and execute that
     {
         Road road = (Road)map.get(xPos, yPos);
