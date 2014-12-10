@@ -43,7 +43,7 @@ public class Runner extends JFrame{
 	static Map map;
 	static 		JFrame f ;
 	static RandomMapGenerator generator;
-	static boolean tLOptimized;
+	static boolean tLOptimized = true;
 	
 	static boolean stopped = true;
 	
