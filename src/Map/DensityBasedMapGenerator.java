@@ -99,7 +99,7 @@ public class DensityBasedMapGenerator implements MapGenerator {
                 end   = roads.get((int) (roads.size() * Math.random()));
             } while (start == end);
 
-            m.placeCar(new Car(start.x, start.y, end.x, end.y, m));
+            m.placeCar(new Car(start.x, start.y, end.x, end.y, m, 0));
         }
 
         for (int i = 0; i < grid.length; i++) {
