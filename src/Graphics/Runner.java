@@ -85,16 +85,18 @@ public class Runner extends JFrame{
 			if(!stopped) {
 				step(map);
 			}
-			//timer.setText(""+iterations);
-			//carLabel.setText(""+map.getCars().size());
 			color(gui, map);
+	      timer.setText(Integer.toString(iterations));
+	      carLabel.setText(Integer.toString(map.getCars().size()));
+
 			f.pack();
 			gui.updateUI();
 			Thread.sleep(500);
 		}
 	}
 	private static void color(JPanel gui, Map map) {
-		for (int i = 0; i < map.getLengthX(); i++) {
+
+	   for (int i = 0; i < map.getLengthX(); i++) {
 			for (int j = 0; j < map.getLengthY(); j++) {
 				
 				if (map.get(j, i) instanceof TrafficLight) {
