@@ -5,7 +5,7 @@ import Car.*;
 
 public class Road extends Tile
 {
-	private final int speedLimit;
+	private int speedLimit;
 	protected final int dir;
 	private int max;
 	protected Car[] occupants;
@@ -22,7 +22,9 @@ public class Road extends Tile
 	public int getSpeed() {
 		return speedLimit;
 	}
-	
+	public void setSpeed(int speed){
+        speedLimit = speed;
+    }
 	public int getDirection() {
 		return dir;
 	}
