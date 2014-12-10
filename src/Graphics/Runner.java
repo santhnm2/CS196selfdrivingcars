@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import javax.swing.Icon;
 import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -23,7 +24,6 @@ import javax.swing.border.EmptyBorder;
 import Car.Car;
 import Map.Map;
 import Map.RandomMapGenerator;
-import Map.Tile;
 import Map.NonRoad.NonRoad;
 import Map.Road.Intersection;
 import Map.Road.Road;
@@ -282,27 +282,14 @@ public class Runner extends JFrame{
 		JMenu fileMenu = new JMenu("File");
 		JMenu optimizations = new JMenu("Optimizations");
 		menubar.add(fileMenu);
-		
+	    JMenu settingsMenu = new JMenu("Settings");
 		JMenuItem StopItem = new JMenuItem("Stop");
 		JMenuItem StartItem = new JMenuItem("Start (doesnt work yet)");
 		JMenuItem minimizeTime = new JMenuItem("Time");
 		JMenuItem minimzeDistance = new JMenuItem("Distance");
 		JMenuItem base = new JMenuItem("Baseline");
-		
-		fileMenu.add(StopItem);
-		StopItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				run=false;
-			}
-		});
-		fileMenu.add(StartItem);
-		StartItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				run=true;
-				System.out.println("should i run again?"+run+" but i dont");
-			}
-		});
-		fileMenu.add(optimizations);
+
+		settingsMenu.add(optimizations);
 		optimizations.add(base);
       optimizations.addActionListener(new ActionListener() {
          public void actionPerformed(ActionEvent ae) {
@@ -321,8 +308,17 @@ public class Runner extends JFrame{
             map.setPath(0);
          }
       });
-
 		
+		menubar.add(settingsMenu);
+		
+		final JCheckBoxMenuItem tL = new JCheckBoxMenuItem("TrafficLight Optimizations", tLOptimized);
+		tL.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				tLOptimized = !tLOptimized;
+				tL.setState(tLOptimized);
+			}
+		});
+		settingsMenu.add(tL);		
 		frame.setJMenuBar(menubar);
 		frame.pack();
 
