@@ -40,9 +40,8 @@ public class Runner extends JFrame{
 	static int sizeBox=14;//size of each box
 	static Map map;
 	static 		JFrame f ;
-	
+	static RandomMapGenerator generator;
 	static boolean tLOptimized;
-	static int path;
 	
 	static boolean stopped = true;
 	
@@ -50,7 +49,7 @@ public class Runner extends JFrame{
 	
 		gui.setBorder(new EmptyBorder(2, 3, 2, 3));
 		gui.setBackground(Color.WHITE.darker().darker());
-		RandomMapGenerator generator = new RandomMapGenerator(size, cars);
+		generator = new RandomMapGenerator(size, cars);
 
 		map = generator.generateMap();
 		int w = map.getLengthX();
@@ -281,11 +280,15 @@ public class Runner extends JFrame{
 	public static void addMenus(final JFrame frame) {
 		JMenuBar menubar = new JMenuBar();
 		JMenu fileMenu = new JMenu("File");
+		JMenu optimizations = new JMenu("Optimizations");
 		menubar.add(fileMenu);
 		
 		JMenuItem StopItem = new JMenuItem("Stop");
 		JMenuItem StartItem = new JMenuItem("Start (doesnt work yet)");
-
+		JMenuItem minimizeTime = new JMenuItem("Time");
+		JMenuItem minimzeDistance = new JMenuItem("Distance");
+		JMenuItem base = new JMenuItem("Baseline");
+		
 		fileMenu.add(StopItem);
 		StopItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
@@ -299,6 +302,25 @@ public class Runner extends JFrame{
 				System.out.println("should i run again?"+run+" but i dont");
 			}
 		});
+		fileMenu.add(optimizations);
+		optimizations.add(base);
+      optimizations.addActionListener(new ActionListener() {
+         public void actionPerformed(ActionEvent ae) {
+            map.setPath(2);
+         }
+      });
+      optimizations.add(minimzeDistance);
+      optimizations.addActionListener(new ActionListener() {
+         public void actionPerformed(ActionEvent ae) {
+            map.setPath(1);
+         }
+      });
+      optimizations.add(minimizeTime);
+      optimizations.addActionListener(new ActionListener() {
+         public void actionPerformed(ActionEvent ae) {
+            map.setPath(0);
+         }
+      });
 
 		
 		frame.setJMenuBar(menubar);
