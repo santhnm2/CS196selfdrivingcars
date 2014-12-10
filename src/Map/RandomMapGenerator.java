@@ -21,6 +21,8 @@ public class RandomMapGenerator implements MapGenerator {
 
     private final int length;
     private final int cars;
+    private ArrayList<Road> roads;
+    private Map m;
 
     public RandomMapGenerator(int length, int cars) {
         this.length = length;
@@ -37,7 +39,7 @@ public class RandomMapGenerator implements MapGenerator {
             }
         }
 
-        Map m = new Map(grid, new ArrayList<Car>());
+        m = new Map(grid, new ArrayList<Car>());
 
         for (int t = 0; t < 3; t++) {
             for (int i = 0; i < length; i += 4){
@@ -61,7 +63,7 @@ public class RandomMapGenerator implements MapGenerator {
 
         removeIslands(m);
 
-        ArrayList<Road> roads = new ArrayList<Road>();
+        roads = new ArrayList<Road>();
 
         for (Tile[] a : grid) {
             for (Tile b : a) {
@@ -70,22 +72,20 @@ public class RandomMapGenerator implements MapGenerator {
                 }
             }
         }
-
         for (int i = 0; i < cars; i++) {
-            Road start, end;
+           Road start, end;
 
-            do {
-                start = roads.get((int) (roads.size() * Math.random()));
-                end   = roads.get((int) (roads.size() * Math.random()));
-            } while (start == end);
+           do {
+               start = roads.get((int) (roads.size() * Math.random()));
+               end   = roads.get((int) (roads.size() * Math.random()));
+           } while (start == end);
 
-            m.placeCar(new Car(start.x, start.y, end.x, end.y, m));
-        }
-
+           m.placeCar(new Car(start.x, start.y, end.x, end.y, m, 0));
+       }
 
         return m;
     }
-
+   
     private void removeIslands(Map m) {
         int[][] dp = new int[length][length];
 

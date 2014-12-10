@@ -11,19 +11,21 @@ import java.util.ArrayList;
 
 import javax.swing.Icon;
 import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.border.EmptyBorder;
 
 import Car.Car;
+import FileIO.MapIO;
 import Map.Map;
 import Map.RandomMapGenerator;
-import Map.Tile;
 import Map.NonRoad.NonRoad;
 import Map.Road.Intersection;
 import Map.Road.Road;
@@ -40,11 +42,16 @@ public class Runner extends JFrame{
 	static int sizeBox=14;//size of each box
 	static Map map;
 	static 		JFrame f ;
+	static RandomMapGenerator generator;
+	static boolean tLOptimized;
+	
+	static boolean stopped = true;
+	
 	public static void main(String[] args) throws InterruptedException {
 	
 		gui.setBorder(new EmptyBorder(2, 3, 2, 3));
 		gui.setBackground(Color.WHITE.darker().darker());
-		RandomMapGenerator generator = new RandomMapGenerator(size, cars);
+		generator = new RandomMapGenerator(size, cars);
 
 		map = generator.generateMap();
 		int w = map.getLengthX();
@@ -73,7 +80,9 @@ public class Runner extends JFrame{
 	private static void run() throws InterruptedException{
 		while(run){
 			gui.removeAll();
-			step(map);
+			if(!stopped) {
+				step(map);
+			}
 			color(gui, map);
 			f.pack();
 			gui.updateUI();
@@ -173,17 +182,22 @@ public class Runner extends JFrame{
 		//Print out state
 		iterations++;
 		ArrayList<Intersection> intersections=map.getHandler().intersections;
-		//if(iterations % 10 == 0) { //Toggle all lights every ten iterations
+		if(tLOptimized) {
 			for(int i = 0; i < intersections.size(); i++) {
-				
-
-					if(intersections.get(i).shouldToggle()) {
-						intersections.get(i).toggle();
-						
-					
+				if(intersections.get(i).shouldToggle()) {
+					intersections.get(i).toggle();
 				}
 			}
-		//}
+		}
+		else {
+			if(iterations % 10 == 0) { //Toggle all lights every ten iterations
+				for(int i = 0; i < intersections.size(); i++) {
+					if(intersections.get(i).shouldToggle()) {
+						intersections.get(i).toggle();
+					}
+				}
+			}
+		}
 		int t=0;
 		while(!haveAllMoved()&&t<=5)
 		{
@@ -224,12 +238,18 @@ public class Runner extends JFrame{
 	}
 	public static void Jbutton(final JFrame f) {
 		JToolBar vertical = new JToolBar(JToolBar.VERTICAL);
+		JButton start = new JButton("Start");
 		JButton stop = new JButton("Stop");
         JButton step = new JButton("Step");
 
-		stop.addActionListener(new ActionListener() {
+        start.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				run=false;
+				stopped = false;
+			}
+		});
+        stop.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				stopped = true;
 			}
 		});
 		
@@ -249,6 +269,7 @@ public class Runner extends JFrame{
 			 }
 		});
         
+        vertical.add(start);
         vertical.add(stop);
         vertical.add(step);
 //        add(label, BorderLayout.WEST);
@@ -261,29 +282,69 @@ public class Runner extends JFrame{
 	public static void addMenus(final JFrame frame) {
 		JMenuBar menubar = new JMenuBar();
 		JMenu fileMenu = new JMenu("File");
+		JMenu optimizations = new JMenu("Optimizations");
 		menubar.add(fileMenu);
+
+		JMenuItem save = new JMenuItem("Save");
+		JMenuItem load = new JMenuItem("Load");
+		fileMenu.add(save);
+		fileMenu.add(load);
 		
+		save.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				String path = getFilePath(frame);
+				MapIO.saveMap(map, path);
+			}
+		});
+		load.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				String path = getFilePath(frame);
+				map = MapIO.loadMap(path);
+			}
+		});
+	    JMenu settingsMenu = new JMenu("Settings");
 		JMenuItem StopItem = new JMenuItem("Stop");
 		JMenuItem StartItem = new JMenuItem("Start (doesnt work yet)");
+		JMenuItem minimizeTime = new JMenuItem("Time");
+		JMenuItem minimzeDistance = new JMenuItem("Distance");
+		JMenuItem base = new JMenuItem("Baseline");
 
-		fileMenu.add(StopItem);
-		StopItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				run=false;
-			}
-		});
-		fileMenu.add(StartItem);
-		StartItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				run=true;
-				System.out.println("should i run again?"+run+" but i dont");
-			}
-		});
-
+		settingsMenu.add(optimizations);
+		optimizations.add(base);
+      optimizations.addActionListener(new ActionListener() {
+         public void actionPerformed(ActionEvent ae) {
+            map.setPath(2);
+         }
+      });
+      optimizations.add(minimzeDistance);
+      optimizations.addActionListener(new ActionListener() {
+         public void actionPerformed(ActionEvent ae) {
+            map.setPath(1);
+         }
+      });
+      optimizations.add(minimizeTime);
+      optimizations.addActionListener(new ActionListener() {
+         public void actionPerformed(ActionEvent ae) {
+            map.setPath(0);
+         }
+      });
 		
+		menubar.add(settingsMenu);
+		
+		final JCheckBoxMenuItem tL = new JCheckBoxMenuItem("TrafficLight Optimizations", tLOptimized);
+		tL.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				tLOptimized = !tLOptimized;
+				tL.setState(tLOptimized);
+			}
+		});
+		settingsMenu.add(tL);		
 		frame.setJMenuBar(menubar);
 		frame.pack();
 
 	}
-
+	public static String getFilePath(JFrame frame) {
+		String s = (String)JOptionPane.showInputDialog(frame, "Enter a file path and name", "File Path", JOptionPane.PLAIN_MESSAGE, null, null, "maps/map1.map");
+		return s;
+	}
 }
