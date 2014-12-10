@@ -71,22 +71,26 @@ public class Dijkstra {
       if (graph[pos].getUp() != null && graph[pos].getVertical() == Directions.UP && indexInCompleted(completed, graph[pos].getUp().getIndex()) == -1) {
          int tempWeight = weight + (graph[pos].getY() - graph[pos].getUp().getY())*6/speedVertical;
          if (weightUse == 2)tempWeight = 0;
-         pq.add(tempWeight, graph[pos].getUp().getIndex(), pos);
+         if ((weightUse == 3 && speedVertical != 3) || weightUse != 3)
+            pq.add(tempWeight, graph[pos].getUp().getIndex(), pos);
       }
       if (graph[pos].getRight() != null && graph[pos].getHorizontal() == Directions.RIGHT && indexInCompleted(completed, graph[pos].getRight().getIndex()) == -1) {
          int tempWeight = weight + (graph[pos].getRight().getX() - graph[pos].getX())*6/speedHorizontal;
          if (weightUse == 2)tempWeight = 0;
-         pq.add(tempWeight, graph[pos].getRight().getIndex(), pos);
+         if ((weightUse == 3 && speedHorizontal != 3) || weightUse != 3)
+            pq.add(tempWeight, graph[pos].getRight().getIndex(), pos);
       }
       if (graph[pos].getDown() != null && graph[pos].getVertical() == Directions.DOWN && indexInCompleted(completed, graph[pos].getDown().getIndex()) == -1) {
          int tempWeight = weight + (graph[pos].getDown().getY() - graph[pos].getY())*6/speedVertical;
          if (weightUse == 2)tempWeight = 0;
-         pq.add(tempWeight, graph[pos].getDown().getIndex(), pos);
+         if ((weightUse == 3 && speedVertical != 3) || weightUse != 3)
+            pq.add(tempWeight, graph[pos].getDown().getIndex(), pos);
       }
       if (graph[pos].getLeft() != null && graph[pos].getHorizontal() == Directions.LEFT && indexInCompleted(completed, graph[pos].getLeft().getIndex()) == -1) {
          int tempWeight = weight + (graph[pos].getX() - graph[pos].getLeft().getX())*6/speedHorizontal;
          if (weightUse == 2)tempWeight = 0;
-         pq.add(tempWeight, graph[pos].getLeft().getIndex(), pos);
+         if ((weightUse == 3 && speedHorizontal != 3) || weightUse != 3)
+            pq.add(tempWeight, graph[pos].getLeft().getIndex(), pos);
       }
    }
    public static int indexInCompleted(int[][] completed, int item)
@@ -106,13 +110,6 @@ public class Dijkstra {
       temp[1][completed[0].length] = current[2];
       return temp;
    }
-
-//   public static boolean finalDestOneDirection(int start, int end) {
-//      if (start == end || start + 1 == end || start - 1 == end)
-//         return true;
-//      return false;
-//   }
-
    // function to add one direction to the list at a time
    public static void moveInDirection(graphNode a, graphNode b, ArrayList<Integer> path) {
       if (a.getX() == b.getX()) {
