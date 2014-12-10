@@ -60,6 +60,8 @@ public class RandomMapGenerator implements MapGenerator {
             }
         }
 
+        removeIslands(m);
+
         ArrayList<Road> roads = new ArrayList<Road>();
 
         for (Tile[] a : grid) {
