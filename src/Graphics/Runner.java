@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import javax.swing.Icon;
 import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -23,7 +24,6 @@ import javax.swing.border.EmptyBorder;
 import Car.Car;
 import Map.Map;
 import Map.RandomMapGenerator;
-import Map.Tile;
 import Map.NonRoad.NonRoad;
 import Map.Road.Intersection;
 import Map.Road.Road;
@@ -299,7 +299,18 @@ public class Runner extends JFrame{
 				System.out.println("should i run again?"+run+" but i dont");
 			}
 		});
-
+		
+		JMenu settingsMenu = new JMenu("Settings");
+		menubar.add(settingsMenu);
+		
+		final JCheckBoxMenuItem tL = new JCheckBoxMenuItem("TrafficLight Optimizations", tLOptimized);
+		tL.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				tLOptimized = !tLOptimized;
+				tL.setState(tLOptimized);
+			}
+		});
+		settingsMenu.add(tL);
 		
 		frame.setJMenuBar(menubar);
 		frame.pack();
