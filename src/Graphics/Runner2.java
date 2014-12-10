@@ -45,7 +45,7 @@ public class Runner2 extends JFrame{
 	static RandomMapGenerator generator;
 	static boolean tLOptimized;
 	static boolean stopped = true;
-	
+	static int width=0;
 	public static void main(String[] args) throws InterruptedException {
 	
 		gui.setBorder(new EmptyBorder(2, 3, 2, 3));
@@ -71,19 +71,23 @@ public class Runner2 extends JFrame{
 		Jbutton(f);
 		addMenus(f);
 		f.pack();
-		
+		width=f.getWidth();
+		sizeBox=f.getWidth()/size;
 		f.setVisible(true);
+		f.pack();
 		run();
 	}
 		private static void run() throws InterruptedException{
 			while(run){
 				gui.removeAll();
 				if(!stopped) {
-					step(map);
+					step(map);					
+					if(width!=f.getWidth())
+						sizeBox=f.getWidth()/size;
+					
 				}
-				sizeBox=f.getWidth()/size;
 				color(gui, map);
-				f.pack();
+				//f.pack();
 				gui.updateUI();
 				Thread.sleep(500);
 			}
@@ -389,7 +393,11 @@ public class Runner2 extends JFrame{
 						gui.removeAll();
 						step(map);
 						color(gui, map);
-						f.pack();
+						if(stopped)
+							if(width!=f.getWidth())
+								sizeBox=f.getWidth()/size;
+						
+						//f.pack();
 						//run=true;
 //						try {
 //							run();
