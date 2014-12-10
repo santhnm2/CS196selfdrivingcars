@@ -40,6 +40,10 @@ public class Runner extends JFrame{
 	static int sizeBox=14;//size of each box
 	static Map map;
 	static 		JFrame f ;
+	
+	static boolean tLOptimized;
+	static int path;
+	
 	public static void main(String[] args) throws InterruptedException {
 	
 		gui.setBorder(new EmptyBorder(2, 3, 2, 3));
@@ -173,17 +177,22 @@ public class Runner extends JFrame{
 		//Print out state
 		iterations++;
 		ArrayList<Intersection> intersections=map.getHandler().intersections;
-		//if(iterations % 10 == 0) { //Toggle all lights every ten iterations
+		if(tLOptimized) {
 			for(int i = 0; i < intersections.size(); i++) {
-				
-
-					if(intersections.get(i).shouldToggle()) {
-						intersections.get(i).toggle();
-						
-					
+				if(intersections.get(i).shouldToggle()) {
+					intersections.get(i).toggle();
 				}
 			}
-		//}
+		}
+		else {
+			if(iterations % 10 == 0) { //Toggle all lights every ten iterations
+				for(int i = 0; i < intersections.size(); i++) {
+					if(intersections.get(i).shouldToggle()) {
+						intersections.get(i).toggle();
+					}
+				}
+			}
+		}
 		int t=0;
 		while(!haveAllMoved()&&t<=5)
 		{
