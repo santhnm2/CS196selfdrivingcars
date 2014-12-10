@@ -1,8 +1,4 @@
 package Graphics;
-
-//YUANS CODE IS HERE
-
-//YUANS CODE IS HERE
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -30,12 +26,6 @@ import Map.Tile;
 import Map.NonRoad.NonRoad;
 import Map.Road.Road;
 import Map.Road.TrafficLight;
-
-//YUANS CODE IS HERE
-
-// YUANS CODE IS HERE
-
-
 
 public class Runner2 extends JFrame{
 	static int iterations = 0;
@@ -262,7 +252,7 @@ public class Runner2 extends JFrame{
 				//System.out.print(mapColor[i][j]);
 				paintWithColor(gui, map, mapColor[i][j], j, i);
 			}
-			System.out.println();
+			//System.out.println();
 		}
 		//System.out.println("==============");
 		CT = 0;			//optimization, avoid huge chunk of boxes
