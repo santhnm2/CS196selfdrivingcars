@@ -13,17 +13,25 @@ import Optimization.PathGenerator;
 public class Car implements java.io.Serializable {
     private int speed=0;
     private int dir=0;
-    private int xPos=0;
-    private int yPos=0;
+    protected int xPos=0;
+    public int yPos=0;
     private int previousDir=0;
     //	final private Tile destination=new Tile();   waiting to be implemented
     ArrayList<Integer> path=new ArrayList<Integer>();
     Map map; //Grid that the car is in
+    public boolean isAutomatic=true;
     private int destX;
     private int destY;
     public boolean hasMoved=false;
+    public Car(int x,int y,Map map){
+    	this.xPos=x;
+    	this.yPos=y;
+    	this.map=map;
+    }
+
     
     public Car(int x, int y, int destX, int destY, Map map, int pathNumber) {
+
         xPos = x;
         yPos = y;
         this.destX = destX;
