@@ -3,6 +3,7 @@ package Graphics;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -23,7 +24,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.border.EmptyBorder;
 
@@ -31,7 +31,6 @@ import Car.Car;
 import FileIO.MapIO;
 import Map.Map;
 import Map.RandomMapGenerator;
-import Map.Tile;
 import Map.NonRoad.NonRoad;
 import Map.Road.Intersection;
 import Map.Road.Road;
@@ -75,7 +74,7 @@ public class Runner extends JFrame {
 
 		f = new JFrame("Demo");
 		f.add(gui);
-		f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setLocationByPlatform(true);
 		Jbutton(f);
 		addMenus(f);
@@ -84,10 +83,10 @@ public class Runner extends JFrame {
 		run();
 	}
 
-	private static void run() throws InterruptedException {
-		while (run) {
-			gui.removeAll();
-			if (!stopped) {
+	private static void run() throws InterruptedException{
+		while(run){
+			EventQueue.invokeLater(new Runnable() { public void run() {gui.removeAll();}});
+			if(!stopped) {
 				step(map);
 			}
 			color(gui, map);
@@ -442,18 +441,9 @@ public class Runner extends JFrame {
 
 		step.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				gui.removeAll();
-				step(map);
-				color(gui, map);
-				f.pack();
-				// run=true;
-				// try {
-				// run();
-				// } catch (InterruptedException e) {
-				// // TODO Auto-generated catch block
-				// e.printStackTrace();
-				// }
-			}
+				if (stopped)
+					step(map);
+				}
 		});
 
 		vertical.add(start);
