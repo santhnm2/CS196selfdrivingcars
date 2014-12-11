@@ -15,6 +15,7 @@ public class HumanCar extends Car {
     public HumanCar(int x,int y,Map map)
     {
     	super(x, y, map);
+    	isAutomatic=false;
     }
     public void move(int dir)
     {

@@ -19,6 +19,7 @@ public class Car implements java.io.Serializable {
     //	final private Tile destination=new Tile();   waiting to be implemented
     ArrayList<Integer> path=new ArrayList<Integer>();
     Map map; //Grid that the car is in
+    public boolean isAutomatic=true;
     private int destX;
     private int destY;
     public boolean hasMoved=false;
