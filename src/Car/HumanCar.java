@@ -20,16 +20,17 @@ public class HumanCar extends Car {
     public void move(int dir)
     {
     		Tile nextTile=getNextTile(xPos, yPos, dir);
-    		
-    		Road road=(Road) map.get(xPos, yPos);
-    		road.carDecrement(this);
+    		super.seDir(dir);
+
 	        if(nextTile instanceof Road&&nextTile.getX()>=0 && nextTile.getY()>=0 && nextTile.getX()<map.getLengthX() && nextTile.getY()<map.getLengthY()) {
 	        	{
+                    Road road=(Road) map.get(xPos, yPos);
+                    road.carDecrement(this);
 	        		road=(Road)nextTile;
 	        		xPos=nextTile.getX();yPos=nextTile.getY();
 	        		road.carIncrement(this);
 	        	} 
-    	
+
     }
 }
     }

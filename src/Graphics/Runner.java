@@ -1,4 +1,4 @@
-//package Graphics;
+package Graphics;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -83,7 +83,6 @@ public class Runner extends JFrame {
 				int x=(e.getX()*40/gui.getWidth());
 				//System.out.println(gui.getWidth());
 				//System.out.println(gui.getHeight());
-				System.out.println(x+","+y);
 				humanCarSwitch=true;
 				humanX=x;humanY=y;
 			}
@@ -120,6 +119,8 @@ public class Runner extends JFrame {
 				if(key==KeyEvent.VK_UP)
 				{
 					dir=0;
+
+
 				}
 				if(key==KeyEvent.VK_RIGHT)
 				{
@@ -134,7 +135,6 @@ public class Runner extends JFrame {
 					dir=3;
 				}
 				humanControlledCar.move(dir);
-				System.out.println("keyPressed="+KeyEvent.getKeyText(e.getKeyCode()));
 			}
 
 			@Override
@@ -186,7 +186,6 @@ public class Runner extends JFrame {
 			
 			gui.setFocusable(true);
 			gui.requestFocusInWindow();
-			gui.removeAll();
 			EventQueue.invokeLater(new Runnable() { public void run() {gui.removeAll();}});
 			if(!stopped) {
 				step(map);
@@ -477,7 +476,6 @@ public class Runner extends JFrame {
 				}
 				
 		}
-		//System.out.println(map);
 	}
 	private static boolean haveAllMoved()
 	{
