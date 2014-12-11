@@ -511,18 +511,9 @@ public class Runner extends JFrame {
 		
         step.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				gui.removeAll();
-				step(map);
-				color(gui, map);
-				f.pack();
-				//run=true;
-//				try {
-//					run();
-//				} catch (InterruptedException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-			 }
+				if (stopped)
+					step(map);
+				}
 		});
         
         vertical.add(start);
