@@ -262,7 +262,7 @@ public class DensityBasedMapGenerator implements MapGenerator {
         mapGen.spot(20, 20);
 
         mapGen.spot(40, 40);
-        
+
         Map map = mapGen.generateMap();
 
         System.out.println(map);

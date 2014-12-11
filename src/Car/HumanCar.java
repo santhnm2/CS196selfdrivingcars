@@ -16,6 +16,7 @@ public class HumanCar extends Car {
     {
     	super(x, y, map);
     	isAutomatic=false;
+        Road road =(Road)map.get(x,y);
     }
     public void move(int dir)
     {

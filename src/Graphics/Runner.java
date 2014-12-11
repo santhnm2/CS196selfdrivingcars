@@ -36,14 +36,15 @@ import Car.Car;
 import Car.HumanCar;
 import FileIO.MapIO;
 import Map.Map;
-import Map.RandomMapGenerator;
 import Map.NonRoad.NonRoad;
 import Map.Road.Intersection;
 import Map.Road.Road;
 import Map.Road.TrafficLight;
+import Map.RandomMapGenerator;
 
 public class Runner extends JFrame {
 	static int iterations = 0;
+    static int numberOfHumanCars=0;
 	static JPanel gui = new JPanel(new BorderLayout());
 	static JLabel [][] labels;
 	static boolean run=true;
@@ -83,8 +84,13 @@ public class Runner extends JFrame {
 				int x=(e.getX()*40/gui.getWidth());
 				//System.out.println(gui.getWidth());
 				//System.out.println(gui.getHeight());
-				humanCarSwitch=true;
-				humanX=x;humanY=y;
+                if(numberOfHumanCars<1) {
+                    humanCarSwitch = true;
+                    numberOfHumanCars++;
+                    humanX = x;
+                    humanY = y;
+                }
+
 			}
 			
 			@Override
@@ -148,6 +154,7 @@ public class Runner extends JFrame {
 		RandomMapGenerator generator = new RandomMapGenerator(size, cars);
 		
 		generator = new RandomMapGenerator(size, cars);
+
 
 		map = generator.generateMap();
 		
@@ -254,7 +261,10 @@ public class Runner extends JFrame {
 						if (car.getDirection()==1){
 							Image image=null;
 							try {
-								 image = ImageIO.read(new File("images/car1r.jpg"));
+                                if(car.hasManual)
+                                    image=ImageIO.read(new File("images/blueR.jpg"));
+                                else
+								    image = ImageIO.read(new File("images/car1r.jpg"));
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -267,7 +277,10 @@ public class Runner extends JFrame {
 						if (car.getDirection()==2){
 							Image image=null;
 							try {
-								 image = ImageIO.read(new File("images/car1d.jpg"));
+                                if(car.hasManual)
+                                    image=ImageIO.read(new File("images/blueD.jpg"));
+                                else
+								    image = ImageIO.read(new File("images/car1d.jpg"));
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -280,7 +293,10 @@ public class Runner extends JFrame {
 						if (car.getDirection()==3){
 							Image image=null;
 							try {
-								 image = ImageIO.read(new File("images/car1l.jpg"));
+                                if(car.hasManual)
+                                    image=ImageIO.read(new File("images/blueL.jpg"));
+								else
+                                    image = ImageIO.read(new File("images/car1l.jpg"));
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -293,7 +309,10 @@ public class Runner extends JFrame {
 						if (car.getDirection()==0){
 							Image image=null;
 							try {
-								 image = ImageIO.read(new File("images/car1u.jpg"));
+                                if(car.hasManual)
+                                    image=ImageIO.read(new File("images/blueU.jpg"));
+                                else
+								    image = ImageIO.read(new File("images/car1u.jpg"));
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -308,7 +327,10 @@ public class Runner extends JFrame {
 						if (car.getDirection()==1){
 							Image image=null;
 							try {
-								 image = ImageIO.read(new File("images/car2r.jpg"));
+                                if(car.hasManual)
+                                    image = ImageIO.read(new File("images/blue2r.jpg"));
+                                else
+								    image = ImageIO.read(new File("images/car2r.jpg"));
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -321,7 +343,10 @@ public class Runner extends JFrame {
 						if (car.getDirection()==2){
 							Image image=null;
 							try {
-								 image = ImageIO.read(new File("images/car2d.jpg"));
+                                if(car.hasManual)
+                                    image = ImageIO.read(new File("images/blue2D.jpg"));
+                                else
+                                    image = ImageIO.read(new File("images/car2d.jpg"));
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -334,7 +359,10 @@ public class Runner extends JFrame {
 						if (car.getDirection()==3){
 							Image image=null;
 							try {
-								 image = ImageIO.read(new File("images/car2l.jpg"));
+                                if(car.hasManual)
+                                    image = ImageIO.read(new File("images/blue2L.jpg"));
+                                else
+                                    image = ImageIO.read(new File("images/car2l.jpg"));
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -347,7 +375,10 @@ public class Runner extends JFrame {
 						if (car.getDirection()==0){
 							Image image=null;
 							try {
-								 image = ImageIO.read(new File("images/car2u.jpg"));
+                                if(car.hasManual)
+                                    image = ImageIO.read(new File("images/blue2U.jpg"));
+                                else
+                                    image = ImageIO.read(new File("images/car2u.jpg"));
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();

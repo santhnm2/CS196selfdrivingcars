@@ -10,6 +10,7 @@ public class Road extends Tile
 	private int max;
 	protected Car[] occupants;
 	protected boolean hasCar=false;
+    public boolean hasManual=false;
 	
 	public Road(int x, int y, int speed, int direction, int lanes) {
 		super(x, y);
@@ -32,6 +33,8 @@ public class Road extends Tile
 		hasCar = b;
 	}
 	public boolean carIncrement(Car c){
+        if(!c.isAutomatic)
+            hasManual=true;
 		for(int i = 0; i<occupants.length; i++)
 		{
 			if(occupants[i] == null) {
@@ -42,8 +45,13 @@ public class Road extends Tile
 		}
 		return false;
 	}
-	
+	public void setManual()
+    {
+        hasManual=true;
+    }
 	public boolean carDecrement(Car c){
+        if(!c.isAutomatic)
+            hasManual=false;
 		for(int i = 0; i<occupants.length; i++)
 		{
 			if(occupants[i]!=null && occupants[i].equals(c)) {
