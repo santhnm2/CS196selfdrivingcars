@@ -121,11 +121,9 @@ public class RandomMapGenerator implements MapGenerator {
             }
 
             if(start != null){
-                System.out.println("Start point XY:" + start.getX() + " " + start.getY());
                 int dir = start.getDirection();
                 int length = 1;
                 Tile t = r;
-                System.out.println("XY:" + t.getX() + " " + t.getY());
 
          //       if(m.getInDir(r,dir) != null){
                     t = m.getInDir(r, dir);
@@ -139,7 +137,6 @@ public class RandomMapGenerator implements MapGenerator {
                             t = m.getInDir(r, reverseDir);
 
                         while(!(t == null || t instanceof TrafficLight || t instanceof NonRoad)){
-                            System.out.println("Count: " + count + "XY:" + t.getX() + " " + t.getY());
 
                             length++;
                             if(m.getInDir(t, reverseDir) != null)
@@ -147,7 +144,6 @@ public class RandomMapGenerator implements MapGenerator {
                             else
                                 break;
                         }
-                        System.out.println("Length:" + length);
                         for(int i = 0; i < length; i++){
                             t = m.getInDir(t, dir); // reverse direction
                             speeds[t.getX()][t.getY()] = determineSpeed(length);
@@ -156,7 +152,6 @@ public class RandomMapGenerator implements MapGenerator {
                     } else {
 
                         while(!(t == null || t instanceof TrafficLight || t instanceof NonRoad)){
-                            System.out.println("Count: " + count + "XY:" + t.getX() + " " + t.getY());
 
                             length++;
                             if(m.getInDir(t, dir) != null)
@@ -165,7 +160,6 @@ public class RandomMapGenerator implements MapGenerator {
                                 break;
                         }
                         int reverseDir = (dir + 2 > 3)? dir - 2: dir + 2;
-                        System.out.println("Length:" + length);
 
                         for(int i = 0; i < length; i ++){
                             t = m.getInDir(t, reverseDir); //reverse directions
@@ -292,6 +286,5 @@ public class RandomMapGenerator implements MapGenerator {
     public static void main(String[] args) {
         MapGenerator mapGen = new RandomMapGenerator(10, 1);
 
-        System.out.println(mapGen.generateMap());
     }
 }

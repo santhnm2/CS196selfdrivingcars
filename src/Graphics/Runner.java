@@ -3,16 +3,22 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
@@ -53,9 +59,11 @@ public class Runner extends JFrame {
 	static int humanY;
 	static KeyListener kl;
 	static RandomMapGenerator generator;
-	static boolean tLOptimized;
+	static boolean tLOptimized = true;
 	
 	static boolean stopped = true;
+	static JLabel timer;
+	static JLabel carLabel;
 	
 
 	public static void main(String[] args) throws InterruptedException {
@@ -158,7 +166,7 @@ public class Runner extends JFrame {
 
 		f = new JFrame("Demo");
 		f.add(gui);
-		f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setLocationByPlatform(true);
 		Jbutton(f);
 		addMenus(f);
@@ -179,10 +187,14 @@ public class Runner extends JFrame {
 			gui.setFocusable(true);
 			gui.requestFocusInWindow();
 			gui.removeAll();
+			EventQueue.invokeLater(new Runnable() { public void run() {gui.removeAll();}});
 			if(!stopped) {
 				step(map);
 			}
 			color(gui, map);
+	      timer.setText(Integer.toString(iterations));
+	      carLabel.setText(Integer.toString(map.getCars().size()));
+
 			f.pack();
 			gui.updateUI();
 			Thread.sleep(500);
@@ -196,37 +208,168 @@ public class Runner extends JFrame {
 					TrafficLight light = (TrafficLight) map.get(j, i);
 
 					if (light.isRed()) {
+						Image image=null;
+						try {
+							 image = ImageIO.read(new File("images/red.jpg"));
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						JLabel myLabel = new JLabel(new ColorIcon(image, sizeBox));
 						//labels[i][j] = new JLabel(new ColorIcon(Color.RED, 16));
-						JLabel myLabel = new JLabel(new ColorIcon(Color.RED, sizeBox));
+						//JLabel myLabel = new JLabel(new ColorIcon(Color.RED, sizeBox));
 						gui.add(myLabel);
 						myLabel.setLocation(i, j);
-
 					}
 					else
-					{
+					{Image image=null;
+					try {
+						 image = ImageIO.read(new File("images/green.jpg"));
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					JLabel myLabel = new JLabel(new ColorIcon(image, sizeBox));
 						//labels[i][j] = new JLabel(new ColorIcon(Color.RED, 16));
-						JLabel myLabel = new JLabel(new ColorIcon(Color.GREEN, sizeBox));
+					//	JLabel myLabel = new JLabel(new ColorIcon(Color.GREEN, sizeBox));
 						gui.add(myLabel);
 						myLabel.setLocation(i, j);
 					}
 				} else if (map.get(j, i) instanceof NonRoad) {
 					//labels[i][j] = new JLabel(new ColorIcon(Color.RED, 16));
-					JLabel myLabel = new JLabel(new ColorIcon(Color.WHITE, sizeBox));
+					Image image=null;
+					try {
+						 image = ImageIO.read(new File("images/grass.jpg"));
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					JLabel myLabel = new JLabel(new ColorIcon(image, sizeBox));
+					//JLabel myLabel = new JLabel(new ColorIcon(Color.WHITE, sizeBox));
 					gui.add(myLabel);
-					myLabel.setLocation(i, j);
+					myLabel.setLocation(j, i);
 				} else if (map.get(j, i) instanceof Road) {
 					Road car = (Road) map.get(j, i);
-					if (car.getFilled() > 0)
-					{	int fill=car.getFilled();
-						
-						JLabel myLabel = new JLabel(new ColorIcon(Color.PINK, sizeBox,fill));
-						gui.add(myLabel);
-						myLabel.setLocation(i, j);
+					int fill = car.getFilled();
+					if (fill==1){
+						if (car.getDirection()==1){
+							Image image=null;
+							try {
+								 image = ImageIO.read(new File("images/car1r.jpg"));
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							JLabel myLabel = new JLabel(new ColorIcon(image, sizeBox));
+								//JLabel myLabel = new JLabel(new ColorIcon(Color.PINK, sizeBox,fill));
+								gui.add(myLabel);
+								myLabel.setLocation(i, j);
+						}
+						if (car.getDirection()==2){
+							Image image=null;
+							try {
+								 image = ImageIO.read(new File("images/car1d.jpg"));
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							JLabel myLabel = new JLabel(new ColorIcon(image, sizeBox));
+								//JLabel myLabel = new JLabel(new ColorIcon(Color.PINK, sizeBox,fill));
+								gui.add(myLabel);
+								myLabel.setLocation(i, j);
+						}
+						if (car.getDirection()==3){
+							Image image=null;
+							try {
+								 image = ImageIO.read(new File("images/car1l.jpg"));
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							JLabel myLabel = new JLabel(new ColorIcon(image, sizeBox));
+								//JLabel myLabel = new JLabel(new ColorIcon(Color.PINK, sizeBox,fill));
+								gui.add(myLabel);
+								myLabel.setLocation(i, j);
+						}
+						if (car.getDirection()==0){
+							Image image=null;
+							try {
+								 image = ImageIO.read(new File("images/car1u.jpg"));
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							JLabel myLabel = new JLabel(new ColorIcon(image, sizeBox));
+								//JLabel myLabel = new JLabel(new ColorIcon(Color.PINK, sizeBox,fill));
+								gui.add(myLabel);
+								myLabel.setLocation(i, j);
+						}
+					}
+					else if (fill==2){
+						if (car.getDirection()==1){
+							Image image=null;
+							try {
+								 image = ImageIO.read(new File("images/car2r.jpg"));
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							JLabel myLabel = new JLabel(new ColorIcon(image, sizeBox));
+								//JLabel myLabel = new JLabel(new ColorIcon(Color.PINK, sizeBox,fill));
+								gui.add(myLabel);
+								myLabel.setLocation(i, j);
+						}
+						if (car.getDirection()==2){
+							Image image=null;
+							try {
+								 image = ImageIO.read(new File("images/car2d.jpg"));
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							JLabel myLabel = new JLabel(new ColorIcon(image, sizeBox));
+								//JLabel myLabel = new JLabel(new ColorIcon(Color.PINK, sizeBox,fill));
+								gui.add(myLabel);
+								myLabel.setLocation(i, j);
+						}
+						if (car.getDirection()==3){
+							Image image=null;
+							try {
+								 image = ImageIO.read(new File("images/car2l.jpg"));
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							JLabel myLabel = new JLabel(new ColorIcon(image, sizeBox));
+								//JLabel myLabel = new JLabel(new ColorIcon(Color.PINK, sizeBox,fill));
+								gui.add(myLabel);
+								myLabel.setLocation(i, j);
+						}
+						if (car.getDirection()==0){
+							Image image=null;
+							try {
+								 image = ImageIO.read(new File("images/car2u.jpg"));
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							JLabel myLabel = new JLabel(new ColorIcon(image, sizeBox));
+								//JLabel myLabel = new JLabel(new ColorIcon(Color.PINK, sizeBox,fill));
+								gui.add(myLabel);
+								myLabel.setLocation(i, j);
+						}
 					}
 					else
 					{
 						//labels[i][j] = new JLabel(new ColorIcon(Color.RED, 16));
-						JLabel myLabel = new JLabel(new ColorIcon(Color.BLACK, sizeBox));
+						Image image=null;
+						try {
+							 image = ImageIO.read(new File("images/road.jpg"));
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						JLabel myLabel = new JLabel(new ColorIcon(image, sizeBox));
 						gui.add(myLabel);
 						myLabel.setLocation(i, j);	
 					}
@@ -234,13 +377,18 @@ public class Runner extends JFrame {
 			}
 		}
 	}
-	
-	static class ColorIcon implements Icon {
+		
 
+	static class ColorIcon implements Icon {
+		Image image;
 		Color color;
 		int preferredSize = -1;
 		int cars=0;
 		private ColorIcon() {
+		}
+		public ColorIcon(Image image, int preferredSize){
+			this.image=image;
+			this.preferredSize=preferredSize;
 		}
 		public ColorIcon(Color color, int preferredSize) {
 			this.color = color;
@@ -255,13 +403,14 @@ public class Runner extends JFrame {
 
 		@Override
 		public void paintIcon(Component c, Graphics g, int x, int y) {
-			g.setColor(color);
-			g.fillRect(x, y, preferredSize, preferredSize);
+			//g.setColor(color);
+			//g.fillRect(x, y,preferredSize ,preferredSize);
+			g.drawImage(image, x, y, sizeBox,sizeBox,Color.black, null);
 			if(this.cars>0){
 				
 				g.setColor(Color.black);
 				for(int a=0;a<this.cars;a++)
-					g.drawOval(x+a*3, y+a*3, 3, 3);
+					g.fillOval(x+a*sizeBox/3, y, sizeBox/3,sizeBox/3);
 			}
 			}
 
@@ -277,10 +426,13 @@ public class Runner extends JFrame {
 
 	}
 
+
 	public static void step(Map map) {
 		//Print out state
-		iterations++;
 		
+		if(map.getCars().size()>0) {
+			iterations++;
+		}
 		ArrayList<Intersection> intersections=map.getHandler().intersections;
 		if(tLOptimized) {
 			for(int i = 0; i < intersections.size(); i++) {
@@ -341,6 +493,10 @@ public class Runner extends JFrame {
 		JButton start = new JButton("Start");
 		JButton stop = new JButton("Stop");
         JButton step = new JButton("Step");
+        JLabel t = new JLabel("Ticks:");
+        timer = new JLabel(""+iterations);
+        JLabel c = new JLabel("Cars:");
+        carLabel = new JLabel(""+map.getCars().size());
 
         start.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
@@ -372,6 +528,10 @@ public class Runner extends JFrame {
         vertical.add(start);
         vertical.add(stop);
         vertical.add(step);
+        vertical.add(t);
+        vertical.add(timer);
+        vertical.add(c);
+        vertical.add(carLabel);
 //        add(label, BorderLayout.WEST);
         f.add(vertical, BorderLayout.WEST); 
         f.pack();
