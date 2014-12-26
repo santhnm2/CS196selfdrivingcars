@@ -101,52 +101,6 @@ public class Runner2 extends JFrame{
 }
 	private static void color(JPanel gui, Map map) {
 		paint(gui, map);
-//		for (int i = 0; i < map.getLengthX(); i++) {
-//			for (int j = 0; j < map.getLengthY(); j++) {
-//				
-//				if (map.get(j, i) instanceof TrafficLight) {
-//					TrafficLight light = (TrafficLight) map.get(j, i);
-//
-//					if (light.isRed()) {
-//						//labels[i][j] = new JLabel(new ColorIcon(Color.RED, 16));
-//						JLabel myLabel = new JLabel(new ColorIcon(Color.RED, sizeBox));
-//						gui.add(myLabel);
-//						myLabel.setLocation(i, j);
-//
-//					}
-//					else
-//					{
-//						//labels[i][j] = new JLabel(new ColorIcon(Color.RED, 16));
-//						JLabel myLabel = new JLabel(new ColorIcon(Color.GREEN, sizeBox));
-//						gui.add(myLabel);
-//						myLabel.setLocation(i, j);
-//					}
-//				} else if (map.get(j, i) instanceof NonRoad) {
-//					JLabel myLabel = new JLabel(new ColorIcon(Color.WHITE, sizeBox));
-//					gui.add(myLabel);
-//					myLabel.setLocation(i, j);
-////					//paint1(gui, map, i, j);
-//					//System.out.println("i = " + i + ", j = " + j);
-//				} else if (map.get(j, i) instanceof Road) {
-//					Road car = (Road) map.get(j, i);
-//					if (car.getFilled() > 0)
-//					{	int fill=car.getFilled();
-//						
-//						JLabel myLabel = new JLabel(new ColorIcon(Color.PINK, sizeBox,fill));
-//						gui.add(myLabel);
-//						myLabel.setLocation(i, j);
-//					}
-//					else
-//					{
-//						labels[i][j] = new JLabel(new ColorIcon(Color.RED, 16));
-//						JLabel myLabel = new JLabel(new ColorIcon(Color.BLACK, sizeBox));
-//						gui.add(myLabel);
-//						myLabel.setLocation(i, j);	
-//					}
-//				}
-//			}
-//		}
-		//paint(gui, map);
 	}
 
 
@@ -160,6 +114,7 @@ public class Runner2 extends JFrame{
 	}
 	private static int CT=0;
 	private static int CT2=0;
+	
 	private static void paintWithBuffer(Color[][] mapColor, int x, int y, int height, int width){
 		int non_road_counter = height*width;
 		Color color;
@@ -211,16 +166,6 @@ public class Runner2 extends JFrame{
 			}
 			height--;
 			paintWithBuffer(mapColor, x, y, height, width);
-//			paint_buffer.add(x);
-//			paint_buffer.add(y);
-//			mapColor[y][x] = Color.WHITE;
-//			for (int i=0; i<4; i++){
-//				int newX = x+neighbour[i][0];
-//				int newY = y+neighbour[i][1];
-//				if (newX>=0 && newX<map.getLengthX() && newY>=0 && newY<map.getLengthY()){
-//					floodFilled(newX, newY, map, mapColor);
-//				}
-//			}
 		}else{
 			
 			if (map.get(x, y) instanceof TrafficLight){
