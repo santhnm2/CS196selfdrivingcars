@@ -9,6 +9,11 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,39 +33,134 @@ import javax.swing.JToolBar;
 import javax.swing.border.EmptyBorder;
 
 import Car.Car;
+import Car.HumanCar;
 import FileIO.MapIO;
 import Map.Map;
-import Map.RandomMapGenerator;
 import Map.NonRoad.NonRoad;
 import Map.Road.Intersection;
 import Map.Road.Road;
 import Map.Road.TrafficLight;
+import Map.RandomMapGenerator;
 
 public class Runner extends JFrame {
 	static int iterations = 0;
+    static int numberOfHumanCars=0;
 	static JPanel gui = new JPanel(new BorderLayout());
 	static JLabel[][] labels;
 	static boolean run = true;
 	// for ease of access during demo
-	static int size = 40;// size of the map
-	static int cars = 100;// number of cars
-	static int sizeBox = 14;// size of each box
+	static int size=40;//size of the map
+	static int cars=100;//number of automatic cars
+	static int sizeBox=14;//size of each box
 	static Map map;
-	static JFrame f;
+	static HumanCar humanControlledCar;
+	static 		JFrame f ;
+	static boolean humanCarSwitch;
+	static int humanX;
+	static int humanY;
+	static KeyListener kl;
 	static RandomMapGenerator generator;
 	static boolean tLOptimized = true;
 
 	static boolean stopped = true;
 	static JLabel timer;
 	static JLabel carLabel;
+	
+
 
 	public static void main(String[] args) throws InterruptedException {
 
 		gui.setBorder(new EmptyBorder(2, 3, 2, 3));
+		
+		MouseListener ml=new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				int y=(e.getY()*40/gui.getHeight());// TODO Auto-generated method stub
+				int x=(e.getX()*40/gui.getWidth());
+				//System.out.println(gui.getWidth());
+				//System.out.println(gui.getHeight());
+                if(numberOfHumanCars<1) {
+                    humanCarSwitch = true;
+                    numberOfHumanCars++;
+                    humanX = x;
+                    humanY = y;
+                }
+
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		};
+		gui.addMouseListener(ml);
+		kl=new KeyListener() {
+			
+			@Override
+			public void keyTyped(KeyEvent e) {
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				int key=e.getKeyCode();
+				int dir=-1;
+				if(key==KeyEvent.VK_UP)
+				{
+					dir=0;
+
+
+				}
+				if(key==KeyEvent.VK_RIGHT)
+				{
+					dir=1;
+				}
+				if(key==KeyEvent.VK_DOWN)
+				{
+					dir=2;
+				}
+				if(key==KeyEvent.VK_LEFT)
+				{
+					dir=3;
+				}
+				humanControlledCar.move(dir);
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				//System.out.println("hehe");
+			//	System.out.println("keyReleased="+KeyEvent.getKeyText(e.getKeyCode()));
+			}
+		};
+		gui.addKeyListener(kl);
 		gui.setBackground(Color.WHITE.darker().darker());
+		RandomMapGenerator generator = new RandomMapGenerator(size, cars);
+		
 		generator = new RandomMapGenerator(size, cars);
 
+
 		map = generator.generateMap();
+		
+		
 		int w = map.getLengthX();
 		int h = map.getLengthY();
 		gui.setLayout(new GridLayout(h, w, 2, 2));
@@ -85,6 +185,15 @@ public class Runner extends JFrame {
 
 	private static void run() throws InterruptedException{
 		while(run){
+			if(humanCarSwitch)
+			{
+				humanControlledCar=new HumanCar(humanX, humanY, map);
+				map.addHumanCar(humanControlledCar, humanX, humanY);
+				humanCarSwitch=false;
+			}
+			
+			gui.setFocusable(true);
+			gui.requestFocusInWindow();
 			EventQueue.invokeLater(new Runnable() { public void run() {gui.removeAll();}});
 			if(!stopped) {
 				step(map);
@@ -162,6 +271,10 @@ public class Runner extends JFrame {
 						if (car.getDirection() == 1) {
 							Image image = null;
 							try {
+                                if(car.hasManual)
+                                    image=ImageIO.read(new File("images/blueR.jpg"));
+                                else
+								    image = ImageIO.read(new File("images/car1r.jpg"));
 								image = ImageIO.read(new File(
 										"images/car1r.jpg"));
 							} catch (IOException e) {
@@ -178,6 +291,10 @@ public class Runner extends JFrame {
 						if (car.getDirection() == 2) {
 							Image image = null;
 							try {
+                                if(car.hasManual)
+                                    image=ImageIO.read(new File("images/blueD.jpg"));
+                                else
+								    image = ImageIO.read(new File("images/car1d.jpg"));
 								image = ImageIO.read(new File(
 										"images/car1d.jpg"));
 							} catch (IOException e) {
@@ -194,6 +311,10 @@ public class Runner extends JFrame {
 						if (car.getDirection() == 3) {
 							Image image = null;
 							try {
+                                if(car.hasManual)
+                                    image=ImageIO.read(new File("images/blueL.jpg"));
+								else
+                                    image = ImageIO.read(new File("images/car1l.jpg"));
 								image = ImageIO.read(new File(
 										"images/car1l.jpg"));
 							} catch (IOException e) {
@@ -210,6 +331,10 @@ public class Runner extends JFrame {
 						if (car.getDirection() == 0) {
 							Image image = null;
 							try {
+                                if(car.hasManual)
+                                    image=ImageIO.read(new File("images/blueU.jpg"));
+                                else
+								    image = ImageIO.read(new File("images/car1u.jpg"));
 								image = ImageIO.read(new File(
 										"images/car1u.jpg"));
 							} catch (IOException e) {
@@ -228,6 +353,10 @@ public class Runner extends JFrame {
 						if (car.getDirection() == 1) {
 							Image image = null;
 							try {
+                                if(car.hasManual)
+                                    image = ImageIO.read(new File("images/blue2r.jpg"));
+                                else
+								    image = ImageIO.read(new File("images/car2r.jpg"));
 								image = ImageIO.read(new File(
 										"images/car2r.jpg"));
 							} catch (IOException e) {
@@ -244,6 +373,10 @@ public class Runner extends JFrame {
 						if (car.getDirection() == 2) {
 							Image image = null;
 							try {
+                                if(car.hasManual)
+                                    image = ImageIO.read(new File("images/blue2D.jpg"));
+                                else
+                                    image = ImageIO.read(new File("images/car2d.jpg"));
 								image = ImageIO.read(new File(
 										"images/car2d.jpg"));
 							} catch (IOException e) {
@@ -260,6 +393,12 @@ public class Runner extends JFrame {
 						if (car.getDirection() == 3) {
 							Image image = null;
 							try {
+
+                                if(car.hasManual)
+                                    image = ImageIO.read(new File("images/blue2L.jpg"));
+                                else
+                                    image = ImageIO.read(new File("images/car2l.jpg"));
+
 								image = ImageIO.read(new File(
 										"images/car2l.jpg"));
 							} catch (IOException e) {
@@ -276,6 +415,10 @@ public class Runner extends JFrame {
 						if (car.getDirection() == 0) {
 							Image image = null;
 							try {
+                                if(car.hasManual)
+                                    image = ImageIO.read(new File("images/blue2U.jpg"));
+                                else
+                                    image = ImageIO.read(new File("images/car2u.jpg"));
 								image = ImageIO.read(new File(
 										"images/car2u.jpg"));
 							} catch (IOException e) {
@@ -360,6 +503,9 @@ public class Runner extends JFrame {
 	}
 
 	public static void step(Map map) {
+		//Print out state
+		
+		if(map.getCars().size()>0) {
 		// Print out state
 		if (map.getCars().size() > 0) {
 			iterations++;
@@ -407,7 +553,7 @@ public class Runner extends JFrame {
 			}
 
 		}
-		// System.out.println(map);
+		}
 	}
 
 	private static boolean haveAllMoved() {

@@ -63,7 +63,7 @@ public class RandomMapGenerator implements MapGenerator {
         removeIslands(m);
 
         ArrayList<Road> roads = new ArrayList<Road>();
-
+        
         for (Tile[] a : grid) {
             for (Tile b : a) {
                 if (b instanceof Road && !(b instanceof TrafficLight)) {
@@ -83,9 +83,9 @@ public class RandomMapGenerator implements MapGenerator {
             } while (start == end);
 
             m.placeCar(new Car(start.x, start.y, end.x, end.y, m, 0));
+
         }
-
-
+        
         return m;
     }
     private static Tile[] getAdjTiles(Tile[][] grid, Tile x){

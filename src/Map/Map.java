@@ -1,6 +1,7 @@
 package Map;
 
 import Car.Car;
+import Car.HumanCar;
 import Constants.Directions;
 import Map.NonRoad.NonRoad;
 import Map.Road.Intersection;
@@ -42,6 +43,13 @@ public class Map implements java.io.Serializable {
 
     public ArrayList<Car> getCars() {
         return this.cars;
+    }
+
+
+    public void addHumanCar(HumanCar car,int x,int y)
+    {
+    	Road r=(Road)this.get(x, y);
+    	r.carIncrement(car);
     }
     public void setPath(int path){
        for (int i =0; i< cars.size();i++)
